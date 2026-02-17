@@ -95,12 +95,6 @@ subprojects {
 }
 
 reporting {
-    reports {
-        integrationTestAggregateTestReport(AggregateTestReport) {
-            testSuiteName = 'integrationTest'
-        }
-    }
-
     subprojects.collect { subproject -> subproject.name }.each { subprojectName ->
         dependencies { testReportAggregation project(":${subprojectName}") }
     }
