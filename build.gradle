@@ -4,9 +4,6 @@ plugins {
     alias(libs.plugins.org.sonarqube)
 }
 
-ext {
-    tailwindCssVersion = '3.4.16'
-}
 
 apply from: 'gradle/configureIntygBom.gradle'
 

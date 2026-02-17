@@ -3,7 +3,7 @@ tasks.register('downloadTailwindCSS') {
         String tailwindCSSFilePath = "${layout.buildDirectory.get()}/resources/main/templates/tailwindCSS.js"
         File file = new File(tailwindCSSFilePath)
         if (!file.exists()) {
-            URI.create("https://cdn.tailwindcss.com/${tailwindCssVersion}").toURL().withInputStream {
+            URI.create("https://cdn.tailwindcss.com/${tailwindVersion}").toURL().withInputStream {
                 i -> file.withOutputStream { it << i }
             }
         }
