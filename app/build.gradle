@@ -1,5 +1,10 @@
 plugins {
-    id 'org.springframework.boot' version '3.4.0'
+    alias(libs.plugins.org.cyclonedx.bom)
+    alias(libs.plugins.org.springframework.boot)
+}
+
+tasks.named('bootJar') {
+    archiveFileName.set('app.jar')
 }
 
 def applicationDir = "${rootProject.projectDir}/devops/dev"
@@ -12,7 +17,6 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation "co.elastic.logging:logback-ecs-encoder:${logbackEcsEncoderVersion}"
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -20,11 +24,6 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testcontainers:junit-jupiter'
-}
-
-tasks.named('test') {
-    useJUnitPlatform {
-    }
 }
 
 bootRun {
@@ -38,9 +37,7 @@ tasks.register("appRunDebug") {
     doFirst {
         bootRun.configure {
             jvmArgs = [
-                    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=18041",
-                    "-Dlogging.config=${rootProject.projectDir}/devops/dev/config/logback-spring.xml",
-            ]
+                    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=18041",]
         }
     }
     finalizedBy("bootRun")
