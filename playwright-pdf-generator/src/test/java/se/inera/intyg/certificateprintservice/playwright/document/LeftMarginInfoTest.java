@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.certificateprintservice.playwright.document;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -26,20 +44,22 @@ class LeftMarginInfoTest {
   public static final String RECIPIENT_ID = "recipientId";
   public static final String RECIPIENT_ID_TS = "TRANSP";
 
-  private final LeftMarginInfo leftMarginInfoSKR = LeftMarginInfo.builder()
-      .certificateType(CERTIFICATE_TYPE)
-      .recipientName(RECIPIENT_NAME)
-      .certificateVersion(VERSION)
-      .recipientId(RECIPIENT_ID)
-      .leftMarginText(LEFT_MARGIN_TEXT_SKR)
-      .build();
+  private final LeftMarginInfo leftMarginInfoSKR =
+      LeftMarginInfo.builder()
+          .certificateType(CERTIFICATE_TYPE)
+          .recipientName(RECIPIENT_NAME)
+          .certificateVersion(VERSION)
+          .recipientId(RECIPIENT_ID)
+          .leftMarginText(LEFT_MARGIN_TEXT_SKR)
+          .build();
 
-  private final LeftMarginInfo leftMarginInfo = LeftMarginInfo.builder()
-      .certificateType(CERTIFICATE_TYPE)
-      .recipientName(RECIPIENT_NAME)
-      .certificateVersion(VERSION)
-      .recipientId(RECIPIENT_ID_TS)
-      .build();
+  private final LeftMarginInfo leftMarginInfo =
+      LeftMarginInfo.builder()
+          .certificateType(CERTIFICATE_TYPE)
+          .recipientName(RECIPIENT_NAME)
+          .certificateVersion(VERSION)
+          .recipientId(RECIPIENT_ID_TS)
+          .build();
 
   @Nested
   class Wrapper {
@@ -51,10 +71,10 @@ class LeftMarginInfoTest {
           () -> assertEquals(DIV, element.tag(), TAG_TYPE),
           () -> assertEquals(1, element.children().size(), NUM_CHILDREN),
           () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
-          () -> assertEquals(
-              "position: absolute; left: 1cm; bottom: 35mm; transform: rotate(-90deg) translateY(-50%); transform-origin: top left; font-family: 'Liberation Sans', sans-serif; font-size: 10pt;",
-              attributes(element, STYLE), ATTRIBUTES)
-      );
+          () ->
+              assertEquals(
+                  "position: absolute; left: 1cm; bottom: 35mm; transform: rotate(-90deg) translateY(-50%); transform-origin: top left; font-family: 'Liberation Sans', sans-serif; font-size: 10pt;",
+                  attributes(element, STYLE), ATTRIBUTES));
     }
 
     @Nested
@@ -62,33 +82,29 @@ class LeftMarginInfoTest {
 
       @Test
       void leftMarginInfoSKR() {
-        final var expectedText = LEFT_MARGIN_TEXT_SKR.formatted(RECIPIENT_ID, CERTIFICATE_TYPE,
-            VERSION,
-            RECIPIENT_NAME);
+        final var expectedText =
+            LEFT_MARGIN_TEXT_SKR.formatted(RECIPIENT_ID, CERTIFICATE_TYPE, VERSION, RECIPIENT_NAME);
         final var element = leftMarginInfoSKR.create().child(0);
         assertAll(
             () -> assertEquals(P, element.tag(), TAG_TYPE),
             () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
             () -> assertEquals(expectedText, element.text(), TEXT),
             () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
-            () -> assertEquals("margin: 0;", attributes(element, STYLE), ATTRIBUTES)
-        );
+            () -> assertEquals("margin: 0;", attributes(element, STYLE), ATTRIBUTES));
       }
 
       @Test
       void leftMarginInfoDefault() {
-        final var expectedText = LEFT_MARGIN_TEXT.formatted(CERTIFICATE_TYPE, VERSION,
-            RECIPIENT_NAME);
+        final var expectedText =
+            LEFT_MARGIN_TEXT.formatted(CERTIFICATE_TYPE, VERSION, RECIPIENT_NAME);
         final var element = leftMarginInfo.create().child(0);
         assertAll(
             () -> assertEquals(P, element.tag(), TAG_TYPE),
             () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
             () -> assertEquals(expectedText, element.text(), TEXT),
             () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
-            () -> assertEquals("margin: 0;", attributes(element, STYLE), ATTRIBUTES)
-        );
+            () -> assertEquals("margin: 0;", attributes(element, STYLE), ATTRIBUTES));
       }
     }
   }
-
 }

@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.certificateprintservice.application.print.converter;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -25,42 +43,44 @@ class PrintCertificateMetadataConverterTest {
   private static final String APPLICATION_ORIGIN = "applicationOrigin";
   private static final String PERSON_ID = "personId";
   private static final String DESCRIPTION = "description";
-  private static final PrintCertificateMetadataDTO METADATA_DTO = PrintCertificateMetadataDTO.builder()
-      .name(NAME)
-      .fileName(FILE_NAME)
-      .version(VERSION)
-      .typeId(TYPE_ID)
-      .certificateId(CERTIFICATE_ID)
-      .sentDate(SENT_DATE)
-      .signingDate(SIGNING_DATE)
-      .recipientLogo(RECIPIENT_LOGO)
-      .recipientName(RECIPIENT_NAME)
-      .recipientId(RECIPIENT_ID)
-      .applicationOrigin(APPLICATION_ORIGIN)
-      .personId(PERSON_ID)
-      .description(DESCRIPTION)
-      .generalPrintText(GeneralPrintTextDTO.builder()
-          .leftMarginInfoText("leftMarginInfoText")
-          .draftAlertInfoText("draftAlertInfoText")
-          .build())
-      .build();
-  private static final PrintCertificateMetadataDTO METADATA_DTO_GENERAL_TEXT_MISSING = PrintCertificateMetadataDTO.builder()
-      .name(NAME)
-      .fileName(FILE_NAME)
-      .version(VERSION)
-      .typeId(TYPE_ID)
-      .certificateId(CERTIFICATE_ID)
-      .sentDate(SENT_DATE)
-      .signingDate(SIGNING_DATE)
-      .recipientLogo(RECIPIENT_LOGO)
-      .recipientName(RECIPIENT_NAME)
-      .recipientId(RECIPIENT_ID)
-      .applicationOrigin(APPLICATION_ORIGIN)
-      .personId(PERSON_ID)
-      .description(DESCRIPTION)
-      .generalPrintText(GeneralPrintTextDTO.builder()
-          .build())
-      .build();
+  private static final PrintCertificateMetadataDTO METADATA_DTO =
+      PrintCertificateMetadataDTO.builder()
+          .name(NAME)
+          .fileName(FILE_NAME)
+          .version(VERSION)
+          .typeId(TYPE_ID)
+          .certificateId(CERTIFICATE_ID)
+          .sentDate(SENT_DATE)
+          .signingDate(SIGNING_DATE)
+          .recipientLogo(RECIPIENT_LOGO)
+          .recipientName(RECIPIENT_NAME)
+          .recipientId(RECIPIENT_ID)
+          .applicationOrigin(APPLICATION_ORIGIN)
+          .personId(PERSON_ID)
+          .description(DESCRIPTION)
+          .generalPrintText(
+              GeneralPrintTextDTO.builder()
+                  .leftMarginInfoText("leftMarginInfoText")
+                  .draftAlertInfoText("draftAlertInfoText")
+                  .build())
+          .build();
+  private static final PrintCertificateMetadataDTO METADATA_DTO_GENERAL_TEXT_MISSING =
+      PrintCertificateMetadataDTO.builder()
+          .name(NAME)
+          .fileName(FILE_NAME)
+          .version(VERSION)
+          .typeId(TYPE_ID)
+          .certificateId(CERTIFICATE_ID)
+          .sentDate(SENT_DATE)
+          .signingDate(SIGNING_DATE)
+          .recipientLogo(RECIPIENT_LOGO)
+          .recipientName(RECIPIENT_NAME)
+          .recipientId(RECIPIENT_ID)
+          .applicationOrigin(APPLICATION_ORIGIN)
+          .personId(PERSON_ID)
+          .description(DESCRIPTION)
+          .generalPrintText(GeneralPrintTextDTO.builder().build())
+          .build();
 
   PrintCertificateMetadataConverter printCertificateMetadataConverter;
 
@@ -91,43 +111,43 @@ class PrintCertificateMetadataConverterTest {
 
   @Test
   void shallConvertCertificateId() {
-    assertEquals(CERTIFICATE_ID,
-        printCertificateMetadataConverter.convert(METADATA_DTO).getCertificateId());
+    assertEquals(
+        CERTIFICATE_ID, printCertificateMetadataConverter.convert(METADATA_DTO).getCertificateId());
   }
 
   @Test
   void shallConvertSentDate() {
-    assertEquals(SENT_DATE,
-        printCertificateMetadataConverter.convert(METADATA_DTO).getSentDate());
+    assertEquals(SENT_DATE, printCertificateMetadataConverter.convert(METADATA_DTO).getSentDate());
   }
 
   @Test
   void shallConvertSigningDate() {
-    assertEquals(SIGNING_DATE,
-        printCertificateMetadataConverter.convert(METADATA_DTO).getSigningDate());
+    assertEquals(
+        SIGNING_DATE, printCertificateMetadataConverter.convert(METADATA_DTO).getSigningDate());
   }
 
   @Test
   void shallConvertRecipientLogo() {
-    assertEquals(RECIPIENT_LOGO,
-        printCertificateMetadataConverter.convert(METADATA_DTO).getRecipientLogo());
+    assertEquals(
+        RECIPIENT_LOGO, printCertificateMetadataConverter.convert(METADATA_DTO).getRecipientLogo());
   }
 
   @Test
   void shallConvertRecipientName() {
-    assertEquals(RECIPIENT_NAME,
-        printCertificateMetadataConverter.convert(METADATA_DTO).getRecipientName());
+    assertEquals(
+        RECIPIENT_NAME, printCertificateMetadataConverter.convert(METADATA_DTO).getRecipientName());
   }
 
   @Test
   void shallConvertRecipientId() {
-    assertEquals(RECIPIENT_ID,
-        printCertificateMetadataConverter.convert(METADATA_DTO).getRecipientId());
+    assertEquals(
+        RECIPIENT_ID, printCertificateMetadataConverter.convert(METADATA_DTO).getRecipientId());
   }
 
   @Test
   void shallConvertApplicationOrigin() {
-    assertEquals(APPLICATION_ORIGIN,
+    assertEquals(
+        APPLICATION_ORIGIN,
         printCertificateMetadataConverter.convert(METADATA_DTO).getApplicationOrigin());
   }
 
@@ -138,25 +158,34 @@ class PrintCertificateMetadataConverterTest {
 
   @Test
   void shallConvertDescription() {
-    assertEquals(DESCRIPTION,
-        printCertificateMetadataConverter.convert(METADATA_DTO).getDescription());
+    assertEquals(
+        DESCRIPTION, printCertificateMetadataConverter.convert(METADATA_DTO).getDescription());
   }
 
   @Test
   void shallConvertGeneralPrintText() {
-    assertAll(() -> {
-      assertEquals("leftMarginInfoText",
-          printCertificateMetadataConverter.convert(METADATA_DTO).getGeneralPrintText()
-              .getLeftMarginInfoText());
-      assertEquals("draftAlertInfoText",
-          printCertificateMetadataConverter.convert(METADATA_DTO).getGeneralPrintText()
-              .getDraftAlertInfoText());
-    });
+    assertAll(
+        () -> {
+          assertEquals(
+              "leftMarginInfoText",
+              printCertificateMetadataConverter
+                  .convert(METADATA_DTO)
+                  .getGeneralPrintText()
+                  .getLeftMarginInfoText());
+          assertEquals(
+              "draftAlertInfoText",
+              printCertificateMetadataConverter
+                  .convert(METADATA_DTO)
+                  .getGeneralPrintText()
+                  .getDraftAlertInfoText());
+        });
   }
 
   @Test
   void shallConvertGeneralPrintTextWhenMissing() {
-    assertNull(printCertificateMetadataConverter.convert(METADATA_DTO_GENERAL_TEXT_MISSING)
-        .getGeneralPrintText());
+    assertNull(
+        printCertificateMetadataConverter
+            .convert(METADATA_DTO_GENERAL_TEXT_MISSING)
+            .getGeneralPrintText());
   }
 }

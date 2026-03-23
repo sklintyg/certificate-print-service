@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.certificateprintservice.playwright.certificate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,42 +33,38 @@ class ElementValueConverterTest {
 
   @Test
   void shouldReturnValueForText() {
-    final var result = ElementValueConverter.html(
-        ElementValueText.builder()
-            .text("Example text for value")
-            .build()
-    );
+    final var result =
+        ElementValueConverter.html(
+            ElementValueText.builder().text("Example text for value").build());
 
     assertEquals(
-        "<p class=\"text-sm italic px-[5mm]\">Example text for value</p>",
-        result.toString()
-    );
+        "<p class=\"text-sm italic px-[5mm]\">Example text for value</p>", result.toString());
   }
 
   @Test
   void shouldReturnValueForList() {
-    final var result = ElementValueConverter.html(
-        ElementValueList.builder()
-            .list(List.of("Example text for value", "Example 2"))
-            .build()
-    );
+    final var result =
+        ElementValueConverter.html(
+            ElementValueList.builder()
+                .list(List.of("Example text for value", "Example 2"))
+                .build());
 
     assertEquals(
         "<p class=\"text-sm italic px-[5mm]\">Example text for value, Example 2</p>",
-        result.toString()
-    );
+        result.toString());
   }
 
   @Test
   void shouldReturnValueTable() {
-    final var result = BasicElementFactory.table(
-        ElementValueTable.builder()
-            .headings(List.of("H1", "H2"))
-            .values(List.of(List.of("D1", "D2"), List.of("D11", "D21")))
-            .build()
-    );
+    final var result =
+        BasicElementFactory.table(
+            ElementValueTable.builder()
+                .headings(List.of("H1", "H2"))
+                .values(List.of(List.of("D1", "D2"), List.of("D11", "D21")))
+                .build());
 
-    assertEquals("""
+    assertEquals(
+        """
             <table class="text-sm mx-[5mm]">
              <tr class="border-b border-black border-solid">
               <th class="font-bold pr-[10mm]">H1</th>
@@ -64,26 +78,26 @@ class ElementValueConverterTest {
               <td>D11</td>
               <td>D21</td>
              </tr>
-            </table>"""
-        , result.toString());
+            </table>""",
+        result.toString());
   }
 
   @Test
   void shouldReturnValueForLabeledList() {
-    final var result = ElementValueConverter.html(
-        ElementValueLabeledList.builder()
-            .list(List.of(
-                ElementValueLabeledText.builder()
-                    .label("Label 1")
-                    .text("Example text for value")
-                    .build(),
-                ElementValueLabeledText.builder()
-                    .label("Label 2")
-                    .text("Example 2")
-                    .build()
-            ))
-            .build()
-    );
+    final var result =
+        ElementValueConverter.html(
+            ElementValueLabeledList.builder()
+                .list(
+                    List.of(
+                        ElementValueLabeledText.builder()
+                            .label("Label 1")
+                            .text("Example text for value")
+                            .build(),
+                        ElementValueLabeledText.builder()
+                            .label("Label 2")
+                            .text("Example 2")
+                            .build()))
+                .build());
 
     assertEquals(
         """
@@ -97,7 +111,6 @@ class ElementValueConverterTest {
               <p class="text-sm italic px-[5mm]">Example 2</p>
              </div>
             </div>""",
-        result.toString()
-    );
+        result.toString());
   }
 }

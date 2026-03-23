@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.certificateprintservice.playwright.document;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -53,53 +71,53 @@ class ContentTest {
   private static final String SIGN_DATE_HEADER = "Intyget signerades:";
   private static final String SKICKA_INTYG_TILL_MOTTAGARE = "Skicka intyg till mottagare";
   private static final String KAN_EJ_SKICKA_INTYG_TILL_MOTTAGARE = "Hantera intyg";
-  private static final String INFO_1177 = "Du kan hantera ditt intyg genom att logga in på 1177.se Där kan du till exempel skicka intyget till mottagaren";
-  private static final String KAN_EJ_SKICKA_INFO_1177 = "Du kan hantera ditt intyg genom att logga in på 1177.se";
-  private static final String DRAFT_ALERT_MESSAGE = "Detta är en utskrift av ett elektroniskt intygsutkast och ska INTE skickas till %s.";
-  private static final String SENT_ALERT_MESSAGE = "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren. Notera att intyget redan har skickats till %s.";
-  private static final String SIGNED_ALERT_MESSAGE = "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.";
+  private static final String INFO_1177 =
+      "Du kan hantera ditt intyg genom att logga in på 1177.se Där kan du till exempel skicka intyget till mottagaren";
+  private static final String KAN_EJ_SKICKA_INFO_1177 =
+      "Du kan hantera ditt intyg genom att logga in på 1177.se";
+  private static final String DRAFT_ALERT_MESSAGE =
+      "Detta är en utskrift av ett elektroniskt intygsutkast och ska INTE skickas till %s.";
+  private static final String SENT_ALERT_MESSAGE =
+      "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren. Notera att intyget redan har skickats till %s.";
+  private static final String SIGNED_ALERT_MESSAGE =
+      "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.";
   private static final String DRAFT_ALERT_TEXT = "arbetsgivaren";
 
-  private static final List<Question> SUB_QUESTIONS = List.of(Question.builder()
-      .id(SUB_QUESTION_ID)
-      .name(SUB_QUESTION_NAME)
-      .subQuestions(Collections.emptyList())
-      .value(ElementValueText.builder()
-          .text(SUB_QUESTION_VALUE)
-          .build())
-      .build());
+  private static final List<Question> SUB_QUESTIONS =
+      List.of(
+          Question.builder()
+              .id(SUB_QUESTION_ID)
+              .name(SUB_QUESTION_NAME)
+              .subQuestions(Collections.emptyList())
+              .value(ElementValueText.builder().text(SUB_QUESTION_VALUE).build())
+              .build());
 
-  private static final List<Question> QUESTIONS = List.of(
-      Question.builder()
-          .id(QUESTION_ID)
-          .name(QUESTION_NAME)
-          .value(ElementValueText.builder()
-              .text(QUESTION_VALUE)
-              .build())
-          .subQuestions(SUB_QUESTIONS)
-          .build());
+  private static final List<Question> QUESTIONS =
+      List.of(
+          Question.builder()
+              .id(QUESTION_ID)
+              .name(QUESTION_NAME)
+              .value(ElementValueText.builder().text(QUESTION_VALUE).build())
+              .subQuestions(SUB_QUESTIONS)
+              .build());
 
-  private final static List<Category> CATEGORIES = List.of(
-      Category.builder()
-          .id(CATEGORY_ID)
-          .name(CATEGORY_NAME)
-          .questions(QUESTIONS)
-          .build());
+  private static final List<Category> CATEGORIES =
+      List.of(Category.builder().id(CATEGORY_ID).name(CATEGORY_NAME).questions(QUESTIONS).build());
 
-
-  private final Content.ContentBuilder contentBuilder = Content.builder()
-      .categories(CATEGORIES)
-      .certificateName(CERTIFICATE_NAME)
-      .certificateType(CERTIFICATE_TYPE)
-      .certificateVersion(CERTIFICATE_VERSION)
-      .recipientName(RECIPIENT_NAME)
-      .personId(PERSON_ID)
-      .issuerName(ISSUER_NAME)
-      .issuingUnit(ISSUING_UNIT)
-      .issuingUnitInfo(List.of(ADDRESS, ZIP_CODE, CITY))
-      .certificateName(CERTIFICATE_NAME)
-      .draftAlertInfoText(DRAFT_ALERT_TEXT)
-      .description(DESCRIPTION);
+  private final Content.ContentBuilder contentBuilder =
+      Content.builder()
+          .categories(CATEGORIES)
+          .certificateName(CERTIFICATE_NAME)
+          .certificateType(CERTIFICATE_TYPE)
+          .certificateVersion(CERTIFICATE_VERSION)
+          .recipientName(RECIPIENT_NAME)
+          .personId(PERSON_ID)
+          .issuerName(ISSUER_NAME)
+          .issuingUnit(ISSUING_UNIT)
+          .issuingUnitInfo(List.of(ADDRESS, ZIP_CODE, CITY))
+          .certificateName(CERTIFICATE_NAME)
+          .draftAlertInfoText(DRAFT_ALERT_TEXT)
+          .description(DESCRIPTION);
 
   @Nested
   class ContentWrapper {
@@ -111,8 +129,7 @@ class ContentTest {
       assertAll(
           () -> assertEquals(DIV, element.tag(), TAG_TYPE),
           () -> assertEquals(4, element.children().size(), NUM_CHILDREN),
-          () -> assertEquals(0, attributesSize(element), NUM_ATTRIBUTES)
-      );
+          () -> assertEquals(0, attributesSize(element), NUM_ATTRIBUTES));
     }
 
     @Nested
@@ -125,8 +142,7 @@ class ContentTest {
         assertAll(
             () -> assertEquals(DIV, element.tag(), TAG_TYPE),
             () -> assertEquals(3, element.children().size(), NUM_CHILDREN),
-            () -> assertEquals(0, attributesSize(element), NUM_ATTRIBUTES)
-        );
+            () -> assertEquals(0, attributesSize(element), NUM_ATTRIBUTES));
       }
 
       @Nested
@@ -141,9 +157,11 @@ class ContentTest {
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
               () -> assertEquals("Person- /samordningsnr personId", element.text(), TEXT),
-              () -> assertEquals("absolute h-px w-[17cm] text-[1px] -z-50 text-white",
-                  attributes(element, CLASS), ATTRIBUTES)
-          );
+              () ->
+                  assertEquals(
+                      "absolute h-px w-[17cm] text-[1px] -z-50 text-white",
+                      attributes(element, CLASS),
+                      ATTRIBUTES));
         }
 
         @Test
@@ -154,75 +172,104 @@ class ContentTest {
               () -> assertEquals(H1, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
-              () -> assertEquals(
-                  "%s".formatted(CERTIFICATE_TYPE),
-                  element.text(), TEXT),
-              () -> assertEquals("absolute h-px w-[17cm] text-[1px] -z-50 text-white",
-                  attributes(element, CLASS), ATTRIBUTES)
-          );
+              () -> assertEquals("%s".formatted(CERTIFICATE_TYPE), element.text(), TEXT),
+              () ->
+                  assertEquals(
+                      "absolute h-px w-[17cm] text-[1px] -z-50 text-white",
+                      attributes(element, CLASS),
+                      ATTRIBUTES));
         }
 
         @Test
         void alertTextDraftIfCanSendElectronicllyIsTrue() {
-          final var content = contentBuilder.signDate(null).isDraft(true).isSent(false)
-              .isCanSendElectronically(true).build();
+          final var content =
+              contentBuilder
+                  .signDate(null)
+                  .isDraft(true)
+                  .isSent(false)
+                  .isCanSendElectronically(true)
+                  .build();
           final var element = content.create().child(0).child(2);
           assertAll(
               () -> assertEquals(P, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
-              () -> assertEquals(DRAFT_ALERT_MESSAGE.formatted(RECIPIENT_NAME), element.text(),
-                  TEXT),
-              () -> assertEquals("absolute h-px w-[17cm] text-[1px] -z-50 text-white",
-                  attributes(element, CLASS), ATTRIBUTES)
-          );
+              () ->
+                  assertEquals(DRAFT_ALERT_MESSAGE.formatted(RECIPIENT_NAME), element.text(), TEXT),
+              () ->
+                  assertEquals(
+                      "absolute h-px w-[17cm] text-[1px] -z-50 text-white",
+                      attributes(element, CLASS),
+                      ATTRIBUTES));
         }
 
         @Test
         void alertTextDraftIfCanSendElectronicllyIsFalse() {
-          final var content = contentBuilder.signDate(null).isDraft(true).isSent(false)
-              .isCanSendElectronically(false).build();
+          final var content =
+              contentBuilder
+                  .signDate(null)
+                  .isDraft(true)
+                  .isSent(false)
+                  .isCanSendElectronically(false)
+                  .build();
           final var element = content.create().child(0).child(2);
           assertAll(
               () -> assertEquals(P, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
-              () -> assertEquals(DRAFT_ALERT_MESSAGE.formatted("arbetsgivaren"), element.text(),
-                  TEXT),
-              () -> assertEquals("absolute h-px w-[17cm] text-[1px] -z-50 text-white",
-                  attributes(element, CLASS), ATTRIBUTES)
-          );
+              () ->
+                  assertEquals(
+                      DRAFT_ALERT_MESSAGE.formatted("arbetsgivaren"), element.text(), TEXT),
+              () ->
+                  assertEquals(
+                      "absolute h-px w-[17cm] text-[1px] -z-50 text-white",
+                      attributes(element, CLASS),
+                      ATTRIBUTES));
         }
 
         @Test
         void alertTextSigned() {
-          final var content = contentBuilder.signDate(SIGN_DATE).isDraft(false).isSent(false)
-              .isCanSendElectronically(true)
-              .build();
+          final var content =
+              contentBuilder
+                  .signDate(SIGN_DATE)
+                  .isDraft(false)
+                  .isSent(false)
+                  .isCanSendElectronically(true)
+                  .build();
           final var element = content.create().child(0).child(2);
           assertAll(
               () -> assertEquals(P, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
               () -> assertEquals(SIGNED_ALERT_MESSAGE, element.text(), TEXT),
-              () -> assertEquals("absolute h-px w-[17cm] text-[1px] -z-50 text-white",
-                  attributes(element, CLASS), ATTRIBUTES));
+              () ->
+                  assertEquals(
+                      "absolute h-px w-[17cm] text-[1px] -z-50 text-white",
+                      attributes(element, CLASS),
+                      ATTRIBUTES));
         }
 
         @Test
         void alertTextSent() {
-          final var content = contentBuilder.signDate(SIGN_DATE).isDraft(false).isSent(true)
-              .isCanSendElectronically(true)
-              .build();
+          final var content =
+              contentBuilder
+                  .signDate(SIGN_DATE)
+                  .isDraft(false)
+                  .isSent(true)
+                  .isCanSendElectronically(true)
+                  .build();
           final var element = content.create().child(0).child(2);
           assertAll(
               () -> assertEquals(P, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
-              () -> assertEquals(SENT_ALERT_MESSAGE.formatted(RECIPIENT_NAME), element.text(),
-                  TEXT),
-              () -> assertEquals("absolute h-px w-[17cm] text-[1px] -z-50 text-white",
-                  attributes(element, CLASS), ATTRIBUTES));
+              () ->
+                  assertEquals(SENT_ALERT_MESSAGE.formatted(RECIPIENT_NAME), element.text(), TEXT),
+              () ->
+                  assertEquals(
+                      "absolute h-px w-[17cm] text-[1px] -z-50 text-white",
+                      attributes(element, CLASS),
+                      ATTRIBUTES));
         }
       }
     }
@@ -238,9 +285,11 @@ class ContentTest {
             () -> assertEquals(DIV, element.tag(), TAG_TYPE),
             () -> assertEquals(5, element.children().size(), NUM_CHILDREN),
             () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
-            () -> assertEquals(
-                "box-decoration-clone border border-solid border-black mb-[5mm] pb-[3mm]",
-                attributes(element, CLASS), ATTRIBUTES));
+            () ->
+                assertEquals(
+                    "box-decoration-clone border border-solid border-black mb-[5mm] pb-[3mm]",
+                    attributes(element, CLASS),
+                    ATTRIBUTES));
       }
 
       @Nested
@@ -255,9 +304,11 @@ class ContentTest {
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
               () -> assertEquals(CATEGORY_NAME, element.text(), TEXT),
-              () -> assertEquals(
-                  "text-base font-bold uppercase border-b border-black border-solid px-[5mm]",
-                  attributes(element, CLASS), ATTRIBUTES));
+              () ->
+                  assertEquals(
+                      "text-base font-bold uppercase border-b border-black border-solid px-[5mm]",
+                      attributes(element, CLASS),
+                      ATTRIBUTES));
         }
 
         @Test
@@ -269,9 +320,11 @@ class ContentTest {
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
               () -> assertEquals(QUESTION_NAME, element.text(), TEXT),
-              () -> assertEquals("text-sm font-bold pt-[1mm] px-[5mm]", attributes(element, CLASS),
-                  ATTRIBUTES)
-          );
+              () ->
+                  assertEquals(
+                      "text-sm font-bold pt-[1mm] px-[5mm]",
+                      attributes(element, CLASS),
+                      ATTRIBUTES));
         }
 
         @Test
@@ -283,9 +336,8 @@ class ContentTest {
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
               () -> assertEquals(QUESTION_VALUE, element.text(), TEXT),
-              () -> assertEquals("text-sm italic px-[5mm]", attributes(element, CLASS),
-                  ATTRIBUTES)
-          );
+              () ->
+                  assertEquals("text-sm italic px-[5mm]", attributes(element, CLASS), ATTRIBUTES));
         }
 
         @Test
@@ -297,9 +349,11 @@ class ContentTest {
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
               () -> assertEquals(SUB_QUESTION_NAME, element.text(), TEXT),
-              () -> assertEquals("text-sm font-bold pt-[1mm] px-[5mm] text-neutral-600",
-                  attributes(element, CLASS), ATTRIBUTES)
-          );
+              () ->
+                  assertEquals(
+                      "text-sm font-bold pt-[1mm] px-[5mm] text-neutral-600",
+                      attributes(element, CLASS),
+                      ATTRIBUTES));
         }
 
         @Test
@@ -311,8 +365,8 @@ class ContentTest {
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
               () -> assertEquals(SUB_QUESTION_VALUE, element.text(), TEXT),
-              () -> assertEquals("text-sm italic px-[5mm]", attributes(element, CLASS), ATTRIBUTES)
-          );
+              () ->
+                  assertEquals("text-sm italic px-[5mm]", attributes(element, CLASS), ATTRIBUTES));
         }
       }
     }
@@ -328,8 +382,7 @@ class ContentTest {
             () -> assertEquals(DIV, element.tag(), TAG_TYPE),
             () -> assertEquals(1, element.children().size(), NUM_CHILDREN),
             () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
-            () -> assertEquals("break-inside-avoid", attributes(element, CLASS), ATTRIBUTES)
-        );
+            () -> assertEquals("break-inside-avoid", attributes(element, CLASS), ATTRIBUTES));
       }
 
       @Test
@@ -340,8 +393,7 @@ class ContentTest {
             () -> assertEquals(DIV, element.tag(), TAG_TYPE),
             () -> assertEquals(3, element.children().size(), NUM_CHILDREN),
             () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
-            () -> assertEquals("break-inside-avoid", attributes(element, CLASS), ATTRIBUTES)
-        );
+            () -> assertEquals("break-inside-avoid", attributes(element, CLASS), ATTRIBUTES));
       }
 
       @Nested
@@ -355,8 +407,7 @@ class ContentTest {
               () -> assertEquals(DIV, element.tag(), TAG_TYPE),
               () -> assertEquals(5, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
-              () -> assertEquals("grid mt-[5mm]", attributes(element, CLASS), ATTRIBUTES)
-          );
+              () -> assertEquals("grid mt-[5mm]", attributes(element, CLASS), ATTRIBUTES));
         }
 
         @Test
@@ -367,8 +418,7 @@ class ContentTest {
               () -> assertEquals(DIV, element.tag(), TAG_TYPE),
               () -> assertEquals(2, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
-              () -> assertEquals("grid mt-[5mm]", attributes(element, CLASS), ATTRIBUTES)
-          );
+              () -> assertEquals("grid mt-[5mm]", attributes(element, CLASS), ATTRIBUTES));
         }
 
         @Test
@@ -379,8 +429,7 @@ class ContentTest {
               () -> assertEquals(DIV, element.tag(), TAG_TYPE),
               () -> assertEquals(5, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
-              () -> assertEquals("grid mt-[5mm]", attributes(element, CLASS), ATTRIBUTES)
-          );
+              () -> assertEquals("grid mt-[5mm]", attributes(element, CLASS), ATTRIBUTES));
         }
 
         @Test
@@ -391,8 +440,7 @@ class ContentTest {
               () -> assertEquals(DIV, element.tag(), TAG_TYPE),
               () -> assertEquals(2, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
-              () -> assertEquals("grid mt-[5mm]", attributes(element, CLASS), ATTRIBUTES)
-          );
+              () -> assertEquals("grid mt-[5mm]", attributes(element, CLASS), ATTRIBUTES));
         }
 
         @Nested
@@ -407,8 +455,7 @@ class ContentTest {
                 () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
                 () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
                 () -> assertEquals(ISSUER_NAME_HEADER, element.text(), TEXT),
-                () -> assertEquals("font-bold", attributes(element, CLASS), ATTRIBUTES)
-            );
+                () -> assertEquals("font-bold", attributes(element, CLASS), ATTRIBUTES));
           }
 
           @Test
@@ -419,8 +466,7 @@ class ContentTest {
                 () -> assertEquals(P, element.tag(), TAG_TYPE),
                 () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
                 () -> assertEquals(0, attributesSize(element), ATTRIBUTES),
-                () -> assertEquals(ISSUER_NAME, element.text(), TEXT)
-            );
+                () -> assertEquals(ISSUER_NAME, element.text(), TEXT));
           }
         }
 
@@ -436,8 +482,7 @@ class ContentTest {
                 () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
                 () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
                 () -> assertEquals(CONTACT_INFO_HEADER, element.text(), TEXT),
-                () -> assertEquals("font-bold", attributes(element, CLASS), ATTRIBUTES)
-            );
+                () -> assertEquals("font-bold", attributes(element, CLASS), ATTRIBUTES));
           }
 
           @Test
@@ -448,8 +493,7 @@ class ContentTest {
                 () -> assertEquals(P, element.tag(), TAG_TYPE),
                 () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
                 () -> assertEquals(0, attributesSize(element), ATTRIBUTES),
-                () -> assertEquals(ISSUING_UNIT, element.text(), TEXT)
-            );
+                () -> assertEquals(ISSUING_UNIT, element.text(), TEXT));
           }
 
           @Test
@@ -460,8 +504,7 @@ class ContentTest {
                 () -> assertEquals(P, element.tag(), TAG_TYPE),
                 () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
                 () -> assertEquals(0, attributesSize(element), ATTRIBUTES),
-                () -> assertEquals(ADDRESS, element.text(), TEXT)
-            );
+                () -> assertEquals(ADDRESS, element.text(), TEXT));
           }
 
           @Test
@@ -472,8 +515,7 @@ class ContentTest {
                 () -> assertEquals(P, element.tag(), TAG_TYPE),
                 () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
                 () -> assertEquals(0, attributesSize(element), ATTRIBUTES),
-                () -> assertEquals(ZIP_CODE, element.text(), TEXT)
-            );
+                () -> assertEquals(ZIP_CODE, element.text(), TEXT));
           }
 
           @Test
@@ -484,8 +526,7 @@ class ContentTest {
                 () -> assertEquals(P, element.tag(), TAG_TYPE),
                 () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
                 () -> assertEquals(0, attributesSize(element), ATTRIBUTES),
-                () -> assertEquals(CITY, element.text(), TEXT)
-            );
+                () -> assertEquals(CITY, element.text(), TEXT));
           }
         }
 
@@ -501,8 +542,7 @@ class ContentTest {
                 () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
                 () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
                 () -> assertEquals(SIGN_DATE_HEADER, element.text(), TEXT),
-                () -> assertEquals("font-bold", attributes(element, CLASS), ATTRIBUTES)
-            );
+                () -> assertEquals("font-bold", attributes(element, CLASS), ATTRIBUTES));
           }
 
           @Test
@@ -513,8 +553,7 @@ class ContentTest {
                 () -> assertEquals(P, element.tag(), TAG_TYPE),
                 () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
                 () -> assertEquals(0, attributesSize(element), ATTRIBUTES),
-                () -> assertEquals(SIGN_DATE, element.text(), TEXT)
-            );
+                () -> assertEquals(SIGN_DATE, element.text(), TEXT));
           }
         }
       }
@@ -531,8 +570,7 @@ class ContentTest {
             () -> assertEquals(DIV, element.tag(), TAG_TYPE),
             () -> assertEquals(5, element.children().size(), NUM_CHILDREN),
             () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
-            () -> assertEquals("break-before-page", attributes(element, CLASS), ATTRIBUTES)
-        );
+            () -> assertEquals("break-before-page", attributes(element, CLASS), ATTRIBUTES));
       }
 
       @Nested
@@ -546,8 +584,7 @@ class ContentTest {
               () -> assertEquals(STRONG, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(0, attributesSize(element), ATTRIBUTES),
-              () -> assertEquals(CERTIFICATE_NAME, element.text(), TEXT)
-          );
+              () -> assertEquals(CERTIFICATE_NAME, element.text(), TEXT));
         }
 
         @Test
@@ -559,8 +596,7 @@ class ContentTest {
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
               () -> assertEquals(DESCRIPTION, element.text(), TEXT),
-              () -> assertEquals("whitespace-pre-line", attributes(element, CLASS), ATTRIBUTES)
-          );
+              () -> assertEquals("whitespace-pre-line", attributes(element, CLASS), ATTRIBUTES));
         }
 
         @Test
@@ -568,33 +604,41 @@ class ContentTest {
           final var description =
               "This is a description with a <A href=\"http://www.test.test\">link</A>."
                   + "<BR>And a new line."
-                  + "<LINK:some-link-id>" + "<ul><li>List item 1</li><li>List item 2</li></ul>";
-          final var content = contentBuilder.description(description).isDraft(false)
-              .signDate(SIGN_DATE).build();
+                  + "<LINK:some-link-id>"
+                  + "<ul><li>List item 1</li><li>List item 2</li></ul>";
+          final var content =
+              contentBuilder.description(description).isDraft(false).signDate(SIGN_DATE).build();
           final var element = content.create().child(3).child(1);
 
           assertAll(
               () -> assertEquals(DIV, element.tag(), TAG_TYPE),
               () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
               () -> assertEquals("whitespace-pre-line", attributes(element, CLASS), ATTRIBUTES),
-              () -> assertEquals(
-                  "This is a description with a link. And a new line. List item 1 List item 2",
-                  element.text(),
-                  "Text content should have LINK tag removed and include list items"),
+              () ->
+                  assertEquals(
+                      "This is a description with a link. And a new line. List item 1 List item 2",
+                      element.text(),
+                      "Text content should have LINK tag removed and include list items"),
               () -> assertEquals(1, element.select("a").size(), "Should have one anchor tag"),
               () -> assertEquals("link", element.select("a").first().text(), "Anchor text"),
-              () -> assertEquals("http://www.test.test", element.select("a").first().attr("href"),
-                  "Anchor href"),
+              () ->
+                  assertEquals(
+                      "http://www.test.test",
+                      element.select("a").first().attr("href"),
+                      "Anchor href"),
               () -> assertEquals(1, element.select("br").size(), "Should have one br tag"),
               () -> assertEquals(1, element.select("ul").size(), "Should have one ul tag"),
-              () -> assertEquals("list-disc pl-5", element.select("ul").first().attr("class"),
-                  "UL should have list-disc pl-5 classes"),
+              () ->
+                  assertEquals(
+                      "list-disc pl-5",
+                      element.select("ul").first().attr("class"),
+                      "UL should have list-disc pl-5 classes"),
               () -> assertEquals(2, element.select("li").size(), "Should have two li tags"),
-              () -> assertEquals("List item 1", element.select("li").get(0).text(),
-                  "First li text"),
-              () -> assertEquals("List item 2", element.select("li").get(1).text(),
-                  "Second li text")
-          );
+              () ->
+                  assertEquals("List item 1", element.select("li").get(0).text(), "First li text"),
+              () ->
+                  assertEquals(
+                      "List item 2", element.select("li").get(1).text(), "Second li text"));
         }
 
         @Test
@@ -604,65 +648,59 @@ class ContentTest {
           assertAll(
               () -> assertEquals(BR, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
-              () -> assertEquals(0, attributesSize(element), ATTRIBUTES)
-          );
+              () -> assertEquals(0, attributesSize(element), ATTRIBUTES));
         }
 
         @Test
         void sendCertificateToRecipientText() {
-          final var content = contentBuilder.isDraft(true).signDate(null)
-              .isCanSendElectronically(true).build();
+          final var content =
+              contentBuilder.isDraft(true).signDate(null).isCanSendElectronically(true).build();
           final var element = content.create().child(3).child(3);
           assertAll(
               () -> assertEquals(STRONG, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(0, attributesSize(element), ATTRIBUTES),
-              () -> assertEquals(SKICKA_INTYG_TILL_MOTTAGARE, element.text(), TEXT)
-          );
+              () -> assertEquals(SKICKA_INTYG_TILL_MOTTAGARE, element.text(), TEXT));
         }
 
         @Test
         void cannotSendCertificateToRecipientText() {
-          final var content = contentBuilder.isDraft(true).signDate(null)
-              .isCanSendElectronically(false).build();
+          final var content =
+              contentBuilder.isDraft(true).signDate(null).isCanSendElectronically(false).build();
           final var element = content.create().child(3).child(3);
           assertAll(
               () -> assertEquals(STRONG, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(0, attributesSize(element), ATTRIBUTES),
-              () -> assertEquals(KAN_EJ_SKICKA_INTYG_TILL_MOTTAGARE, element.text(), TEXT)
-          );
+              () -> assertEquals(KAN_EJ_SKICKA_INTYG_TILL_MOTTAGARE, element.text(), TEXT));
         }
 
         @Test
         void info1177() {
-          final var content = contentBuilder.isDraft(true).signDate(null)
-              .isCanSendElectronically(true).build();
+          final var content =
+              contentBuilder.isDraft(true).signDate(null).isCanSendElectronically(true).build();
           final var element = content.create().child(3).child(4);
           assertAll(
               () -> assertEquals(P, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
               () -> assertEquals(INFO_1177, element.text(), TEXT),
-              () -> assertEquals("whitespace-pre-line", attributes(element, CLASS), ATTRIBUTES)
-          );
+              () -> assertEquals("whitespace-pre-line", attributes(element, CLASS), ATTRIBUTES));
         }
 
         @Test
         void cannotSendInfo1177() {
-          final var content = contentBuilder.isDraft(true).signDate(null)
-              .isCanSendElectronically(true).build();
+          final var content =
+              contentBuilder.isDraft(true).signDate(null).isCanSendElectronically(true).build();
           final var element = content.create().child(3).child(4);
           assertAll(
               () -> assertEquals(P, element.tag(), TAG_TYPE),
               () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
               () -> assertEquals(1, attributesSize(element), ATTRIBUTES),
               () -> assertEquals(INFO_1177, element.text(), TEXT),
-              () -> assertEquals("whitespace-pre-line", attributes(element, CLASS), ATTRIBUTES)
-          );
+              () -> assertEquals("whitespace-pre-line", attributes(element, CLASS), ATTRIBUTES));
         }
       }
     }
   }
-
 }

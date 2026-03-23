@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.certificateprintservice.playwright.document;
 
 import static java.util.Objects.requireNonNull;
@@ -35,20 +53,22 @@ class DocumentTest {
   private static final String TEST_TEMPLATE_FILENAME = "testCertificateTemplate.html";
   private static final int HEADER_HEIGHT = 77;
 
-  private final Document.DocumentBuilder documentBuilder = Document.builder()
-      .content(Content.builder()
-          .issuerName("issuerName")
-          .issuingUnit("issuingUnit")
-          .issuingUnitInfo(List.of("address", "zipCode", "city"))
+  private final Document.DocumentBuilder documentBuilder =
+      Document.builder()
+          .content(
+              Content.builder()
+                  .issuerName("issuerName")
+                  .issuingUnit("issuingUnit")
+                  .issuingUnitInfo(List.of("address", "zipCode", "city"))
+                  .certificateName(CERTIFICATE_NAME)
+                  .description("description")
+                  .categories(Collections.emptyList())
+                  .isDraft(true)
+                  .build())
           .certificateName(CERTIFICATE_NAME)
-          .description("description")
-          .categories(Collections.emptyList())
-          .isDraft(true)
-          .build())
-      .certificateName(CERTIFICATE_NAME)
-      .certificateType(CERTIFICATE_TYPE)
-      .certificateVersion(CERTIFICATE_VERSION)
-      .tailWindScript(TAILWIND_CSS_SCRIPT);
+          .certificateType(CERTIFICATE_TYPE)
+          .certificateVersion(CERTIFICATE_VERSION)
+          .tailWindScript(TAILWIND_CSS_SCRIPT);
 
   private static final Resource template = new ClassPathResource(TEST_TEMPLATE_FILENAME);
   private static org.jsoup.nodes.Document jsoupDocument;
@@ -56,8 +76,9 @@ class DocumentTest {
 
   @BeforeAll
   static void init() throws IOException {
-    jsoupDocument = Jsoup.parse(template.getInputStream(), StandardCharsets.UTF_8.name(),
-        "", Parser.xmlParser());
+    jsoupDocument =
+        Jsoup.parse(
+            template.getInputStream(), StandardCharsets.UTF_8.name(), "", Parser.xmlParser());
   }
 
   @Nested
@@ -73,7 +94,8 @@ class DocumentTest {
       final var elementBefore = jsoupDocument.getElementById(STYLE);
       final var elementAfter = document.build(template, HEADER_HEIGHT).getElementById(STYLE);
       assertEquals("", requireNonNull(elementBefore).text());
-      assertEquals("@page { margin: calc(%spx + 16mm) 20mm 39mm 20mm; }".formatted(HEADER_HEIGHT),
+      assertEquals(
+          "@page { margin: calc(%spx + 16mm) 20mm 39mm 20mm; }".formatted(HEADER_HEIGHT),
           requireNonNull(elementAfter).text());
     }
 
@@ -90,7 +112,8 @@ class DocumentTest {
       final var elementBefore = jsoupDocument.getElementById(TITLE);
       final var elementAfter = document.build(template, HEADER_HEIGHT).getElementById(TITLE);
       assertEquals("", requireNonNull(elementBefore).text());
-      assertEquals("%s (%s v%s)".formatted(CERTIFICATE_NAME, CERTIFICATE_TYPE, CERTIFICATE_VERSION),
+      assertEquals(
+          "%s (%s v%s)".formatted(CERTIFICATE_NAME, CERTIFICATE_TYPE, CERTIFICATE_VERSION),
           requireNonNull(elementAfter).text());
     }
 
@@ -99,8 +122,9 @@ class DocumentTest {
       final var elementBefore = jsoupDocument.getElementById(SCRIPT);
       final var elementAfter = document.build(template, HEADER_HEIGHT).getElementById(SCRIPT);
       assertNull(requireNonNull(elementBefore).attribute(SRC));
-      assertEquals("data:text/javascript;base64, %s".formatted(TAILWIND_CSS_SCRIPT), requireNonNull(
-          requireNonNull(elementAfter).attribute(SRC)).getValue());
+      assertEquals(
+          "data:text/javascript;base64, %s".formatted(TAILWIND_CSS_SCRIPT),
+          requireNonNull(requireNonNull(elementAfter).attribute(SRC)).getValue());
     }
   }
 
@@ -117,7 +141,8 @@ class DocumentTest {
       final var elementBefore = jsoupDocument.getElementById(STYLE);
       final var elementAfter = document.build(template, HEADER_HEIGHT).getElementById(STYLE);
       assertEquals("", requireNonNull(elementBefore).text());
-      assertEquals("@page { margin: calc(%spx + 16mm) 20mm 39mm 20mm; }".formatted(HEADER_HEIGHT),
+      assertEquals(
+          "@page { margin: calc(%spx + 16mm) 20mm 39mm 20mm; }".formatted(HEADER_HEIGHT),
           requireNonNull(elementAfter).text());
     }
 
@@ -129,13 +154,13 @@ class DocumentTest {
       assertNotEquals(0, requireNonNull(elementAfter).children().size());
     }
 
-
     @Test
     void shouldSetTitle() throws IOException {
       final var elementBefore = jsoupDocument.getElementById(TITLE);
       final var elementAfter = document.build(template, HEADER_HEIGHT).getElementById(TITLE);
       assertEquals("", requireNonNull(elementBefore).text());
-      assertEquals("%s (%s v%s)".formatted(CERTIFICATE_NAME, CERTIFICATE_TYPE, CERTIFICATE_VERSION),
+      assertEquals(
+          "%s (%s v%s)".formatted(CERTIFICATE_NAME, CERTIFICATE_TYPE, CERTIFICATE_VERSION),
           requireNonNull(elementAfter).text());
     }
 
@@ -144,9 +169,9 @@ class DocumentTest {
       final var elementBefore = jsoupDocument.getElementById(SCRIPT);
       final var elementAfter = document.build(template, HEADER_HEIGHT).getElementById(SCRIPT);
       assertNull(requireNonNull(elementBefore).attribute(SRC));
-      assertEquals("data:text/javascript;base64, %s".formatted(TAILWIND_CSS_SCRIPT), requireNonNull(
-          requireNonNull(elementAfter).attribute(SRC)).getValue());
+      assertEquals(
+          "data:text/javascript;base64, %s".formatted(TAILWIND_CSS_SCRIPT),
+          requireNonNull(requireNonNull(elementAfter).attribute(SRC)).getValue());
     }
   }
-
 }

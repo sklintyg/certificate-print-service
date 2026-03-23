@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.certificateprintservice.playwright.document;
 
 import lombok.AccessLevel;
@@ -14,14 +32,16 @@ public class Constants {
   public static final String HREF = "href";
   public static final String CONTENT = "content";
 
-  public static final String HEADER_STYLE = """
+  public static final String HEADER_STYLE =
+      """
       margin: 10mm 20mm;
       display: grid;
       width: 17cm;
       font-family: 'Liberation Sans', sans-serif;
       font-size: 10pt;""";
 
-  public static final String FOOTER_STYLE = """
+  public static final String FOOTER_STYLE =
+      """
       margin: 0 20mm;
       width: 17cm;
       height: 25mm;
@@ -31,7 +51,8 @@ public class Constants {
       font-family: 'Liberation Sans', sans-serif;
       font-size: 10pt;""";
 
-  public static final String LEFT_MARGIN_INFO_STYLE = """
+  public static final String LEFT_MARGIN_INFO_STYLE =
+      """
       position: absolute;
       left: 1cm;
       bottom: 35mm;
@@ -40,7 +61,8 @@ public class Constants {
       font-family: 'Liberation Sans', sans-serif;
       font-size: 10pt;""";
 
-  public static final String RIGHT_MARGIN_INFO_STYLE = """
+  public static final String RIGHT_MARGIN_INFO_STYLE =
+      """
       position: absolute;
       left: 20cm;
       bottom: 35mm;
@@ -50,7 +72,8 @@ public class Constants {
       font-family: 'Liberation Sans', sans-serif;
       font-size: 10pt;""";
 
-  public static final String WATERMARK_STYLE = """
+  public static final String WATERMARK_STYLE =
+      """
       position: absolute;
       top: calc(50% - 8mm);
       left: 50%;
@@ -60,5 +83,4 @@ public class Constants {
       z-index: -1;
       font-family: 'Liberation Sans', sans-serif;
       font-size: 100pt;""";
-
 }
