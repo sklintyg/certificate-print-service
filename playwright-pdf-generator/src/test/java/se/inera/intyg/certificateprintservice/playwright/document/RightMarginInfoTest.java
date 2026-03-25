@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.certificateprintservice.playwright.document;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -21,9 +39,8 @@ class RightMarginInfoTest {
   private static final String CERTIFICATE_ID = "certificateId";
   private static final String RIGHT_MARGIN_TEXT = "Intygs-ID: %s";
 
-  private final RightMarginInfo rightMarginInfo = RightMarginInfo.builder()
-      .certificateId(CERTIFICATE_ID)
-      .build();
+  private final RightMarginInfo rightMarginInfo =
+      RightMarginInfo.builder().certificateId(CERTIFICATE_ID).build();
 
   @Nested
   class Wrapper {
@@ -35,11 +52,10 @@ class RightMarginInfoTest {
           () -> assertEquals(DIV, element.tag(), TAG_TYPE),
           () -> assertEquals(1, element.children().size(), NUM_CHILDREN),
           () -> assertEquals(1, element.attributes().asList().size(), NUM_ATTRIBUTES),
-          () -> assertEquals(
-              "position: absolute; left: 20cm; bottom: 35mm; width: 100%; transform: rotate(-90deg) translateY(-50%); transform-origin: top left; font-family: 'Liberation Sans', sans-serif; font-size: 10pt;",
-              attributes(element, STYLE), ATTRIBUTES)
-
-      );
+          () ->
+              assertEquals(
+                  "position: absolute; left: 20cm; bottom: 35mm; width: 100%; transform: rotate(-90deg) translateY(-50%); transform-origin: top left; font-family: 'Liberation Sans', sans-serif; font-size: 10pt;",
+                  attributes(element, STYLE), ATTRIBUTES));
     }
 
     @Nested
@@ -54,10 +70,8 @@ class RightMarginInfoTest {
             () -> assertEquals(0, element.children().size(), NUM_CHILDREN),
             () -> assertEquals(expectedText, element.text(), TEXT),
             () -> assertEquals(1, attributesSize(element), NUM_ATTRIBUTES),
-            () -> assertEquals("margin: 0;", attributes(element, STYLE), ATTRIBUTES)
-        );
+            () -> assertEquals("margin: 0;", attributes(element, STYLE), ATTRIBUTES));
       }
     }
   }
-
 }

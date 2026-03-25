@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.certificateprintservice.playwright.element;
 
 import static se.inera.intyg.certificateprintservice.playwright.element.ElementProvider.element;
@@ -15,34 +33,46 @@ public class ContentElementFactory {
   private static final String CONTACT_INFO = "Kontaktuppgifter:";
   private static final String SIGN_INFO = "Intyget signerades:";
   private static final String SEND_CERTIFICATE_TEXT = "Skicka intyg till mottagare";
-  private static final String HANDLE_CERTIFICATE_TEXT = "Du kan hantera ditt intyg genom att logga in på 1177.se Där kan du till exempel skicka intyget till mottagaren";
+  private static final String HANDLE_CERTIFICATE_TEXT =
+      "Du kan hantera ditt intyg genom att logga in på 1177.se Där kan du till exempel skicka intyget till mottagaren";
   private static final String SEND_CERTIFICATE_TEXT_HANDLE_CERTIFICATE = "Hantera intyg";
-  private static final String HANDLE_CERTIFICATE_TEXT_HANDLE_CERTIFICATE = "Du kan hantera ditt intyg genom att logga in på 1177.se";
+  private static final String HANDLE_CERTIFICATE_TEXT_HANDLE_CERTIFICATE =
+      "Du kan hantera ditt intyg genom att logga in på 1177.se";
 
-  private static final String INVISIBLE_STYLE = "absolute h-px w-[17cm] text-[1px] -z-50 text-white";
+  private static final String INVISIBLE_STYLE =
+      "absolute h-px w-[17cm] text-[1px] -z-50 text-white";
 
-  public static Element hiddenAccessibleHeader(String name, String type, String version,
-      String recipientName, String personId, boolean isDraft,
-      boolean isSent, boolean isCanSendElectronically, String draftAlertInfoText) {
+  public static Element hiddenAccessibleHeader(
+      String name,
+      String type,
+      String version,
+      String recipientName,
+      String personId,
+      boolean isDraft,
+      boolean isSent,
+      boolean isCanSendElectronically,
+      String draftAlertInfoText) {
     return element(Tag.DIV)
-        .appendChildren(List.of(
-            element(Tag.P)
-                .addClass(INVISIBLE_STYLE)
-                .text("Person- /samordningsnr %s".formatted(personId)),
-            element(Tag.H1)
-                .addClass(INVISIBLE_STYLE)
-                .text("%s".formatted(type)),
-            element(Tag.P)
-                .addClass(INVISIBLE_STYLE)
-                .text(HeaderElementFactory.alertMessage(recipientName, isDraft, isSent,
-                    isCanSendElectronically, draftAlertInfoText))
-        ));
+        .appendChildren(
+            List.of(
+                element(Tag.P)
+                    .addClass(INVISIBLE_STYLE)
+                    .text("Person- /samordningsnr %s".formatted(personId)),
+                element(Tag.H1).addClass(INVISIBLE_STYLE).text("%s".formatted(type)),
+                element(Tag.P)
+                    .addClass(INVISIBLE_STYLE)
+                    .text(
+                        HeaderElementFactory.alertMessage(
+                            recipientName,
+                            isDraft,
+                            isSent,
+                            isCanSendElectronically,
+                            draftAlertInfoText))));
   }
 
-  public static Element issuerInfo(String name, String unit, List<String> unitInfo,
-      String signDate, boolean isDraft) {
-    final var issuerInfo = element(Tag.DIV)
-        .addClass("break-inside-avoid");
+  public static Element issuerInfo(
+      String name, String unit, List<String> unitInfo, String signDate, boolean isDraft) {
+    final var issuerInfo = element(Tag.DIV).addClass("break-inside-avoid");
 
     if (!isDraft) {
       issuerInfo.appendChild(issuerName(name));
@@ -60,38 +90,40 @@ public class ContentElementFactory {
   private static Element issuerName(String issuerName) {
     return element(Tag.DIV)
         .addClass("grid mt-[5mm]")
-        .appendChildren(List.of(
-            element(Tag.P).addClass("font-bold").text(ISSUER),
-            element(Tag.P).text(issuerName)));
+        .appendChildren(
+            List.of(
+                element(Tag.P).addClass("font-bold").text(ISSUER),
+                element(Tag.P).text(issuerName)));
   }
 
   private static Element contactInfo(String issuingUnit, List<String> issuingUnitInfo) {
     return element(Tag.DIV)
         .addClass("grid mt-[5mm]")
-        .appendChildren(List.of(
-            element(Tag.P).addClass("font-bold").text(CONTACT_INFO),
-            element(Tag.P).text(issuingUnit)))
-        .appendChildren(issuingUnitInfo.stream().map(i -> element(Tag.P).text(i))
-            .toList());
+        .appendChildren(
+            List.of(
+                element(Tag.P).addClass("font-bold").text(CONTACT_INFO),
+                element(Tag.P).text(issuingUnit)))
+        .appendChildren(issuingUnitInfo.stream().map(i -> element(Tag.P).text(i)).toList());
   }
 
   private static Element signingDate(String signDate) {
     return element(Tag.DIV)
         .addClass("grid mt-[5mm]")
-        .appendChildren(List.of(
-            element(Tag.P).addClass("font-bold").text(SIGN_INFO),
-            element(Tag.P).text(signDate)));
+        .appendChildren(
+            List.of(
+                element(Tag.P).addClass("font-bold").text(SIGN_INFO),
+                element(Tag.P).text(signDate)));
   }
 
-  public static Element certificateInformation(String name, String description,
-      boolean canSendElectronically) {
-    final var certificateInfo = element(Tag.DIV)
-        .addClass("break-before-page")
-        .appendChildren(List.of(
-            element(Tag.STRONG).text(name),
-            parseDescription(description),
-            element(Tag.BR)))
-        .appendChildren(citizenInfo(canSendElectronically));
+  public static Element certificateInformation(
+      String name, String description, boolean canSendElectronically) {
+    final var certificateInfo =
+        element(Tag.DIV)
+            .addClass("break-before-page")
+            .appendChildren(
+                List.of(
+                    element(Tag.STRONG).text(name), parseDescription(description), element(Tag.BR)))
+            .appendChildren(citizenInfo(canSendElectronically));
 
     setLinkColor(certificateInfo);
     return certificateInfo;
@@ -102,13 +134,16 @@ public class ContentElementFactory {
     final var container = element(Tag.DIV).addClass("whitespace-pre-line");
     final var doc = org.jsoup.Jsoup.parseBodyFragment(cleanedDescription);
 
-    doc.body().childNodes().forEach(node -> {
-      if (node instanceof org.jsoup.nodes.TextNode textNode) {
-        container.append(textNode.getWholeText());
-      } else if (node instanceof Element elementNode) {
-        appendElementNode(container, elementNode);
-      }
-    });
+    doc.body()
+        .childNodes()
+        .forEach(
+            node -> {
+              if (node instanceof org.jsoup.nodes.TextNode textNode) {
+                container.append(textNode.getWholeText());
+              } else if (node instanceof Element elementNode) {
+                appendElementNode(container, elementNode);
+              }
+            });
     return container;
   }
 
@@ -122,9 +157,9 @@ public class ContentElementFactory {
 
   private static Element createUnorderedList(Element ulElement) {
     final var listElement = element(Tag.UL).addClass("list-disc pl-5");
-    ulElement.select("li").forEach(listItem ->
-        listElement.appendChild(element(Tag.LI).html(listItem.html()))
-    );
+    ulElement
+        .select("li")
+        .forEach(listItem -> listElement.appendChild(element(Tag.LI).html(listItem.html())));
     return listElement;
   }
 
@@ -135,19 +170,16 @@ public class ContentElementFactory {
           element(Tag.P)
               .addClass("whitespace-pre-line")
               .append(HANDLE_CERTIFICATE_TEXT_HANDLE_CERTIFICATE));
-
     }
     return List.of(
         element(Tag.STRONG).text(SEND_CERTIFICATE_TEXT),
-        element(Tag.P)
-            .addClass("whitespace-pre-line")
-            .append(HANDLE_CERTIFICATE_TEXT));
+        element(Tag.P).addClass("whitespace-pre-line").append(HANDLE_CERTIFICATE_TEXT));
   }
 
   private static void setLinkColor(Element infoWrapper) {
-    infoWrapper.getAllElements().stream().flatMap(element -> element.children().stream())
+    infoWrapper.getAllElements().stream()
+        .flatMap(element -> element.children().stream())
         .filter(element -> element.tagName().equals(Tag.A.toString()))
         .forEach(element -> element.addClass("text-[#0000ee] underline"));
   }
-
 }

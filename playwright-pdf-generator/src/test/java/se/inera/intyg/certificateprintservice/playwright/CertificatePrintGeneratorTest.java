@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.certificateprintservice.playwright;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -43,27 +61,17 @@ import se.inera.intyg.certificateprintservice.playwright.document.Watermark;
 @ExtendWith(MockitoExtension.class)
 class CertificatePrintGeneratorTest {
 
-  @Mock
-  private BrowserPool browserPool;
-  @Mock
-  private PlaywrightBrowser playwrightBrowser;
-  @Mock
-  private BrowserContext browserContext;
-  @Mock
-  private Page page;
-  @Mock
-  private Locator locator;
-  @Mock
-  private ContentConverter contentConverter;
-  @Mock
-  private FooterConverter footerConverter;
-  @Mock
-  private HeaderConverter headerConverter;
-  @Mock
-  private CertificatePrintEventService certificatePrintEventService;
+  @Mock private BrowserPool browserPool;
+  @Mock private PlaywrightBrowser playwrightBrowser;
+  @Mock private BrowserContext browserContext;
+  @Mock private Page page;
+  @Mock private Locator locator;
+  @Mock private ContentConverter contentConverter;
+  @Mock private FooterConverter footerConverter;
+  @Mock private HeaderConverter headerConverter;
+  @Mock private CertificatePrintEventService certificatePrintEventService;
 
-  @InjectMocks
-  private CertificatePrintGenerator certificatePrintGenerator;
+  @InjectMocks private CertificatePrintGenerator certificatePrintGenerator;
 
   private static final String CERTIFICATE_NAME = "certificateName";
   private static final String CERTIFICATE_TYPE = "certificateType";
@@ -76,45 +84,47 @@ class CertificatePrintGeneratorTest {
   private static final String ISSUING_UNIT = "issuingUnit";
   private static final String DESCRIPTION = "description";
 
-  final static Certificate CERTIFICATE = builder()
-      .metadata(Metadata.builder().build())
-      .build();
+  static final Certificate CERTIFICATE = builder().metadata(Metadata.builder().build()).build();
 
-  private final static List<Category> CATEGORIES = List.of(
-      Category.builder()
-          .id(CATEGORY_ID)
-          .name(CATEGORY_NAME)
-          .questions(Collections.emptyList())
-          .build());
+  private static final List<Category> CATEGORIES =
+      List.of(
+          Category.builder()
+              .id(CATEGORY_ID)
+              .name(CATEGORY_NAME)
+              .questions(Collections.emptyList())
+              .build());
 
-  private final Content contentBuilder = Content.builder()
-      .categories(CATEGORIES)
-      .certificateName(CERTIFICATE_NAME)
-      .certificateType(CERTIFICATE_TYPE)
-      .certificateVersion(CERTIFICATE_VERSION)
-      .recipientName(RECIPIENT_NAME)
-      .personId(PERSON_ID)
-      .issuingUnit(ISSUING_UNIT)
-      .issuingUnitInfo(List.of("address", "ZIP_CODE", "city"))
-      .certificateName(CERTIFICATE_NAME)
-      .description(DESCRIPTION)
-      .isDraft(true)
-      .build();
+  private final Content contentBuilder =
+      Content.builder()
+          .categories(CATEGORIES)
+          .certificateName(CERTIFICATE_NAME)
+          .certificateType(CERTIFICATE_TYPE)
+          .certificateVersion(CERTIFICATE_VERSION)
+          .recipientName(RECIPIENT_NAME)
+          .personId(PERSON_ID)
+          .issuingUnit(ISSUING_UNIT)
+          .issuingUnitInfo(List.of("address", "ZIP_CODE", "city"))
+          .certificateName(CERTIFICATE_NAME)
+          .description(DESCRIPTION)
+          .isDraft(true)
+          .build();
 
-  private final Header header = Header.builder()
-      .certificateName(CERTIFICATE_NAME)
-      .certificateType(CERTIFICATE_TYPE)
-      .certificateVersion(CERTIFICATE_VERSION)
-      .personId(PERSON_ID)
-      .recipientLogo(RECIPIENT_LOGO)
-      .recipientName(RECIPIENT_NAME)
-      .leftMarginInfo(LeftMarginInfo.builder()
-          .certificateType(CERTIFICATE_TYPE).
-          recipientName(RECIPIENT_NAME)
-          .build())
-      .watermark(Watermark.builder().build())
-      .isDraft(true)
-      .build();
+  private final Header header =
+      Header.builder()
+          .certificateName(CERTIFICATE_NAME)
+          .certificateType(CERTIFICATE_TYPE)
+          .certificateVersion(CERTIFICATE_VERSION)
+          .personId(PERSON_ID)
+          .recipientLogo(RECIPIENT_LOGO)
+          .recipientName(RECIPIENT_NAME)
+          .leftMarginInfo(
+              LeftMarginInfo.builder()
+                  .certificateType(CERTIFICATE_TYPE)
+                  .recipientName(RECIPIENT_NAME)
+                  .build())
+          .watermark(Watermark.builder().build())
+          .isDraft(true)
+          .build();
 
   private static final Resource TEMPLATE = new ClassPathResource("testCertificateTemplate.html");
   private static final Resource TAILWIND = new ClassPathResource("testTailwindScript.js");
@@ -146,8 +156,8 @@ class CertificatePrintGeneratorTest {
     @Test
     void shouldThrowIllegalStateException() {
       when(page.pdf(any(PdfOptions.class))).thenThrow(IllegalStateException.class);
-      assertThrows(IllegalStateException.class,
-          () -> certificatePrintGenerator.generate(CERTIFICATE));
+      assertThrows(
+          IllegalStateException.class, () -> certificatePrintGenerator.generate(CERTIFICATE));
     }
   }
 
@@ -156,5 +166,4 @@ class CertificatePrintGeneratorTest {
     ReflectionTestUtils.setField(certificatePrintGenerator, "tailwindScript", TAILWIND);
     assertDoesNotThrow(() -> certificatePrintGenerator.afterPropertiesSet());
   }
-
 }

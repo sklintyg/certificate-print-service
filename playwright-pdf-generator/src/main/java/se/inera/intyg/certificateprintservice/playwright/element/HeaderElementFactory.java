@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.certificateprintservice.playwright.element;
 
 import static se.inera.intyg.certificateprintservice.playwright.document.Constants.ALT;
@@ -15,61 +33,69 @@ import org.jsoup.nodes.Element;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HeaderElementFactory {
 
-  private static final String DRAFT_ALERT_MESSAGE = "Detta är en utskrift av ett elektroniskt intygsutkast och ska INTE skickas till %s.";
-  private static final String SENT_ALERT_MESSAGE = "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren. Notera att intyget redan har skickats till %s.";
-  private static final String SIGNED_ALERT_MESSAGE = "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.";
+  private static final String DRAFT_ALERT_MESSAGE =
+      "Detta är en utskrift av ett elektroniskt intygsutkast och ska INTE skickas till %s.";
+  private static final String SENT_ALERT_MESSAGE =
+      "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren. Notera att intyget redan har skickats till %s.";
+  private static final String SIGNED_ALERT_MESSAGE =
+      "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.";
   private static final String PERSON_SAMORDNINGS_NR = "Person- /samordningsnr";
 
   public static Element recipientLogo(byte[] logoBytes, String recipientName) {
     final var logoBase64 = new String(Base64.getEncoder().encode(logoBytes));
-    return element(Tag.DIV).appendChild(
-        element(Tag.IMG)
-            .attr(STYLE, "max-height: 15mm; max-width: 35mm;")
-            .attr(SRC, "data:image/png;base64, " + logoBase64)
-            .attr(ALT, "%s logotyp".formatted(recipientName))
-    );
+    return element(Tag.DIV)
+        .appendChild(
+            element(Tag.IMG)
+                .attr(STYLE, "max-height: 15mm; max-width: 35mm;")
+                .attr(SRC, "data:image/png;base64, " + logoBase64)
+                .attr(ALT, "%s logotyp".formatted(recipientName)));
   }
 
   public static Element personId(String personId) {
     return element(Tag.DIV)
         .attr(STYLE, "float: right; text-align: right; width: 100%;")
-        .appendChildren(List.of(
+        .appendChildren(
+            List.of(
                 element(Tag.P)
                     .attr(STYLE, "font-weight: bold; margin: 0;")
                     .appendText(PERSON_SAMORDNINGS_NR),
-                element(Tag.P).appendText(personId)
-                    .attr(STYLE, "margin: 0;")
-            )
-        );
+                element(Tag.P).appendText(personId).attr(STYLE, "margin: 0;")));
   }
 
   public static Element title(String name, String type, String version) {
     return element(Tag.DIV)
-        .attr(STYLE,
+        .attr(
+            STYLE,
             "font-size: 14pt; border-bottom: black solid 1px; margin: 0; padding-bottom: 1mm;")
-        .appendChildren(List.of(
-            element(Tag.P)
-                .attr(STYLE, "font-weight: bold; display: inline; margin: 0;")
-                .appendText(name),
-            element(Tag.P)
-                .attr(STYLE, "display: inline; margin: 0;")
-                .appendText(" (%s)".formatted(type))
-        ));
+        .appendChildren(
+            List.of(
+                element(Tag.P)
+                    .attr(STYLE, "font-weight: bold; display: inline; margin: 0;")
+                    .appendText(name),
+                element(Tag.P)
+                    .attr(STYLE, "display: inline; margin: 0;")
+                    .appendText(" (%s)".formatted(type))));
   }
 
-  public static Element alert(String recipientName, boolean isDraft, boolean isSent,
-      boolean isCanSendElectronically, String draftAlertInfoText) {
-    final var alertMessage = alertMessage(recipientName, isDraft, isSent, isCanSendElectronically,
-        draftAlertInfoText);
+  public static Element alert(
+      String recipientName,
+      boolean isDraft,
+      boolean isSent,
+      boolean isCanSendElectronically,
+      String draftAlertInfoText) {
+    final var alertMessage =
+        alertMessage(recipientName, isDraft, isSent, isCanSendElectronically, draftAlertInfoText);
     return element(Tag.DIV)
         .attr(STYLE, "margin-top: 5mm; padding: 3mm 5mm; border: red solid 1px;")
-        .appendChild(element(Tag.P)
-            .attr(STYLE, "margin: 0;")
-            .appendText(alertMessage));
+        .appendChild(element(Tag.P).attr(STYLE, "margin: 0;").appendText(alertMessage));
   }
 
-  public static String alertMessage(String recipientName, boolean isDraft, boolean isSent,
-      boolean isCanSendElectronically, String draftAlertInfoText) {
+  public static String alertMessage(
+      String recipientName,
+      boolean isDraft,
+      boolean isSent,
+      boolean isCanSendElectronically,
+      String draftAlertInfoText) {
     if (isDraft && !isCanSendElectronically && draftAlertInfoText != null) {
       return DRAFT_ALERT_MESSAGE.formatted(draftAlertInfoText);
     }
@@ -77,10 +103,8 @@ public class HeaderElementFactory {
       return DRAFT_ALERT_MESSAGE.formatted(recipientName);
     }
     if (isSent) {
-      return
-          SENT_ALERT_MESSAGE.formatted(recipientName);
+      return SENT_ALERT_MESSAGE.formatted(recipientName);
     }
     return SIGNED_ALERT_MESSAGE;
   }
-
 }
