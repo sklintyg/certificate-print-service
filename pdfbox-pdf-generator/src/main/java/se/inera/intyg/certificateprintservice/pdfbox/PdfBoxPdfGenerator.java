@@ -26,8 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.certificateprintservice.pdfgenerator.CustomPdfGenerator;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdf;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.AcroFormFiller;
+import se.inera.intyg.certificateprintservice.pdfbox.overlay.OverlayTextService;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfGenerator;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
 
 @Slf4j
 @Service
@@ -48,6 +50,8 @@ public class PdfBoxPdfGenerator implements CustomPdfGenerator {
       document.setAllSecurityToBeRemoved(true);
       acroFormFiller.fill(document, customPdf.getFields());
       overlayTextService.drawOverlays(document, customPdf.getMetadata());
+      // TODO: Set title for document
+      // document.getDocumentInformation().setTitle(...<add title in api>...)
       flattenAcroForm(document);
       return toBytes(document);
     } catch (IOException e) {

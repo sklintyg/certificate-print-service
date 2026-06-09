@@ -22,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueLabeledList;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueLabeledText;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueTable;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueLabeledList;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueLabeledText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueTable;
 
 class BasicElementFactoryTest {
 

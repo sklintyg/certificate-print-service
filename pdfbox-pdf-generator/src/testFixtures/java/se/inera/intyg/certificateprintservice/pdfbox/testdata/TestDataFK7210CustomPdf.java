@@ -20,7 +20,7 @@ package se.inera.intyg.certificateprintservice.pdfbox.testdata;
 
 import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.fk7210Fields;
 
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdf;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
 
 public class TestDataFK7210CustomPdf {
 

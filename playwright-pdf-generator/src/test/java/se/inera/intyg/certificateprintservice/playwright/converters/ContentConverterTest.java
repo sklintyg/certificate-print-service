@@ -24,9 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Category;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Certificate;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Metadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.Category;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.Certificate;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.Metadata;
 
 class ContentConverterTest {
 

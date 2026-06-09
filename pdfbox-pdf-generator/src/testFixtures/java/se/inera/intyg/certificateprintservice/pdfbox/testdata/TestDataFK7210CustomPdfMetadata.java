@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.certificateprintservice.pdfbox.testdata;
 
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CertificateStatus;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CertificateStatus;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 
 public class TestDataFK7210CustomPdfMetadata {
 

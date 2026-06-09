@@ -22,10 +22,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
-import se.inera.intyg.certificateprintservice.application.print.dto.custom.CertificateStatusDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPdfFieldDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPdfMetadataDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CertificateStatusDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
 
 public class TestDataCustomPrintRequest {
 

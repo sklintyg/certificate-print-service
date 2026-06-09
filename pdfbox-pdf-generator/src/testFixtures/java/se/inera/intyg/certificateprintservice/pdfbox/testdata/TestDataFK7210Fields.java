@@ -19,7 +19,7 @@
 package se.inera.intyg.certificateprintservice.pdfbox.testdata;
 
 import java.util.Map;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfFieldF;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 
 /**
  * Realistic FK7210 (Intyg om graviditet) PDF field test data.
@@ -68,16 +68,16 @@ public class TestDataFK7210Fields {
    * Returns a map of all FK7210 AcroForm field IDs to their realistic test values, as they would
    * appear in a fully filled-in certificate ready for printing.
    */
-  public static Map<String, CustomPdfFieldF> fk7210Fields() {
+  public static Map<String, CustomPdfField> fk7210Fields() {
     return Map.of(
-        PATIENT_ID_FIELD_ID, CustomPdfFieldF.builder().value(PATIENT_ID).build(),
-        BIRTH_DATE_FIELD_ID, CustomPdfFieldF.builder().value(BIRTH_DATE).build(),
-        SIGNED_DATE_FIELD_ID, CustomPdfFieldF.builder().value(SIGNED_DATE).build(),
-        SIGNED_BY_NAME_FIELD_ID, CustomPdfFieldF.builder().value(DOCTOR_NAME).build(),
-        PA_TITLE_FIELD_ID, CustomPdfFieldF.builder().value(PA_TITLE).build(),
-        SPECIALTY_FIELD_ID, CustomPdfFieldF.builder().value(SPECIALTY).build(),
-        HSA_ID_FIELD_ID, CustomPdfFieldF.builder().value(HSA_ID).build(),
-        WORKPLACE_CODE_FIELD_ID, CustomPdfFieldF.builder().value(WORKPLACE_CODE).build(),
-        CONTACT_INFORMATION_FIELD_ID, CustomPdfFieldF.builder().value(CONTACT_INFORMATION).build());
+        PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(PATIENT_ID).build(),
+        BIRTH_DATE_FIELD_ID, CustomPdfField.builder().value(BIRTH_DATE).build(),
+        SIGNED_DATE_FIELD_ID, CustomPdfField.builder().value(SIGNED_DATE).build(),
+        SIGNED_BY_NAME_FIELD_ID, CustomPdfField.builder().value(DOCTOR_NAME).build(),
+        PA_TITLE_FIELD_ID, CustomPdfField.builder().value(PA_TITLE).build(),
+        SPECIALTY_FIELD_ID, CustomPdfField.builder().value(SPECIALTY).build(),
+        HSA_ID_FIELD_ID, CustomPdfField.builder().value(HSA_ID).build(),
+        WORKPLACE_CODE_FIELD_ID, CustomPdfField.builder().value(WORKPLACE_CODE).build(),
+        CONTACT_INFORMATION_FIELD_ID, CustomPdfField.builder().value(CONTACT_INFORMATION).build());
   }
 }

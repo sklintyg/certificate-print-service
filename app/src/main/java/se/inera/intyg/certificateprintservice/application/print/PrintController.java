@@ -24,10 +24,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPrintRequestDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPrintResponseDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateRequestDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.service.CustomPrintService;
+import se.inera.intyg.certificateprintservice.application.print.general.dto.PrintCertificateRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.general.dto.PrintCertificateResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.general.service.GeneralPrintService;
 
 @RestController
 @RequestMapping("api/print")

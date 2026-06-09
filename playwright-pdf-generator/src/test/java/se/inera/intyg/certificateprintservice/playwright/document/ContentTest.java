@@ -40,9 +40,9 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Category;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Question;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.Category;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.Question;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueText;
 
 class ContentTest {
 

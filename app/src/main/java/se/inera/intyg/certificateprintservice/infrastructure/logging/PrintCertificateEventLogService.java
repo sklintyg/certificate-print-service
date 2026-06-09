@@ -26,8 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.certificateprintservice.MdcCloseableMap;
 import se.inera.intyg.certificateprintservice.MdcLogConstants;
-import se.inera.intyg.certificateprintservice.pdfgenerator.event.CertificatePrintEventSubscriber;
-import se.inera.intyg.certificateprintservice.pdfgenerator.event.model.CertificatePrintEvent;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.event.CertificatePrintEventSubscriber;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.event.model.CertificatePrintEvent;
 
 @Service
 @Slf4j

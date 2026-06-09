@@ -26,7 +26,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.jsoup.nodes.Element;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Category;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.Category;
 import se.inera.intyg.certificateprintservice.playwright.certificate.CategoryConverter;
 import se.inera.intyg.certificateprintservice.playwright.element.ContentElementFactory;
 

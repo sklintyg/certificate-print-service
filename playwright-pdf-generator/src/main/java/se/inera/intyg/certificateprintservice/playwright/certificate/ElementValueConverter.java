@@ -21,12 +21,12 @@ package se.inera.intyg.certificateprintservice.playwright.certificate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jsoup.nodes.Element;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValue;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueLabeledList;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueLabeledText;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueList;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueTable;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValue;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueLabeledList;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueLabeledText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueList;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueTable;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueText;
 import se.inera.intyg.certificateprintservice.playwright.element.BasicElementFactory;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
