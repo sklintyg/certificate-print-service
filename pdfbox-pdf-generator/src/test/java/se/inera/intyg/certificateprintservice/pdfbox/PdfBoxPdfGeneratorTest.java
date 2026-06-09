@@ -21,17 +21,15 @@ package se.inera.intyg.certificateprintservice.pdfbox;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210CustomPdf.build7210CustomPdfWithTemplate;
 import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.TAGGED_PDF_RESOURCE;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import org.apache.pdfbox.Loader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210CustomPdfMetadata;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdf;
 
 class PdfBoxPdfGeneratorTest {
 
@@ -40,36 +38,21 @@ class PdfBoxPdfGeneratorTest {
 
   @Test
   void shallThrowWhenTemplateIsNull() {
-    final var request =
-        CustomPdf.builder()
-            .template(null)
-            .metadata(TestDataFK7210CustomPdfMetadata.draftMetadata())
-            .fields(Collections.emptyMap())
-            .build();
+    final var request = build7210CustomPdfWithTemplate(null);
 
     assertThrows(IllegalArgumentException.class, () -> generator.get(request));
   }
 
   @Test
   void shallThrowWhenTemplateIsEmpty() {
-    final var request =
-        CustomPdf.builder()
-            .template(new byte[0])
-            .metadata(TestDataFK7210CustomPdfMetadata.draftMetadata())
-            .fields(Collections.emptyMap())
-            .build();
+    final var request = build7210CustomPdfWithTemplate(new byte[0]);
 
     assertThrows(IllegalArgumentException.class, () -> generator.get(request));
   }
 
   @Test
   void shallReturnNonEmptyBytesForValidTemplateWithNoFields() throws IOException {
-    final var request =
-        CustomPdf.builder()
-            .template(buildFk7210PdfTemplate())
-            .metadata(TestDataFK7210CustomPdfMetadata.fullMetadata())
-            .fields(Collections.emptyMap())
-            .build();
+    final var request = build7210CustomPdfWithTemplate(buildFk7210PdfTemplate());
 
     final var result = generator.get(request);
 
