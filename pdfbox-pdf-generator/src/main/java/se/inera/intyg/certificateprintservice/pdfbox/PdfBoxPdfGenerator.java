@@ -20,6 +20,7 @@ package se.inera.intyg.certificateprintservice.pdfbox;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
@@ -64,7 +65,7 @@ public class PdfBoxPdfGenerator implements CustomPdfGenerator {
   private byte[] toBytes(PDDocument document) throws IOException {
     try (final var out = new ByteArrayOutputStream()) {
       document.save(out);
-      return out.toByteArray();
+      return Base64.getEncoder().encode(out.toByteArray());
     }
   }
 }
