@@ -64,13 +64,6 @@ class FillPdfRequestConverterTest {
   }
 
   @Test
-  void shallConvertMetadataPatientId() {
-    final var request = buildRequest(buildMetadata(), Collections.emptyMap());
-    final var result = converter.convert(request);
-    assertEquals("191212121212", result.getMetadata().getPatientId());
-  }
-
-  @Test
   void shallConvertMetadataIsSent() {
     final var request = buildRequest(buildMetadata(), Collections.emptyMap());
     final var result = converter.convert(request);
@@ -85,26 +78,14 @@ class FillPdfRequestConverterTest {
   }
 
   @Test
-  void shallConvertFields() {
-    final var fieldOption =
-        PdfFieldFillOptionsDTO.builder()
-            .value("some-value")
-            .append(false)
-            .appearance("/Helv 9 Tf 0 g")
-            .offset(5)
-            .normalizeText(true)
-            .build();
-    final var fields = Map.of("field-id", List.of(fieldOption));
-    final var request = buildRequest(buildMetadata(), fields);
+  void shallConvertFieldValue() {
+    final var fieldOption = PdfFieldFillOptionsDTO.builder().value("some-value").build();
+    final var request = buildRequest(buildMetadata(), Map.of("field-id", fieldOption));
 
     final var result = converter.convert(request);
 
     assertEquals(1, result.getFields().size());
-    final var convertedOption = result.getFields().get("field-id").get(0);
-    assertEquals("some-value", convertedOption.getValue());
-    assertEquals("/Helv 9 Tf 0 g", convertedOption.getAppearance());
-    assertEquals(5, convertedOption.getOffset());
-    assertTrue(convertedOption.isNormalizeText());
+    assertEquals("some-value", result.getFields().get("field-id").getValue());
   }
 
   @Test
@@ -125,7 +106,6 @@ class FillPdfRequestConverterTest {
         PdfMetadataOptionsDTO.builder()
             .status(CertificateStatusDTO.DRAFT)
             .certificateId("cert-123")
-            .patientId("191212121212")
             .untaggedWatermarks(null)
             .build();
     final var request = buildRequest(metadata, Collections.emptyMap());
@@ -142,20 +122,16 @@ class FillPdfRequestConverterTest {
         .certificateId("cert-123")
         .additionalInfoText("Webcert 2.0")
         .addPageNumbers(true)
-        .overflowPageIndex(2)
         .signaturePageIndex(0)
         .signatureTagIndex(5)
         .signedDateFieldId("signed-date-field")
-        .patientId("191212121212")
-        .patientIdFieldId("patient-id-field")
         .startMcid(100)
         .untaggedWatermarks(List.of("UTKAST"))
         .build();
   }
 
   private FillPdfRequestDTO buildRequest(
-      PdfMetadataOptionsDTO metadata,
-      Map<String, List<PdfFieldFillOptionsDTO>> fields) {
+      PdfMetadataOptionsDTO metadata, Map<String, PdfFieldFillOptionsDTO> fields) {
     return FillPdfRequestDTO.builder()
         .template(TEMPLATE_BASE64)
         .metadata(metadata)

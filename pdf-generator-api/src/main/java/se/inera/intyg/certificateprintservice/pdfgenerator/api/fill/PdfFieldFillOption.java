@@ -26,8 +26,4 @@ import lombok.Value;
 public class PdfFieldFillOption {
 
   String value;
-  boolean append;
-  String appearance;
-  int offset;
-  boolean normalizeText;
 }

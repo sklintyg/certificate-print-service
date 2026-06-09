@@ -33,12 +33,9 @@ public class FillPdfMetadata {
   String certificateId;
   String additionalInfoText;
   boolean addPageNumbers;
-  Integer overflowPageIndex;
   int signaturePageIndex;
   int signatureTagIndex;
   String signedDateFieldId;
-  String patientId;
-  String patientIdFieldId;
   int startMcid;
   List<String> untaggedWatermarks;
 }

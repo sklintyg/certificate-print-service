@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.certificateprintservice.application.print;
+package se.inera.intyg.certificateprintservice.application.testdata;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -25,13 +25,13 @@ import se.inera.intyg.certificateprintservice.application.print.dto.fill.Certifi
 import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.dto.fill.PdfMetadataOptionsDTO;
 
-public class FillPdfRequestTestFixture {
+public class TestDataFillPdfRequest {
 
   public static final String VALID_TEMPLATE =
       Base64.getEncoder().encodeToString("pdf-bytes".getBytes(StandardCharsets.UTF_8));
   public static final String CERTIFICATE_ID = "cert-id";
 
-  private FillPdfRequestTestFixture() {
+  private TestDataFillPdfRequest() {
     throw new IllegalStateException("Utility class");
   }
 

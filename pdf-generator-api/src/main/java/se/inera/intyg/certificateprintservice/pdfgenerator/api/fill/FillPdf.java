@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.certificateprintservice.pdfgenerator.api.fill;
 
-import java.util.List;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Value;
@@ -29,5 +28,5 @@ public class FillPdf {
 
   byte[] template;
   FillPdfMetadata metadata;
-  Map<String, List<PdfFieldFillOption>> fields;
+  Map<String, PdfFieldFillOption> fields;
 }

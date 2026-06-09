@@ -38,7 +38,6 @@ class PdfBoxPdfGeneratorTest {
                 FillPdfMetadata.builder()
                     .status(CertificateStatus.DRAFT)
                     .certificateId("cert-id")
-                    .patientId("191212121212")
                     .build())
             .fields(java.util.Collections.emptyMap())
             .build();

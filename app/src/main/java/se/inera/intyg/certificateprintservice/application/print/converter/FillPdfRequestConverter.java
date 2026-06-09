@@ -20,7 +20,6 @@ package se.inera.intyg.certificateprintservice.application.print.converter;
 
 import java.util.Base64;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
@@ -52,38 +51,27 @@ public class FillPdfRequestConverter {
         .certificateId(dto.getCertificateId())
         .additionalInfoText(dto.getAdditionalInfoText())
         .addPageNumbers(dto.isAddPageNumbers())
-        .overflowPageIndex(dto.getOverflowPageIndex())
         .signaturePageIndex(dto.getSignaturePageIndex())
         .signatureTagIndex(dto.getSignatureTagIndex())
         .signedDateFieldId(dto.getSignedDateFieldId())
-        .patientId(dto.getPatientId())
-        .patientIdFieldId(dto.getPatientIdFieldId())
         .startMcid(dto.getStartMcid())
         .untaggedWatermarks(
-            dto.getUntaggedWatermarks() != null ? dto.getUntaggedWatermarks() : Collections.emptyList())
+            dto.getUntaggedWatermarks() != null
+                ? dto.getUntaggedWatermarks()
+                : Collections.emptyList())
         .build();
   }
 
-  private Map<String, List<PdfFieldFillOption>> convertFields(
-      Map<String, List<PdfFieldFillOptionsDTO>> fields) {
+  private Map<String, PdfFieldFillOption> convertFields(
+      Map<String, PdfFieldFillOptionsDTO> fields) {
     if (fields == null) {
       return Collections.emptyMap();
     }
     return fields.entrySet().stream()
-        .collect(Collectors.toMap(Map.Entry::getKey, e -> convertFieldOptions(e.getValue())));
+        .collect(Collectors.toMap(Map.Entry::getKey, e -> convertField(e.getValue())));
   }
 
-  private List<PdfFieldFillOption> convertFieldOptions(List<PdfFieldFillOptionsDTO> options) {
-    return options.stream().map(this::convertFieldOption).toList();
-  }
-
-  private PdfFieldFillOption convertFieldOption(PdfFieldFillOptionsDTO dto) {
-    return PdfFieldFillOption.builder()
-        .value(dto.getValue())
-        .append(dto.isAppend())
-        .appearance(dto.getAppearance())
-        .offset(dto.getOffset())
-        .normalizeText(dto.isNormalizeText())
-        .build();
+  private PdfFieldFillOption convertField(PdfFieldFillOptionsDTO dto) {
+    return PdfFieldFillOption.builder().value(dto.getValue()).build();
   }
 }

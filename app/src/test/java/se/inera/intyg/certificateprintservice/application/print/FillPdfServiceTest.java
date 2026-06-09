@@ -22,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
-import static se.inera.intyg.certificateprintservice.application.print.FillPdfRequestTestFixture.validRequest;
-import static se.inera.intyg.certificateprintservice.application.print.FillPdfRequestTestFixture.validMetadataBuilder;
-import static se.inera.intyg.certificateprintservice.application.print.FillPdfRequestTestFixture.validRequestBuilder;
+import static se.inera.intyg.certificateprintservice.application.testdata.TestDataFillPdfRequest.validMetadataBuilder;
+import static se.inera.intyg.certificateprintservice.application.testdata.TestDataFillPdfRequest.validRequest;
+import static se.inera.intyg.certificateprintservice.application.testdata.TestDataFillPdfRequest.validRequestBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
