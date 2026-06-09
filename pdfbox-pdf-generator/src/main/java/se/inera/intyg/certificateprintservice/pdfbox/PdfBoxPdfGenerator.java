@@ -18,21 +18,51 @@
  */
 package se.inera.intyg.certificateprintservice.pdfbox;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.certificateprintservice.pdfgenerator.CustomPdfGenerator;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdf;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class PdfBoxPdfGenerator implements CustomPdfGenerator {
+
+  private final AcroFormFiller acroFormFiller;
 
   @Override
   public byte[] get(CustomPdf customPdf) {
-    // TODO: Implement PDFBox-based template filling
-    log.info(
-        "PdfBoxPdfGenerator.fill called for certificateId={} - skeleton implementation, returning empty bytes",
-        customPdf.getMetadata().getCertificateId());
-    return new byte[0];
+    final var template = customPdf.getTemplate();
+    if (template == null || template.length == 0) {
+      throw new IllegalArgumentException("PDF template bytes must not be null or empty");
+    }
+
+    try (final var document = Loader.loadPDF(template)) {
+      document.setAllSecurityToBeRemoved(true);
+      acroFormFiller.fill(document, customPdf.getFields());
+      flattenAcroForm(document);
+      return toBytes(document);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Failed to load or process PDF template", e);
+    }
+  }
+
+  private void flattenAcroForm(PDDocument document) throws IOException {
+    final var acroForm = document.getDocumentCatalog().getAcroForm();
+    if (acroForm != null) {
+      acroForm.flatten();
+    }
+  }
+
+  private byte[] toBytes(PDDocument document) throws IOException {
+    try (final var out = new ByteArrayOutputStream()) {
+      document.save(out);
+      return out.toByteArray();
+    }
   }
 }

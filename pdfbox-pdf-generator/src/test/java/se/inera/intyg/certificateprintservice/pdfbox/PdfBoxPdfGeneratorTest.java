@@ -19,7 +19,13 @@
 package se.inera.intyg.certificateprintservice.pdfbox;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Collections;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CertificateStatus;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdf;
@@ -27,22 +33,63 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfM
 
 class PdfBoxPdfGeneratorTest {
 
-  private final PdfBoxPdfGenerator generator = new PdfBoxPdfGenerator();
+  private final PdfBoxPdfGenerator generator = new PdfBoxPdfGenerator(new AcroFormFiller());
 
   @Test
-  void shallReturnNonNullByteArray() {
+  void shallThrowWhenTemplateIsNull() {
+    final var request =
+        CustomPdf.builder()
+            .template(null)
+            .metadata(defaultMetadata())
+            .fields(Collections.emptyMap())
+            .build();
+
+    assertThrows(IllegalArgumentException.class, () -> generator.get(request));
+  }
+
+  @Test
+  void shallThrowWhenTemplateIsEmpty() {
     final var request =
         CustomPdf.builder()
             .template(new byte[0])
-            .metadata(
-                CustomPdfMetadata.builder()
-                    .status(CertificateStatus.DRAFT)
-                    .certificateId("cert-id")
-                    .build())
-            .fields(java.util.Collections.emptyMap())
+            .metadata(defaultMetadata())
+            .fields(Collections.emptyMap())
+            .build();
+
+    assertThrows(IllegalArgumentException.class, () -> generator.get(request));
+  }
+
+  @Test
+  void shallReturnNonEmptyBytesForValidTemplateWithNoFields() throws IOException {
+    final var request =
+        CustomPdf.builder()
+            .template(buildMinimalPdf())
+            .metadata(defaultMetadata())
+            .fields(Collections.emptyMap())
             .build();
 
     final var result = generator.get(request);
+
     assertNotNull(result);
+    assertTrue(result.length > 0);
+  }
+
+  // --- helpers ---
+
+  private CustomPdfMetadata defaultMetadata() {
+    return CustomPdfMetadata.builder()
+        .status(CertificateStatus.DRAFT)
+        .certificateId("cert-id")
+        .build();
+  }
+
+  /** Builds a minimal valid PDF with no AcroForm. */
+  private byte[] buildMinimalPdf() throws IOException {
+    try (final var doc = new PDDocument();
+        final var out = new ByteArrayOutputStream()) {
+      doc.addPage(new org.apache.pdfbox.pdmodel.PDPage());
+      doc.save(out);
+      return out.toByteArray();
+    }
   }
 }
