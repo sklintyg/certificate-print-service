@@ -75,19 +75,18 @@ class PdfBoxPdfGeneratorTest {
     assertTrue(result.length > 0);
   }
 
-  // --- helpers ---
-
   private CustomPdfMetadata defaultMetadata() {
     return CustomPdfMetadata.builder()
         .status(CertificateStatus.LOCKED_DRAFT)
         .isSent(false)
         .certificateId("cert-id")
-        .addPageNumbers(false)
         .startMcid(0)
         .build();
   }
 
-  /** Builds a minimal valid PDF with no AcroForm. */
+  /**
+   * Builds a minimal valid PDF with no AcroForm.
+   */
   private byte[] buildMinimalPdf() throws IOException {
     try (final var doc = new PDDocument();
         final var out = new ByteArrayOutputStream()) {

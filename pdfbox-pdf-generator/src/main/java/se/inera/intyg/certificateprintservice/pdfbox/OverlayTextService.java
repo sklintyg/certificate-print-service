@@ -46,34 +46,29 @@ public class OverlayTextService {
     drawDraftWatermark(document, metadata, mcid);
     drawSignatureText(document, metadata, mcid);
     drawSentText(document, metadata, mcid);
-
-    final var totalPages = document.getNumberOfPages();
-    for (int pageIndex = 0; pageIndex < totalPages; pageIndex++) {
-      drawMarginText(document, metadata, mcid, pageIndex);
-      drawPageNumber(document, metadata, mcid, pageIndex, totalPages);
-    }
+    drawMarginText(document, metadata, mcid, 0);
   }
 
   private void drawDraftWatermark(
       PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid) throws IOException {
-    if (metadata.getStatus() == CertificateStatus.DRAFT) {
+    if (metadata.getStatus().equals(CertificateStatus.DRAFT)) {
       pdfTextGenerator.addWatermark(document, WATERMARK_TEXT, mcid.getAndIncrement());
     }
   }
 
   private void drawSignatureText(
       PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid) throws IOException {
-    if (metadata.getStatus() != CertificateStatus.SIGNED) {
+    if (!metadata.getStatus().equals(CertificateStatus.SIGNED)) {
       return;
     }
+
     final var acroForm = document.getDocumentCatalog().getAcroForm();
-    if (acroForm == null || metadata.getSignedDateFieldId() == null) {
-      return;
-    }
     final var signedDateField = acroForm.getField(metadata.getSignedDateFieldId());
+
     if (signedDateField == null) {
-      return;
+      throw new IllegalStateException("Signed date field is missing");
     }
+
     final var rectangle = signedDateField.getWidgets().getFirst().getRectangle();
     final var xPosition = rectangle.getUpperRightX() + SIGNATURE_X_PADDING;
     final var yPosition = rectangle.getLowerLeftY() + SIGNATURE_Y_PADDING;
@@ -93,8 +88,10 @@ public class OverlayTextService {
     if (!metadata.isSent()) {
       return;
     }
+
     final var sentLine =
         "Intyget har skickats digitalt till %s".formatted(metadata.getSentRecipientName());
+
     pdfTextGenerator.addSentText(document, sentLine, mcid.getAndIncrement());
 
     if (metadata.isAvailableForCitizen()) {
@@ -106,23 +103,13 @@ public class OverlayTextService {
   private void drawMarginText(
       PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid, int pageIndex)
       throws IOException {
-    if (metadata.getStatus() != CertificateStatus.SIGNED) {
+    if (!metadata.getStatus().equals(CertificateStatus.SIGNED)) {
       return;
     }
+
     final var text =
         "Intygsid: %s. %s".formatted(metadata.getCertificateId(), metadata.getAdditionalInfoText());
-    pdfTextGenerator.addMarginText(document, text, mcid.getAndIncrement(), pageIndex);
-  }
 
-  private void drawPageNumber(
-      PDDocument document,
-      CustomPdfMetadata metadata,
-      AtomicInteger mcid,
-      int pageIndex,
-      int totalPages)
-      throws IOException {
-    if (metadata.isAddPageNumbers()) {
-      pdfTextGenerator.addPageNumber(document, pageIndex, totalPages, mcid.getAndIncrement());
-    }
+    pdfTextGenerator.addMarginText(document, text, mcid.getAndIncrement(), pageIndex);
   }
 }

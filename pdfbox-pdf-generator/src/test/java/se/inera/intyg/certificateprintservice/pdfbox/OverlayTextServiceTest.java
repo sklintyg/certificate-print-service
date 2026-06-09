@@ -41,8 +41,10 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfM
 @ExtendWith(MockitoExtension.class)
 class OverlayTextServiceTest {
 
-  @Mock private PdfTextGenerator pdfTextGenerator;
-  @InjectMocks private OverlayTextService overlayTextService;
+  @Mock
+  private PdfTextGenerator pdfTextGenerator;
+  @InjectMocks
+  private OverlayTextService overlayTextService;
 
   private PDDocument document;
 
@@ -143,7 +145,6 @@ class OverlayTextServiceTest {
               .isSent(false)
               .certificateId("cert-123")
               .additionalInfoText("Webcert")
-              .addPageNumbers(false)
               .startMcid(0)
               .build();
 
@@ -160,50 +161,11 @@ class OverlayTextServiceTest {
     }
   }
 
-  @Nested
-  class PageNumbers {
-
-    @Test
-    void shallDrawPageNumbersWhenAddPageNumbersIsTrue() throws IOException {
-      final var metadata =
-          CustomPdfMetadata.builder()
-              .status(CertificateStatus.LOCKED_DRAFT)
-              .isSent(false)
-              .certificateId("id")
-              .addPageNumbers(true)
-              .startMcid(0)
-              .build();
-
-      overlayTextService.drawOverlays(document, metadata);
-
-      verify(pdfTextGenerator).addPageNumber(eq(document), eq(0), eq(1), anyInt());
-    }
-
-    @Test
-    void shallNotDrawPageNumbersWhenAddPageNumbersIsFalse() throws IOException {
-      final var metadata =
-          CustomPdfMetadata.builder()
-              .status(CertificateStatus.LOCKED_DRAFT)
-              .isSent(false)
-              .certificateId("id")
-              .addPageNumbers(false)
-              .startMcid(0)
-              .build();
-
-      overlayTextService.drawOverlays(document, metadata);
-
-      verify(pdfTextGenerator, never()).addPageNumber(any(), anyInt(), anyInt(), anyInt());
-    }
-  }
-
-  // --- helpers ---
-
   private CustomPdfMetadata metadataWithStatus(CertificateStatus status) {
     return CustomPdfMetadata.builder()
         .status(status)
         .isSent(false)
         .certificateId("cert-id")
-        .addPageNumbers(false)
         .startMcid(0)
         .build();
   }

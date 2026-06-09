@@ -51,7 +51,6 @@ public class TestDataCustomPrintRequest {
         .availableForCitizen(true)
         .certificateId("cert-123")
         .additionalInfoText("Webcert 2.0")
-        .addPageNumbers(true)
         .signaturePageIndex(0)
         .signatureTagIndex(5)
         .signedDateFieldId("signed-date-field")

@@ -46,11 +46,7 @@ public class PdfTextGenerator {
   private static final float SENT_VISIBILITY_TEXT_FONT_SIZE = 16f;
   private static final float SIGNATURE_TEXT_FONT_SIZE = 8f;
   private static final float MARGIN_TEXT_FONT_SIZE = 8f;
-  private static final float PAGE_NUMBER_FONT_SIZE = 10f;
   private static final int WATERMARK_FONT_SIZE = 105;
-
-  private static final float MARGIN_LEFT_PAGE_NUMBER = 63.5f;
-  private static final float MARGIN_TOP_PAGE_NUMBER = 37f;
   private static final float MARGIN_TEXT_OFFSET_X = 30f;
   private static final float MARGIN_TEXT_OFFSET_Y = 30f;
 
@@ -175,29 +171,6 @@ public class PdfTextGenerator {
         Matrix.getTranslateInstance(40, 665),
         SENT_VISIBILITY_TEXT_FONT_SIZE,
         mcid,
-        true);
-  }
-
-  public void addPageNumber(PDDocument document, int pageIndex, int totalPages, int mcid)
-      throws IOException {
-    final PDPage page = document.getPage(pageIndex);
-    final var x = page.getMediaBox().getWidth() - MARGIN_LEFT_PAGE_NUMBER;
-    final var y = page.getMediaBox().getHeight() - MARGIN_TOP_PAGE_NUMBER;
-    final var text = "%d (%d)".formatted(pageIndex + 1, totalPages);
-    final var actualText = "Sida %d av %d".formatted(pageIndex + 1, totalPages);
-    addText(
-        document,
-        text,
-        PAGE_NUMBER_FONT_SIZE,
-        null,
-        Color.black,
-        x,
-        y,
-        false,
-        mcid,
-        getDivInQuestionSection(document, 0, pageIndex),
-        pageIndex,
-        actualText,
         true);
   }
 

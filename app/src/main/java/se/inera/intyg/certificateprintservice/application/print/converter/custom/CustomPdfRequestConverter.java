@@ -50,7 +50,6 @@ public class CustomPdfRequestConverter {
         .availableForCitizen(dto.isAvailableForCitizen())
         .certificateId(dto.getCertificateId())
         .additionalInfoText(dto.getAdditionalInfoText())
-        .addPageNumbers(dto.isAddPageNumbers())
         .signaturePageIndex(dto.getSignaturePageIndex())
         .signatureTagIndex(dto.getSignatureTagIndex())
         .signedDateFieldId(dto.getSignedDateFieldId())

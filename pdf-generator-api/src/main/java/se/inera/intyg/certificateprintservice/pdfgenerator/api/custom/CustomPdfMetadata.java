@@ -31,7 +31,6 @@ public class CustomPdfMetadata {
   boolean availableForCitizen;
   String certificateId;
   String additionalInfoText;
-  boolean addPageNumbers;
   int signaturePageIndex;
   int signatureTagIndex;
   String signedDateFieldId;
