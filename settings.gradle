@@ -17,4 +17,4 @@ include 'app'
 include 'playwright-pdf-generator'
 include 'pdf-generator-api'
 include 'logging'
-
+include 'pdfbox-pdf-generator'

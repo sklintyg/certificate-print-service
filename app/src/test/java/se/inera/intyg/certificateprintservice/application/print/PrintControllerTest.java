@@ -28,11 +28,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class PrintControllerTest {
 
   @Mock GeneratePrintService generatePrintService;
+  @Mock FillPdfService fillPdfService;
   @InjectMocks PrintController printController;
 
   @Test
@@ -43,6 +46,17 @@ class PrintControllerTest {
     doReturn(expectedResponse).when(generatePrintService).get(request);
 
     final var actualResponse = printController.get(request);
+    assertEquals(expectedResponse, actualResponse);
+  }
+
+  @Test
+  void shallReturnFillPdfResponse() {
+    final var request = FillPdfRequestDTO.builder().build();
+    final var expectedResponse = FillPdfResponseDTO.builder().build();
+
+    doReturn(expectedResponse).when(fillPdfService).fill(request);
+
+    final var actualResponse = printController.fill(request);
     assertEquals(expectedResponse, actualResponse);
   }
 }

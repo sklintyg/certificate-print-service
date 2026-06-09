@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfResponseDTO;
 
 @RestController
 @RequestMapping("api/print")
@@ -32,9 +34,15 @@ import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertifi
 public class PrintController {
 
   private final GeneratePrintService printService;
+  private final FillPdfService fillPdfService;
 
   @PostMapping()
   PrintCertificateResponseDTO get(@RequestBody PrintCertificateRequestDTO request) {
     return printService.get(request);
+  }
+
+  @PostMapping("/fill")
+  FillPdfResponseDTO fill(@RequestBody FillPdfRequestDTO request) {
+    return fillPdfService.fill(request);
   }
 }

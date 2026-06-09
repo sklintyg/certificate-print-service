@@ -31,6 +31,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 public class GlobalExceptionHandlerController {
 
+  @ExceptionHandler({IllegalArgumentException.class})
+  public ResponseEntity<String> handleIllegalArgumentException(
+      IllegalArgumentException exception) {
+    log.warn("Bad request. Reason: %s.".formatted(exception.getMessage()));
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+        .body(exception.getMessage());
+  }
+
   @ExceptionHandler({Exception.class})
   public ResponseEntity<String> handleRuntimeExceptions(Exception exception) {
     log.error("Internal server error. Reason: %s.".formatted(exception.getMessage()), exception);
