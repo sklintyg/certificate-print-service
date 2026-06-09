@@ -21,15 +21,17 @@ package se.inera.intyg.certificateprintservice.pdfbox;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.TAGGED_PDF_RESOURCE;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
-import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.Loader;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CertificateStatus;
+import se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210CustomPdfMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdf;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfMetadata;
 
 class PdfBoxPdfGeneratorTest {
 
@@ -41,7 +43,7 @@ class PdfBoxPdfGeneratorTest {
     final var request =
         CustomPdf.builder()
             .template(null)
-            .metadata(defaultMetadata())
+            .metadata(TestDataFK7210CustomPdfMetadata.draftMetadata())
             .fields(Collections.emptyMap())
             .build();
 
@@ -53,7 +55,7 @@ class PdfBoxPdfGeneratorTest {
     final var request =
         CustomPdf.builder()
             .template(new byte[0])
-            .metadata(defaultMetadata())
+            .metadata(TestDataFK7210CustomPdfMetadata.draftMetadata())
             .fields(Collections.emptyMap())
             .build();
 
@@ -64,8 +66,8 @@ class PdfBoxPdfGeneratorTest {
   void shallReturnNonEmptyBytesForValidTemplateWithNoFields() throws IOException {
     final var request =
         CustomPdf.builder()
-            .template(buildMinimalPdf())
-            .metadata(defaultMetadata())
+            .template(buildFk7210PdfTemplate())
+            .metadata(TestDataFK7210CustomPdfMetadata.fullMetadata())
             .fields(Collections.emptyMap())
             .build();
 
@@ -75,23 +77,12 @@ class PdfBoxPdfGeneratorTest {
     assertTrue(result.length > 0);
   }
 
-  private CustomPdfMetadata defaultMetadata() {
-    return CustomPdfMetadata.builder()
-        .status(CertificateStatus.LOCKED_DRAFT)
-        .isSent(false)
-        .certificateId("cert-id")
-        .startMcid(0)
-        .build();
-  }
-
-  /**
-   * Builds a minimal valid PDF with no AcroForm.
-   */
-  private byte[] buildMinimalPdf() throws IOException {
-    try (final var doc = new PDDocument();
+  private byte[] buildFk7210PdfTemplate() throws IOException {
+    try (InputStream stream = getClass().getResourceAsStream(TAGGED_PDF_RESOURCE);
         final var out = new ByteArrayOutputStream()) {
-      doc.addPage(new org.apache.pdfbox.pdmodel.PDPage());
-      doc.save(out);
+      Assertions.assertNotNull(stream);
+      final var document = Loader.loadPDF(stream.readAllBytes());
+      document.save(out);
       return out.toByteArray();
     }
   }

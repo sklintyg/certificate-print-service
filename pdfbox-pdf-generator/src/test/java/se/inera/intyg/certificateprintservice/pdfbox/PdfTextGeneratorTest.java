@@ -19,6 +19,7 @@
 package se.inera.intyg.certificateprintservice.pdfbox;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.TAGGED_PDF_RESOURCE;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,8 +36,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for {@link PdfTextGenerator}.
  *
- * <p>Each test loads a tagged PDF from {@code tagged-test-template.pdf} in test resources.
- * If the resource is absent (e.g. during initial development), a programmatic fallback creates the
+ * <p>Each test loads a tagged PDF from {@code tagged-test-template.pdf} in test resources. If the
+ * resource is absent (e.g. during initial development), a programmatic fallback creates the
  * required structure:
  *
  * <pre>
@@ -48,8 +49,6 @@ import org.junit.jupiter.api.Test;
  * </pre>
  */
 class PdfTextGeneratorTest {
-
-  private static final String TAGGED_PDF_RESOURCE = "/tagged-test-template.pdf";
 
   private final PdfTextGenerator generator = new PdfTextGenerator();
 

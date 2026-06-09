@@ -24,10 +24,13 @@ import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.TAGGED_PDF_RESOURCE;
 
 import java.io.IOException;
+import java.io.InputStream;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,23 +38,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210CustomPdfMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CertificateStatus;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfMetadata;
 
 @ExtendWith(MockitoExtension.class)
 class OverlayTextServiceTest {
 
-  @Mock
-  private PdfTextGenerator pdfTextGenerator;
-  @InjectMocks
-  private OverlayTextService overlayTextService;
+  @Mock private PdfTextGenerator pdfTextGenerator;
+  @InjectMocks private OverlayTextService overlayTextService;
 
   private PDDocument document;
 
   @BeforeEach
-  void setUp() {
-    document = new PDDocument();
-    document.addPage(new PDPage());
+  void setUp() throws IOException {
+    try (InputStream stream = getClass().getResourceAsStream(TAGGED_PDF_RESOURCE)) {
+      Assertions.assertNotNull(stream);
+      document = Loader.loadPDF(stream.readAllBytes());
+    }
   }
 
   @Nested
@@ -59,14 +63,16 @@ class OverlayTextServiceTest {
 
     @Test
     void shallDrawWatermarkWhenStatusIsDraft() throws IOException {
-      overlayTextService.drawOverlays(document, metadataWithStatus(CertificateStatus.DRAFT));
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithStatus(CertificateStatus.DRAFT));
 
       verify(pdfTextGenerator).addWatermark(eq(document), eq("UTKAST"), anyInt());
     }
 
     @Test
     void shallNotDrawWatermarkWhenStatusIsNotDraft() throws IOException {
-      overlayTextService.drawOverlays(document, metadataWithStatus(CertificateStatus.SIGNED));
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithStatus(CertificateStatus.SIGNED));
 
       verify(pdfTextGenerator, never()).addWatermark(any(), any(), anyInt());
     }
@@ -77,34 +83,18 @@ class OverlayTextServiceTest {
 
     @Test
     void shallDrawSentTextWhenIsSent() throws IOException {
-      final var metadata =
-          CustomPdfMetadata.builder()
-              .status(CertificateStatus.LOCKED_DRAFT)
-              .isSent(true)
-              .sentRecipientName("Försäkringskassan")
-              .availableForCitizen(false)
-              .certificateId("id")
-              .startMcid(0)
-              .build();
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.signedAndSentMetadata());
 
-      overlayTextService.drawOverlays(document, metadata);
-
-      verify(pdfTextGenerator).addSentText(eq(document), contains("Försäkringskassan"), anyInt());
+      verify(pdfTextGenerator)
+          .addSentText(
+              eq(document), contains(TestDataFK7210CustomPdfMetadata.RECIPIENT_NAME), anyInt());
     }
 
     @Test
     void shallDrawCitizenVisibilityLineWhenAvailableForCitizen() throws IOException {
-      final var metadata =
-          CustomPdfMetadata.builder()
-              .status(CertificateStatus.LOCKED_DRAFT)
-              .isSent(true)
-              .sentRecipientName("FK")
-              .availableForCitizen(true)
-              .certificateId("id")
-              .startMcid(0)
-              .build();
-
-      overlayTextService.drawOverlays(document, metadata);
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.signedAndSentMetadata());
 
       verify(pdfTextGenerator).addSentVisibilityText(eq(document), any(), anyInt());
     }
@@ -113,12 +103,13 @@ class OverlayTextServiceTest {
     void shallNotDrawCitizenLineWhenNotAvailableForCitizen() throws IOException {
       final var metadata =
           CustomPdfMetadata.builder()
-              .status(CertificateStatus.LOCKED_DRAFT)
+              .status(CertificateStatus.SIGNED)
               .isSent(true)
-              .sentRecipientName("FK")
+              .sentRecipientName(TestDataFK7210CustomPdfMetadata.RECIPIENT_NAME)
               .availableForCitizen(false)
-              .certificateId("id")
-              .startMcid(0)
+              .certificateId(TestDataFK7210CustomPdfMetadata.CERTIFICATE_ID)
+              .signedDateFieldId(TestDataFK7210CustomPdfMetadata.SIGNED_DATE_FIELD_ID)
+              .startMcid(TestDataFK7210CustomPdfMetadata.START_MCID)
               .build();
 
       overlayTextService.drawOverlays(document, metadata);
@@ -128,7 +119,8 @@ class OverlayTextServiceTest {
 
     @Test
     void shallNotDrawSentTextWhenNotSent() throws IOException {
-      overlayTextService.drawOverlays(document, metadataWithStatus(CertificateStatus.SIGNED));
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithStatus(CertificateStatus.SIGNED));
 
       verify(pdfTextGenerator, never()).addSentText(any(), any(), anyInt());
     }
@@ -139,34 +131,22 @@ class OverlayTextServiceTest {
 
     @Test
     void shallDrawMarginTextWhenStatusIsSigned() throws IOException {
-      final var metadata =
-          CustomPdfMetadata.builder()
-              .status(CertificateStatus.SIGNED)
-              .isSent(false)
-              .certificateId("cert-123")
-              .additionalInfoText("Webcert")
-              .startMcid(0)
-              .build();
+      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.signedMetadata());
 
-      overlayTextService.drawOverlays(document, metadata);
-
-      verify(pdfTextGenerator).addMarginText(eq(document), contains("cert-123"), anyInt(), eq(0));
+      verify(pdfTextGenerator)
+          .addMarginText(
+              eq(document),
+              contains(TestDataFK7210CustomPdfMetadata.CERTIFICATE_ID),
+              anyInt(),
+              eq(0));
     }
 
     @Test
     void shallNotDrawMarginTextWhenStatusIsNotSigned() throws IOException {
-      overlayTextService.drawOverlays(document, metadataWithStatus(CertificateStatus.DRAFT));
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithStatus(CertificateStatus.DRAFT));
 
       verify(pdfTextGenerator, never()).addMarginText(any(), any(), anyInt(), anyInt());
     }
-  }
-
-  private CustomPdfMetadata metadataWithStatus(CertificateStatus status) {
-    return CustomPdfMetadata.builder()
-        .status(status)
-        .isSent(false)
-        .certificateId("cert-id")
-        .startMcid(0)
-        .build();
   }
 }
