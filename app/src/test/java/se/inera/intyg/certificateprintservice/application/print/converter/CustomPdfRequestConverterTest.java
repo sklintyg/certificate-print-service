@@ -21,11 +21,12 @@ package se.inera.intyg.certificateprintservice.application.print.converter;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.TEMPLATE_BYTES;
+import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.VALID_TEMPLATE;
+import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.buildRequest;
+import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.fullMetadataBuilder;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.application.print.converter.custom.CustomPdfRequestConverter;
@@ -37,43 +38,39 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.Certificat
 
 class CustomPdfRequestConverterTest {
 
-  private static final byte[] TEMPLATE_BYTES = "pdf-template".getBytes(StandardCharsets.UTF_8);
-  private static final String TEMPLATE_BASE64 =
-      Base64.getEncoder().encodeToString(TEMPLATE_BYTES);
-
   private final CustomPdfRequestConverter converter = new CustomPdfRequestConverter();
 
   @Test
   void shallDecodeTemplateFromBase64() {
-    final var request = buildRequest(buildMetadata(), Collections.emptyMap());
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
     assertArrayEquals(TEMPLATE_BYTES, result.getTemplate());
   }
 
   @Test
   void shallConvertMetadataStatus() {
-    final var request = buildRequest(buildMetadata(), Collections.emptyMap());
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
     assertEquals(CertificateStatus.SIGNED, result.getMetadata().getStatus());
   }
 
   @Test
   void shallConvertMetadataCertificateId() {
-    final var request = buildRequest(buildMetadata(), Collections.emptyMap());
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
     assertEquals("cert-123", result.getMetadata().getCertificateId());
   }
 
   @Test
   void shallConvertMetadataIsSent() {
-    final var request = buildRequest(buildMetadata(), Collections.emptyMap());
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
     assertTrue(result.getMetadata().isSent());
   }
 
   @Test
   void shallConvertMetadataSentRecipientName() {
-    final var request = buildRequest(buildMetadata(), Collections.emptyMap());
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
     assertEquals("Försäkringskassan", result.getMetadata().getSentRecipientName());
   }
@@ -81,7 +78,7 @@ class CustomPdfRequestConverterTest {
   @Test
   void shallConvertFieldValue() {
     final var fieldOption = CustomPdfFieldDTO.builder().value("some-value").build();
-    final var request = buildRequest(buildMetadata(), Map.of("field-id", fieldOption));
+    final var request = buildRequest(fullMetadataBuilder().build(), Map.of("field-id", fieldOption));
 
     final var result = converter.convert(request);
 
@@ -93,8 +90,8 @@ class CustomPdfRequestConverterTest {
   void shallReturnEmptyMapWhenFieldsIsNull() {
     final var request =
         CustomPrintRequestDTO.builder()
-            .template(TEMPLATE_BASE64)
-            .metadata(buildMetadata())
+            .template(VALID_TEMPLATE)
+            .metadata(fullMetadataBuilder().build())
             .fields(null)
             .build();
     final var result = converter.convert(request);
@@ -112,31 +109,5 @@ class CustomPdfRequestConverterTest {
     final var request = buildRequest(metadata, Collections.emptyMap());
     final var result = converter.convert(request);
     assertTrue(result.getMetadata().getUntaggedWatermarks().isEmpty());
-  }
-
-  private CustomPdfMetadataDTO buildMetadata() {
-    return CustomPdfMetadataDTO.builder()
-        .status(CertificateStatusDTO.SIGNED)
-        .isSent(true)
-        .sentRecipientName("Försäkringskassan")
-        .availableForCitizen(true)
-        .certificateId("cert-123")
-        .additionalInfoText("Webcert 2.0")
-        .addPageNumbers(true)
-        .signaturePageIndex(0)
-        .signatureTagIndex(5)
-        .signedDateFieldId("signed-date-field")
-        .startMcid(100)
-        .untaggedWatermarks(List.of("UTKAST"))
-        .build();
-  }
-
-  private CustomPrintRequestDTO buildRequest(
-      CustomPdfMetadataDTO metadata, Map<String, CustomPdfFieldDTO> fields) {
-    return CustomPrintRequestDTO.builder()
-        .template(TEMPLATE_BASE64)
-        .metadata(metadata)
-        .fields(fields)
-        .build();
   }
 }

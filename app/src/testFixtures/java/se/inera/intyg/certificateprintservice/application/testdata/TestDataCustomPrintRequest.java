@@ -21,14 +21,17 @@ package se.inera.intyg.certificateprintservice.application.testdata;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import se.inera.intyg.certificateprintservice.application.print.dto.custom.CertificateStatusDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPrintRequestDTO;
 
 public class TestDataCustomPrintRequest {
 
-  public static final String VALID_TEMPLATE =
-      Base64.getEncoder().encodeToString("pdf-bytes".getBytes(StandardCharsets.UTF_8));
+  public static final byte[] TEMPLATE_BYTES = "pdf-template".getBytes(StandardCharsets.UTF_8);
+  public static final String VALID_TEMPLATE = Base64.getEncoder().encodeToString(TEMPLATE_BYTES);
   public static final String CERTIFICATE_ID = "cert-id";
 
   private TestDataCustomPrintRequest() {
@@ -39,6 +42,31 @@ public class TestDataCustomPrintRequest {
     return CustomPdfMetadataDTO.builder()
         .status(CertificateStatusDTO.DRAFT)
         .certificateId(CERTIFICATE_ID);
+  }
+
+  public static CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder fullMetadataBuilder() {
+    return CustomPdfMetadataDTO.builder()
+        .status(CertificateStatusDTO.SIGNED)
+        .isSent(true)
+        .sentRecipientName("Försäkringskassan")
+        .availableForCitizen(true)
+        .certificateId("cert-123")
+        .additionalInfoText("Webcert 2.0")
+        .addPageNumbers(true)
+        .signaturePageIndex(0)
+        .signatureTagIndex(5)
+        .signedDateFieldId("signed-date-field")
+        .startMcid(100)
+        .untaggedWatermarks(List.of("UTKAST"));
+  }
+
+  public static CustomPrintRequestDTO buildRequest(
+      CustomPdfMetadataDTO metadata, Map<String, CustomPdfFieldDTO> fields) {
+    return CustomPrintRequestDTO.builder()
+        .template(VALID_TEMPLATE)
+        .metadata(metadata)
+        .fields(fields)
+        .build();
   }
 
   public static CustomPrintRequestDTO.CustomPrintRequestDTOBuilder validRequestBuilder() {
