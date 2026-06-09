@@ -71,15 +71,6 @@ class AcroFormFillerTest {
     assertEquals("", acroForm.getField("myField").getValueAsString());
   }
 
-  @Test
-  void shallDoNothingWhenDocumentHasNoAcroForm() {
-    document.getDocumentCatalog().setAcroForm(null);
-
-    filler.fill(document, Map.of("myField", CustomPdfFieldF.builder().value("value").build()));
-
-    assertNull(document.getDocumentCatalog().getAcroForm());
-  }
-
   private void addTextField(String fieldName) {
     final var field = new PDTextField(acroForm);
     field.setPartialName(fieldName);

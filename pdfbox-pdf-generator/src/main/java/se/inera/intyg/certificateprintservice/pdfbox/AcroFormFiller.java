@@ -35,12 +35,6 @@ public class AcroFormFiller {
     }
 
     final var acroForm = document.getDocumentCatalog().getAcroForm();
-
-    if (acroForm == null) {
-      log.warn("PDF template has no AcroForm — no fields will be filled");
-      return;
-    }
-
     fields.forEach(
         (fieldId, fieldOptions) -> {
           final var field = acroForm.getField(fieldId);
