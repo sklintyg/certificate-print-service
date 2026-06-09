@@ -30,9 +30,7 @@ import java.util.Collections;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.application.print.converter.custom.CustomPdfRequestConverter;
-import se.inera.intyg.certificateprintservice.application.print.dto.custom.CertificateStatusDTO;
 import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPdfFieldDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPrintRequestDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CertificateStatus;
 
@@ -78,7 +76,8 @@ class CustomPdfRequestConverterTest {
   @Test
   void shallConvertFieldValue() {
     final var fieldOption = CustomPdfFieldDTO.builder().value("some-value").build();
-    final var request = buildRequest(fullMetadataBuilder().build(), Map.of("field-id", fieldOption));
+    final var request =
+        buildRequest(fullMetadataBuilder().build(), Map.of("field-id", fieldOption));
 
     final var result = converter.convert(request);
 
@@ -96,18 +95,5 @@ class CustomPdfRequestConverterTest {
             .build();
     final var result = converter.convert(request);
     assertTrue(result.getFields().isEmpty());
-  }
-
-  @Test
-  void shallDefaultUntaggedWatermarksToEmptyListWhenNull() {
-    final var metadata =
-        CustomPdfMetadataDTO.builder()
-            .status(CertificateStatusDTO.DRAFT)
-            .certificateId("cert-123")
-            .untaggedWatermarks(null)
-            .build();
-    final var request = buildRequest(metadata, Collections.emptyMap());
-    final var result = converter.convert(request);
-    assertTrue(result.getMetadata().getUntaggedWatermarks().isEmpty());
   }
 }

@@ -43,13 +43,10 @@ import se.inera.intyg.certificateprintservice.playwright.document.Watermark;
 @ExtendWith(MockitoExtension.class)
 class HeaderConverterTest {
 
-  @Mock
-  private LeftMarginInfoConverter leftMarginInfoConverter;
-  @Mock
-  private RightMarginInfoConverter rightMarginInfoConverter;
+  @Mock private LeftMarginInfoConverter leftMarginInfoConverter;
+  @Mock private RightMarginInfoConverter rightMarginInfoConverter;
 
-  @InjectMocks
-  private HeaderConverter headerConverter;
+  @InjectMocks private HeaderConverter headerConverter;
 
   private static final String CERTIFICATE_NAME = "certificateName";
   private static final String TYPE_ID = "typeId";

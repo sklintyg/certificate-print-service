@@ -37,7 +37,5 @@ public class ElementSimplifiedValueLabeledList implements ElementSimplifiedValue
   List<ElementSimplifiedValueLabeledText> list;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class ElementSimplifiedValueLabeledListBuilder {
-
-  }
+  public static class ElementSimplifiedValueLabeledListBuilder {}
 }

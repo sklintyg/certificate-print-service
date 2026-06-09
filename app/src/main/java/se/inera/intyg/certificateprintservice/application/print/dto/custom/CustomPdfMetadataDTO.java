@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import lombok.Builder;
 import lombok.Value;
 import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder;
@@ -32,23 +31,18 @@ import se.inera.intyg.certificateprintservice.application.print.dto.custom.Custo
 @JsonDeserialize(builder = CustomPdfMetadataDTOBuilder.class)
 public class CustomPdfMetadataDTO {
 
-  @NotNull
-  CertificateStatusDTO status;
+  @NotNull CertificateStatusDTO status;
   boolean isSent;
   String sentRecipientName;
   boolean availableForCitizen;
-  @NotBlank
-  String certificateId;
+  @NotBlank String certificateId;
   String additionalInfoText;
   boolean addPageNumbers;
   int signaturePageIndex;
   int signatureTagIndex;
   String signedDateFieldId;
   int startMcid;
-  List<String> untaggedWatermarks;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class CustomPdfMetadataDTOBuilder {
-
-  }
+  public static class CustomPdfMetadataDTOBuilder {}
 }

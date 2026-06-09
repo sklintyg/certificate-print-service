@@ -61,27 +61,17 @@ import se.inera.intyg.certificateprintservice.playwright.document.Watermark;
 @ExtendWith(MockitoExtension.class)
 class CertificatePrintGeneratorTest {
 
-  @Mock
-  private BrowserPool browserPool;
-  @Mock
-  private PlaywrightBrowser playwrightBrowser;
-  @Mock
-  private BrowserContext browserContext;
-  @Mock
-  private Page page;
-  @Mock
-  private Locator locator;
-  @Mock
-  private ContentConverter contentConverter;
-  @Mock
-  private FooterConverter footerConverter;
-  @Mock
-  private HeaderConverter headerConverter;
-  @Mock
-  private CertificatePrintEventService certificatePrintEventService;
+  @Mock private BrowserPool browserPool;
+  @Mock private PlaywrightBrowser playwrightBrowser;
+  @Mock private BrowserContext browserContext;
+  @Mock private Page page;
+  @Mock private Locator locator;
+  @Mock private ContentConverter contentConverter;
+  @Mock private FooterConverter footerConverter;
+  @Mock private HeaderConverter headerConverter;
+  @Mock private CertificatePrintEventService certificatePrintEventService;
 
-  @InjectMocks
-  private CertificatePrintGenerator certificatePrintGenerator;
+  @InjectMocks private CertificatePrintGenerator certificatePrintGenerator;
 
   private static final String CERTIFICATE_NAME = "certificateName";
   private static final String CERTIFICATE_TYPE = "certificateType";

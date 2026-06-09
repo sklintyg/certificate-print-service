@@ -40,12 +40,9 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdf;
 @ExtendWith(MockitoExtension.class)
 class CustomPrintServiceTest {
 
-  @Mock
-  CustomPdfGenerator customPdfGenerator;
-  @Mock
-  CustomPdfRequestConverter customPdfRequestConverter;
-  @InjectMocks
-  CustomPrintService customPrintService;
+  @Mock CustomPdfGenerator customPdfGenerator;
+  @Mock CustomPdfRequestConverter customPdfRequestConverter;
+  @InjectMocks CustomPrintService customPrintService;
 
   @Test
   void shallReturnFilledPdf() {
@@ -65,20 +62,19 @@ class CustomPrintServiceTest {
     final var metadata = validMetadataBuilder().isSent(true).build();
     final var request = validRequestBuilder().metadata(metadata).build();
 
-    final var ex = assertThrows(IllegalArgumentException.class,
-        () -> customPrintService.get(request));
+    final var ex =
+        assertThrows(IllegalArgumentException.class, () -> customPrintService.get(request));
     assertEquals(
         "Invalid request - sentRecipientName is required when isSent is true", ex.getMessage());
   }
 
   @Test
   void shallThrowWhenStatusIsSignedButSignedDateFieldIdIsMissing() {
-    final var metadata =
-        validMetadataBuilder().status(CertificateStatusDTO.SIGNED).build();
+    final var metadata = validMetadataBuilder().status(CertificateStatusDTO.SIGNED).build();
     final var request = validRequestBuilder().metadata(metadata).build();
 
-    final var ex = assertThrows(IllegalArgumentException.class,
-        () -> customPrintService.get(request));
+    final var ex =
+        assertThrows(IllegalArgumentException.class, () -> customPrintService.get(request));
     assertEquals(
         "Invalid request - signedDateFieldId is required when status is SIGNED", ex.getMessage());
   }

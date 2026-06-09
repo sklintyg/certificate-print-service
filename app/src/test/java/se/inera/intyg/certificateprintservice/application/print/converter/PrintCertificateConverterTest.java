@@ -41,12 +41,9 @@ class PrintCertificateConverterTest {
 
   private static final String ID_1 = "ID_1";
   private static final String ID_2 = "ID_2";
-  @Mock
-  private PrintCertificateCategoryConverter categoryConverter;
-  @Mock
-  private PrintCertificateMetadataConverter metadataConverter;
-  @InjectMocks
-  private PrintCertificateRequestConverter printCertificateRequestConverter;
+  @Mock private PrintCertificateCategoryConverter categoryConverter;
+  @Mock private PrintCertificateMetadataConverter metadataConverter;
+  @InjectMocks private PrintCertificateRequestConverter printCertificateRequestConverter;
 
   @Test
   void shallConvertCategories() {

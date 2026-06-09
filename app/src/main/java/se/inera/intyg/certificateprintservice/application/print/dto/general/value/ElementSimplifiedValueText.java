@@ -36,7 +36,5 @@ public class ElementSimplifiedValueText implements ElementSimplifiedValue {
   String text;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class ElementSimplifiedValueTextBuilder {
-
-  }
+  public static class ElementSimplifiedValueTextBuilder {}
 }

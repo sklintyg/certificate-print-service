@@ -55,15 +55,10 @@ public class CustomPdfRequestConverter {
         .signatureTagIndex(dto.getSignatureTagIndex())
         .signedDateFieldId(dto.getSignedDateFieldId())
         .startMcid(dto.getStartMcid())
-        .untaggedWatermarks(
-            dto.getUntaggedWatermarks() != null
-                ? dto.getUntaggedWatermarks()
-                : Collections.emptyList())
         .build();
   }
 
-  private Map<String, CustomPdfFieldF> convertFields(
-      Map<String, CustomPdfFieldDTO> fields) {
+  private Map<String, CustomPdfFieldF> convertFields(Map<String, CustomPdfFieldDTO> fields) {
     if (fields == null) {
       return Collections.emptyMap();
     }

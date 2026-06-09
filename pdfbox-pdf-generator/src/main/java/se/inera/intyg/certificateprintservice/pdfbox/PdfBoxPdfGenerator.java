@@ -34,6 +34,7 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdf;
 public class PdfBoxPdfGenerator implements CustomPdfGenerator {
 
   private final AcroFormFiller acroFormFiller;
+  private final OverlayTextService overlayTextService;
 
   @Override
   public byte[] get(CustomPdf customPdf) {
@@ -45,6 +46,7 @@ public class PdfBoxPdfGenerator implements CustomPdfGenerator {
     try (final var document = Loader.loadPDF(template)) {
       document.setAllSecurityToBeRemoved(true);
       acroFormFiller.fill(document, customPdf.getFields());
+      overlayTextService.drawOverlays(document, customPdf.getMetadata());
       flattenAcroForm(document);
       return toBytes(document);
     } catch (IOException e) {

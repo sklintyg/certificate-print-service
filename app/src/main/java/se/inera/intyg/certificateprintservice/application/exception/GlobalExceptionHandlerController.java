@@ -37,7 +37,10 @@ public class GlobalExceptionHandlerController {
       MethodArgumentNotValidException exception) {
     final var message =
         exception.getBindingResult().getFieldErrors().stream()
-            .map(error -> "Invalid request - '%s' %s".formatted(error.getField(), error.getDefaultMessage()))
+            .map(
+                error ->
+                    "Invalid request - '%s' %s"
+                        .formatted(error.getField(), error.getDefaultMessage()))
             .findFirst()
             .orElse("Invalid request");
     log.warn("Bad request. Reason: %s.".formatted(message));
@@ -47,8 +50,7 @@ public class GlobalExceptionHandlerController {
   }
 
   @ExceptionHandler({IllegalArgumentException.class})
-  public ResponseEntity<String> handleIllegalArgumentException(
-      IllegalArgumentException exception) {
+  public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
     log.warn("Bad request. Reason: %s.".formatted(exception.getMessage()));
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .contentType(MediaType.APPLICATION_PROBLEM_JSON)

@@ -89,7 +89,7 @@ public class CertificatePrintGenerator implements PrintCertificateGenerator, Ini
   private byte[] createPdf(PlaywrightBrowser playwrightBrowser, Certificate certificate)
       throws IOException {
     try (final var context = playwrightBrowser.getBrowserContext();
-        final var page = context.newPage();) {
+        final var page = context.newPage(); ) {
       final var metadata = certificate.getMetadata();
       final var header = headerConverter.convert(metadata).create().html();
       final var footer = footerConverter.convert(metadata).create().html();

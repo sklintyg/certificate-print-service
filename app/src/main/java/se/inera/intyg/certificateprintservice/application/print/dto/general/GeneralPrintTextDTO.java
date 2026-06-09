@@ -33,7 +33,5 @@ public class GeneralPrintTextDTO {
   String draftAlertInfoText;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class GeneralPrintTextDTOBuilder {
-
-  }
+  public static class GeneralPrintTextDTOBuilder {}
 }

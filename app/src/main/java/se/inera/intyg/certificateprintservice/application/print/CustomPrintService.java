@@ -37,9 +37,7 @@ public class CustomPrintService {
   public CustomPrintResponseDTO get(CustomPrintRequestDTO request) {
     validateCrossFieldConstraints(request.getMetadata());
     final var customPdf = customPdfRequestConverter.convert(request);
-    return CustomPrintResponseDTO.builder()
-        .pdfData(customPdfGenerator.get(customPdf))
-        .build();
+    return CustomPrintResponseDTO.builder().pdfData(customPdfGenerator.get(customPdf)).build();
   }
 
   private void validateCrossFieldConstraints(CustomPdfMetadataDTO metadata) {
@@ -55,8 +53,8 @@ public class CustomPrintService {
   }
 
   private void validateSignedDateField(CustomPdfMetadataDTO metadata) {
-    if (CertificateStatusDTO.SIGNED.equals(metadata.getStatus()) && isBlank(
-        metadata.getSignedDateFieldId())) {
+    if (CertificateStatusDTO.SIGNED.equals(metadata.getStatus())
+        && isBlank(metadata.getSignedDateFieldId())) {
       throw new IllegalArgumentException(
           "Invalid request - signedDateFieldId is required when status is SIGNED");
     }

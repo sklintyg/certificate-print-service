@@ -38,7 +38,5 @@ public class ElementSimplifiedValueTable implements ElementSimplifiedValue {
   List<List<String>> values;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class ElementSimplifiedValueTableBuilder {
-
-  }
+  public static class ElementSimplifiedValueTableBuilder {}
 }

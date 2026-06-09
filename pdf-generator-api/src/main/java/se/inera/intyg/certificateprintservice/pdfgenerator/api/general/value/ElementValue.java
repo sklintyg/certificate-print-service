@@ -18,6 +18,4 @@
  */
 package se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value;
 
-public interface ElementValue {
-
-}
+public interface ElementValue {}

@@ -35,7 +35,5 @@ public class PrintCertificateCategoryDTO {
   List<PrintCertificateQuestionDTO> questions;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class PrintCertificateCategoryDTOBuilder {
-
-  }
+  public static class PrintCertificateCategoryDTOBuilder {}
 }

@@ -21,7 +21,6 @@ package se.inera.intyg.certificateprintservice.application.testdata;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import se.inera.intyg.certificateprintservice.application.print.dto.custom.CertificateStatusDTO;
 import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPdfFieldDTO;
@@ -56,8 +55,7 @@ public class TestDataCustomPrintRequest {
         .signaturePageIndex(0)
         .signatureTagIndex(5)
         .signedDateFieldId("signed-date-field")
-        .startMcid(100)
-        .untaggedWatermarks(List.of("UTKAST"));
+        .startMcid(100);
   }
 
   public static CustomPrintRequestDTO buildRequest(

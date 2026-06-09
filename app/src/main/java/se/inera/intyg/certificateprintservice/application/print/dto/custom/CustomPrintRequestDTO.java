@@ -33,17 +33,10 @@ import se.inera.intyg.certificateprintservice.application.print.dto.custom.Custo
 @JsonDeserialize(builder = CustomPrintRequestDTOBuilder.class)
 public class CustomPrintRequestDTO {
 
-  @NotBlank
-  String template;
-  @NotNull
-  @Valid
-  CustomPdfMetadataDTO metadata;
-  @NotNull
-  Map<String, CustomPdfFieldDTO> fields;
+  @NotBlank String template;
+  @NotNull @Valid CustomPdfMetadataDTO metadata;
+  @NotNull Map<String, CustomPdfFieldDTO> fields;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class CustomPrintRequestDTOBuilder {
-
-  }
+  public static class CustomPrintRequestDTOBuilder {}
 }
-

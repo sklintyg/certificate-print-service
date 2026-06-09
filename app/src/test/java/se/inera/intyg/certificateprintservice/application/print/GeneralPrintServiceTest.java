@@ -45,12 +45,9 @@ class GeneralPrintServiceTest {
           .categories(List.of(PrintCertificateCategoryDTO.builder().build()))
           .metadata(PrintCertificateMetadataDTO.builder().build())
           .build();
-  @Mock
-  PrintCertificateGenerator printCertificateGenerator;
-  @Mock
-  PrintCertificateRequestConverter printCertificateRequestConverter;
-  @InjectMocks
-  GeneralPrintService generalPrintService;
+  @Mock PrintCertificateGenerator printCertificateGenerator;
+  @Mock PrintCertificateRequestConverter printCertificateRequestConverter;
+  @InjectMocks GeneralPrintService generalPrintService;
 
   @Test
   void shallThrowIfRequestIsNull() {

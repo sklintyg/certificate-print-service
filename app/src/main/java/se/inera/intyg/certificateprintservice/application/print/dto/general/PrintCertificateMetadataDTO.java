@@ -50,7 +50,5 @@ public class PrintCertificateMetadataDTO {
   GeneralPrintTextDTO generalPrintText;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class PrintCertificateMetadataDTOBuilder {
-
-  }
+  public static class PrintCertificateMetadataDTOBuilder {}
 }

@@ -32,7 +32,5 @@ public class PrintCertificateResponseDTO {
   byte[] pdfData;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class PrintCertificateResponseDTOBuilder {
-
-  }
+  public static class PrintCertificateResponseDTOBuilder {}
 }

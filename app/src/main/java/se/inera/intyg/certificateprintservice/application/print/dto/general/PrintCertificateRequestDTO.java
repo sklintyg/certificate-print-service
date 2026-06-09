@@ -34,7 +34,5 @@ public class PrintCertificateRequestDTO {
   PrintCertificateMetadataDTO metadata;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class PrintCertificateRequestDTOBuilder {
-
-  }
+  public static class PrintCertificateRequestDTOBuilder {}
 }

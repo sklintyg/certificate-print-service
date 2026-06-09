@@ -34,12 +34,9 @@ import se.inera.intyg.certificateprintservice.application.print.dto.general.Prin
 @ExtendWith(MockitoExtension.class)
 class PrintControllerTest {
 
-  @Mock
-  GeneralPrintService generalPrintService;
-  @Mock
-  CustomPrintService customPrintService;
-  @InjectMocks
-  PrintController printController;
+  @Mock GeneralPrintService generalPrintService;
+  @Mock CustomPrintService customPrintService;
+  @InjectMocks PrintController printController;
 
   @Test
   void shallReturnPrintCertificateResponse() {

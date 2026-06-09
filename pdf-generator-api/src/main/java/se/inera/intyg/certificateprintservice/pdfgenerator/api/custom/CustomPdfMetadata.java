@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Value;
 
@@ -37,5 +36,4 @@ public class CustomPdfMetadata {
   int signatureTagIndex;
   String signedDateFieldId;
   int startMcid;
-  List<String> untaggedWatermarks;
 }

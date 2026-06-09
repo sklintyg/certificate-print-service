@@ -44,9 +44,9 @@ class PrintCertificateQuestionConverterTest {
 
   PrintCertificateQuestionDTO.PrintCertificateQuestionDTOBuilder
       printCertificateQuestionDTOBuilder =
-      PrintCertificateQuestionDTO.builder()
-          .value(ElementSimplifiedValueText.builder().build())
-          .subquestions(List.of());
+          PrintCertificateQuestionDTO.builder()
+              .value(ElementSimplifiedValueText.builder().build())
+              .subquestions(List.of());
 
   @Test
   void shallConvertId() {

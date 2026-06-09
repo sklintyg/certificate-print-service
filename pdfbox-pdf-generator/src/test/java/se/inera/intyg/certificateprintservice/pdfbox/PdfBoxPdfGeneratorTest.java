@@ -33,7 +33,8 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfM
 
 class PdfBoxPdfGeneratorTest {
 
-  private final PdfBoxPdfGenerator generator = new PdfBoxPdfGenerator(new AcroFormFiller());
+  private final PdfBoxPdfGenerator generator =
+      new PdfBoxPdfGenerator(new AcroFormFiller(), new OverlayTextService(new PdfTextGenerator()));
 
   @Test
   void shallThrowWhenTemplateIsNull() {
@@ -78,8 +79,11 @@ class PdfBoxPdfGeneratorTest {
 
   private CustomPdfMetadata defaultMetadata() {
     return CustomPdfMetadata.builder()
-        .status(CertificateStatus.DRAFT)
+        .status(CertificateStatus.LOCKED_DRAFT)
+        .isSent(false)
         .certificateId("cert-id")
+        .addPageNumbers(false)
+        .startMcid(0)
         .build();
   }
 
