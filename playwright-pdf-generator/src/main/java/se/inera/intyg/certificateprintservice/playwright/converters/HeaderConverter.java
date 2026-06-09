@@ -21,7 +21,7 @@ package se.inera.intyg.certificateprintservice.playwright.converters;
 import com.microsoft.playwright.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Metadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Metadata;
 import se.inera.intyg.certificateprintservice.playwright.document.Header;
 import se.inera.intyg.certificateprintservice.playwright.document.Watermark;
 

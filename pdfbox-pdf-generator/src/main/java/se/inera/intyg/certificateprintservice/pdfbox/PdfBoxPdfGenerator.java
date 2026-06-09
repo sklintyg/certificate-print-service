@@ -20,19 +20,19 @@ package se.inera.intyg.certificateprintservice.pdfbox;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.certificateprintservice.pdfgenerator.FillPdfGenerator;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.fill.FillPdf;
+import se.inera.intyg.certificateprintservice.pdfgenerator.CustomPdfGenerator;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdf;
 
 @Slf4j
 @Service
-public class PdfBoxPdfGenerator implements FillPdfGenerator {
+public class PdfBoxPdfGenerator implements CustomPdfGenerator {
 
   @Override
-  public byte[] fill(FillPdf request) {
+  public byte[] get(CustomPdf customPdf) {
     // TODO: Implement PDFBox-based template filling
     log.info(
         "PdfBoxPdfGenerator.fill called for certificateId={} - skeleton implementation, returning empty bytes",
-        request.getMetadata().getCertificateId());
+        customPdf.getMetadata().getCertificateId());
     return new byte[0];
   }
 }

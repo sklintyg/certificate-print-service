@@ -24,12 +24,13 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateQuestionDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.value.ElementSimplifiedValueList;
-import se.inera.intyg.certificateprintservice.application.print.dto.value.ElementSimplifiedValueText;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Question;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueList;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueText;
+import se.inera.intyg.certificateprintservice.application.print.converter.general.PrintCertificateQuestionConverter;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateQuestionDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.value.ElementSimplifiedValueList;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.value.ElementSimplifiedValueText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Question;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueList;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueText;
 
 @ExtendWith(MockitoExtension.class)
 class PrintCertificateQuestionConverterTest {
@@ -43,9 +44,9 @@ class PrintCertificateQuestionConverterTest {
 
   PrintCertificateQuestionDTO.PrintCertificateQuestionDTOBuilder
       printCertificateQuestionDTOBuilder =
-          PrintCertificateQuestionDTO.builder()
-              .value(ElementSimplifiedValueText.builder().build())
-              .subquestions(List.of());
+      PrintCertificateQuestionDTO.builder()
+          .value(ElementSimplifiedValueText.builder().build())
+          .subquestions(List.of());
 
   @Test
   void shallConvertId() {

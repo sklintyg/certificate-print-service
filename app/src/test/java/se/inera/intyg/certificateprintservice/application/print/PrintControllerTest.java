@@ -26,37 +26,40 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateRequestDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateResponseDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfRequestDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPrintResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class PrintControllerTest {
 
-  @Mock GeneratePrintService generatePrintService;
-  @Mock FillPdfService fillPdfService;
-  @InjectMocks PrintController printController;
+  @Mock
+  GeneralPrintService generalPrintService;
+  @Mock
+  CustomPrintService customPrintService;
+  @InjectMocks
+  PrintController printController;
 
   @Test
   void shallReturnPrintCertificateResponse() {
     final var request = PrintCertificateRequestDTO.builder().build();
     final var expectedResponse = PrintCertificateResponseDTO.builder().build();
 
-    doReturn(expectedResponse).when(generatePrintService).get(request);
+    doReturn(expectedResponse).when(generalPrintService).get(request);
 
-    final var actualResponse = printController.get(request);
+    final var actualResponse = printController.general(request);
     assertEquals(expectedResponse, actualResponse);
   }
 
   @Test
-  void shallReturnFillPdfResponse() {
-    final var request = FillPdfRequestDTO.builder().build();
-    final var expectedResponse = FillPdfResponseDTO.builder().build();
+  void shallReturnCustomPrintResponse() {
+    final var request = CustomPrintRequestDTO.builder().build();
+    final var expectedResponse = CustomPrintResponseDTO.builder().build();
 
-    doReturn(expectedResponse).when(fillPdfService).fill(request);
+    doReturn(expectedResponse).when(customPrintService).get(request);
 
-    final var actualResponse = printController.fill(request);
+    final var actualResponse = printController.custom(request);
     assertEquals(expectedResponse, actualResponse);
   }
 }

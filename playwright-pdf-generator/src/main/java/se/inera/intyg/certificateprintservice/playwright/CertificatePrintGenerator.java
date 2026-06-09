@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.certificateprintservice.pdfgenerator.PrintCertificateGenerator;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Certificate;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Certificate;
 import se.inera.intyg.certificateprintservice.pdfgenerator.event.CertificatePrintEventService;
 import se.inera.intyg.certificateprintservice.pdfgenerator.event.model.CertificatePrintEvent;
 import se.inera.intyg.certificateprintservice.pdfgenerator.event.model.CertificatePrintEventType;
@@ -89,7 +89,7 @@ public class CertificatePrintGenerator implements PrintCertificateGenerator, Ini
   private byte[] createPdf(PlaywrightBrowser playwrightBrowser, Certificate certificate)
       throws IOException {
     try (final var context = playwrightBrowser.getBrowserContext();
-        final var page = context.newPage(); ) {
+        final var page = context.newPage();) {
       final var metadata = certificate.getMetadata();
       final var header = headerConverter.convert(metadata).create().html();
       final var footer = footerConverter.convert(metadata).create().html();

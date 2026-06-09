@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.inera.intyg.certificateprintservice.pdfgenerator.api.Certificate.builder;
+import static se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Certificate.builder;
 
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Locator;
@@ -43,9 +43,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.util.ReflectionTestUtils;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Category;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Certificate;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Metadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Category;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Certificate;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Metadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.event.CertificatePrintEventService;
 import se.inera.intyg.certificateprintservice.playwright.browserpool.BrowserPool;
 import se.inera.intyg.certificateprintservice.playwright.browserpool.PlaywrightBrowser;
@@ -61,17 +61,27 @@ import se.inera.intyg.certificateprintservice.playwright.document.Watermark;
 @ExtendWith(MockitoExtension.class)
 class CertificatePrintGeneratorTest {
 
-  @Mock private BrowserPool browserPool;
-  @Mock private PlaywrightBrowser playwrightBrowser;
-  @Mock private BrowserContext browserContext;
-  @Mock private Page page;
-  @Mock private Locator locator;
-  @Mock private ContentConverter contentConverter;
-  @Mock private FooterConverter footerConverter;
-  @Mock private HeaderConverter headerConverter;
-  @Mock private CertificatePrintEventService certificatePrintEventService;
+  @Mock
+  private BrowserPool browserPool;
+  @Mock
+  private PlaywrightBrowser playwrightBrowser;
+  @Mock
+  private BrowserContext browserContext;
+  @Mock
+  private Page page;
+  @Mock
+  private Locator locator;
+  @Mock
+  private ContentConverter contentConverter;
+  @Mock
+  private FooterConverter footerConverter;
+  @Mock
+  private HeaderConverter headerConverter;
+  @Mock
+  private CertificatePrintEventService certificatePrintEventService;
 
-  @InjectMocks private CertificatePrintGenerator certificatePrintGenerator;
+  @InjectMocks
+  private CertificatePrintGenerator certificatePrintGenerator;
 
   private static final String CERTIFICATE_NAME = "certificateName";
   private static final String CERTIFICATE_TYPE = "certificateType";

@@ -34,8 +34,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.GeneralPrintText;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Metadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.GeneralPrintText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Metadata;
 import se.inera.intyg.certificateprintservice.playwright.document.LeftMarginInfo;
 import se.inera.intyg.certificateprintservice.playwright.document.RightMarginInfo;
 import se.inera.intyg.certificateprintservice.playwright.document.Watermark;
@@ -43,10 +43,13 @@ import se.inera.intyg.certificateprintservice.playwright.document.Watermark;
 @ExtendWith(MockitoExtension.class)
 class HeaderConverterTest {
 
-  @Mock private LeftMarginInfoConverter leftMarginInfoConverter;
-  @Mock private RightMarginInfoConverter rightMarginInfoConverter;
+  @Mock
+  private LeftMarginInfoConverter leftMarginInfoConverter;
+  @Mock
+  private RightMarginInfoConverter rightMarginInfoConverter;
 
-  @InjectMocks private HeaderConverter headerConverter;
+  @InjectMocks
+  private HeaderConverter headerConverter;
 
   private static final String CERTIFICATE_NAME = "certificateName";
   private static final String TYPE_ID = "typeId";

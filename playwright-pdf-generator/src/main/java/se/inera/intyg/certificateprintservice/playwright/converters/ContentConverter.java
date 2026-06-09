@@ -19,7 +19,7 @@
 package se.inera.intyg.certificateprintservice.playwright.converters;
 
 import org.springframework.stereotype.Component;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Certificate;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Certificate;
 import se.inera.intyg.certificateprintservice.playwright.document.Content;
 
 @Component

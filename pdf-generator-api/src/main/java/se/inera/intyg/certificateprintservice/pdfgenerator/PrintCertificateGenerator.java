@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.certificateprintservice.pdfgenerator;
 
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Certificate;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Certificate;
 
 public interface PrintCertificateGenerator {
 

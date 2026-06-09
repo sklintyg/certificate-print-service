@@ -27,9 +27,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateCategoryDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateQuestionDTO;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Question;
+import se.inera.intyg.certificateprintservice.application.print.converter.general.PrintCertificateCategoryConverter;
+import se.inera.intyg.certificateprintservice.application.print.converter.general.PrintCertificateQuestionConverter;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateCategoryDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateQuestionDTO;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Question;
 
 @ExtendWith(MockitoExtension.class)
 class PrintCertificateCategoryConverterTest {
@@ -37,8 +39,10 @@ class PrintCertificateCategoryConverterTest {
   private static final String ID_1 = "ID_1";
   private static final String QUESTION_1 = "question_1";
   private static final String QUESTION_2 = "question_2";
-  @Mock PrintCertificateQuestionConverter printCertificateQuestionConverter;
-  @InjectMocks PrintCertificateCategoryConverter printCertificateCategoryConverter;
+  @Mock
+  PrintCertificateQuestionConverter printCertificateQuestionConverter;
+  @InjectMocks
+  PrintCertificateCategoryConverter printCertificateCategoryConverter;
 
   @Test
   void shallConvertId() {

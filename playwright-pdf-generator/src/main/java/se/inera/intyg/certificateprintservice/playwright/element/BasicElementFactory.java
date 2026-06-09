@@ -25,8 +25,8 @@ import javax.swing.text.html.HTML.Tag;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jsoup.nodes.Element;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueLabeledList;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueTable;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueLabeledList;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.value.ElementValueTable;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BasicElementFactory {

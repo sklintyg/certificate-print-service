@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Test;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.GeneralPrintText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Metadata;
 
 class MetadataTest {
 

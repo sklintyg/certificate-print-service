@@ -25,8 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.certificateprintservice.application.print.dto.GeneralPrintTextDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateMetadataDTO;
+import se.inera.intyg.certificateprintservice.application.print.converter.general.PrintCertificateMetadataConverter;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.GeneralPrintTextDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateMetadataDTO;
 
 class PrintCertificateMetadataConverterTest {
 

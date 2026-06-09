@@ -27,20 +27,26 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateCategoryDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateMetadataDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateRequestDTO;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Category;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Metadata;
+import se.inera.intyg.certificateprintservice.application.print.converter.general.PrintCertificateCategoryConverter;
+import se.inera.intyg.certificateprintservice.application.print.converter.general.PrintCertificateMetadataConverter;
+import se.inera.intyg.certificateprintservice.application.print.converter.general.PrintCertificateRequestConverter;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateCategoryDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateMetadataDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateRequestDTO;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Category;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Metadata;
 
 @ExtendWith(MockitoExtension.class)
 class PrintCertificateConverterTest {
 
   private static final String ID_1 = "ID_1";
   private static final String ID_2 = "ID_2";
-  @Mock private PrintCertificateCategoryConverter categoryConverter;
-  @Mock private PrintCertificateMetadataConverter metadataConverter;
-  @InjectMocks private PrintCertificateRequestConverter printCertificateRequestConverter;
+  @Mock
+  private PrintCertificateCategoryConverter categoryConverter;
+  @Mock
+  private PrintCertificateMetadataConverter metadataConverter;
+  @InjectMocks
+  private PrintCertificateRequestConverter printCertificateRequestConverter;
 
   @Test
   void shallConvertCategories() {

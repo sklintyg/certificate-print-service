@@ -22,7 +22,7 @@ import javax.swing.text.html.HTML.Tag;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jsoup.nodes.Element;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Category;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.Category;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CategoryConverter {

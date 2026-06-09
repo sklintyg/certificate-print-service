@@ -24,26 +24,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateRequestDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateResponseDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfRequestDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.custom.CustomPrintResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.general.PrintCertificateResponseDTO;
 
 @RestController
 @RequestMapping("api/print")
 @RequiredArgsConstructor
 public class PrintController {
 
-  private final GeneratePrintService printService;
-  private final FillPdfService fillPdfService;
+  private final GeneralPrintService generalPrintService;
+  private final CustomPrintService customPrintService;
 
-  @PostMapping()
-  PrintCertificateResponseDTO get(@RequestBody PrintCertificateRequestDTO request) {
-    return printService.get(request);
+  @PostMapping("/general")
+  PrintCertificateResponseDTO general(@RequestBody PrintCertificateRequestDTO request) {
+    return generalPrintService.get(request);
   }
 
-  @PostMapping("/fill")
-  FillPdfResponseDTO fill(@Valid @RequestBody FillPdfRequestDTO request) {
-    return fillPdfService.fill(request);
+  @PostMapping("/custom")
+  CustomPrintResponseDTO custom(@Valid @RequestBody CustomPrintRequestDTO request) {
+    return customPrintService.get(request);
   }
 }

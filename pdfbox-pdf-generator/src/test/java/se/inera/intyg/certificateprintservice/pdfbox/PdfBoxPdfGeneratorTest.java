@@ -21,9 +21,9 @@ package se.inera.intyg.certificateprintservice.pdfbox;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.fill.CertificateStatus;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.fill.FillPdf;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.fill.FillPdfMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CertificateStatus;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdf;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfMetadata;
 
 class PdfBoxPdfGeneratorTest {
 
@@ -32,17 +32,17 @@ class PdfBoxPdfGeneratorTest {
   @Test
   void shallReturnNonNullByteArray() {
     final var request =
-        FillPdf.builder()
+        CustomPdf.builder()
             .template(new byte[0])
             .metadata(
-                FillPdfMetadata.builder()
+                CustomPdfMetadata.builder()
                     .status(CertificateStatus.DRAFT)
                     .certificateId("cert-id")
                     .build())
             .fields(java.util.Collections.emptyMap())
             .build();
 
-    final var result = generator.fill(request);
+    final var result = generator.get(request);
     assertNotNull(result);
   }
 }
