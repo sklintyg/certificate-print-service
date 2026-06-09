@@ -30,10 +30,6 @@ import se.inera.intyg.certificateprintservice.application.print.dto.fill.PdfFiel
 public class PdfFieldFillOptionsDTO {
 
   String value;
-  boolean append;
-  String appearance;
-  int offset;
-  boolean normalizeText;
 
   @JsonPOJOBuilder(withPrefix = "")
   public static class PdfFieldFillOptionsDTOBuilder {}

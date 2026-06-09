@@ -24,6 +24,7 @@ import se.inera.intyg.certificateprintservice.application.print.converter.FillPd
 import se.inera.intyg.certificateprintservice.application.print.dto.fill.CertificateStatusDTO;
 import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdfResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.dto.fill.PdfMetadataOptionsDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.FillPdfGenerator;
 
 @Service
@@ -34,54 +35,33 @@ public class FillPdfService {
   private final FillPdfRequestConverter fillPdfRequestConverter;
 
   public FillPdfResponseDTO fill(FillPdfRequestDTO request) {
-    validateRequest(request);
+    validateCrossFieldConstraints(request.getMetadata());
     final var fillPdf = fillPdfRequestConverter.convert(request);
     return FillPdfResponseDTO.builder()
         .pdfData(fillPdfGenerator.fill(fillPdf))
         .build();
   }
 
-  private void validateRequest(FillPdfRequestDTO request) {
-    if (request == null) {
-      throw new IllegalArgumentException("Invalid request - request is null");
-    }
-    if (request.getTemplate() == null || request.getTemplate().isBlank()) {
-      throw new IllegalArgumentException("Invalid request - Missing required parameter template");
-    }
-    if (request.getMetadata() == null) {
-      throw new IllegalArgumentException("Invalid request - Missing required parameter metadata");
-    }
-    if (request.getFields() == null) {
-      throw new IllegalArgumentException("Invalid request - Missing required parameter fields");
-    }
+  private void validateCrossFieldConstraints(PdfMetadataOptionsDTO metadata) {
+    validateSentRecipient(metadata);
+    validateSignedDateField(metadata);
+  }
 
-    final var metadata = request.getMetadata();
-
-    if (metadata.getCertificateId() == null || metadata.getCertificateId().isBlank()) {
-      throw new IllegalArgumentException(
-          "Invalid request - Missing required metadata parameter certificateId");
-    }
-    if (metadata.getPatientId() == null || metadata.getPatientId().isBlank()) {
-      throw new IllegalArgumentException(
-          "Invalid request - Missing required metadata parameter patientId");
-    }
-    if (metadata.isSent()
-        && (metadata.getSentRecipientName() == null
-            || metadata.getSentRecipientName().isBlank())) {
+  private void validateSentRecipient(PdfMetadataOptionsDTO metadata) {
+    if (metadata.isSent() && isBlank(metadata.getSentRecipientName())) {
       throw new IllegalArgumentException(
           "Invalid request - sentRecipientName is required when isSent is true");
     }
-    if (CertificateStatusDTO.SIGNED.equals(metadata.getStatus())
-        && (metadata.getSignedDateFieldId() == null
-            || metadata.getSignedDateFieldId().isBlank())) {
+  }
+
+  private void validateSignedDateField(PdfMetadataOptionsDTO metadata) {
+    if (CertificateStatusDTO.SIGNED.equals(metadata.getStatus()) && isBlank(metadata.getSignedDateFieldId())) {
       throw new IllegalArgumentException(
           "Invalid request - signedDateFieldId is required when status is SIGNED");
     }
-    if (metadata.getOverflowPageIndex() != null
-        && (metadata.getPatientIdFieldId() == null
-            || metadata.getPatientIdFieldId().isBlank())) {
-      throw new IllegalArgumentException(
-          "Invalid request - patientIdFieldId is required when overflowPageIndex is set");
-    }
+  }
+
+  private boolean isBlank(String value) {
+    return value == null || value.isBlank();
   }
 }

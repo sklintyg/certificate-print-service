@@ -20,7 +20,9 @@ package se.inera.intyg.certificateprintservice.application.print.dto.fill;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import java.util.List;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Value;
@@ -31,10 +33,17 @@ import se.inera.intyg.certificateprintservice.application.print.dto.fill.FillPdf
 @JsonDeserialize(builder = FillPdfRequestDTOBuilder.class)
 public class FillPdfRequestDTO {
 
+  @NotBlank
   String template;
+  @NotNull
+  @Valid
   PdfMetadataOptionsDTO metadata;
-  Map<String, List<PdfFieldFillOptionsDTO>> fields;
+  @NotNull
+  Map<String, PdfFieldFillOptionsDTO> fields;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class FillPdfRequestDTOBuilder {}
+  public static class FillPdfRequestDTOBuilder {
+
+  }
 }
+

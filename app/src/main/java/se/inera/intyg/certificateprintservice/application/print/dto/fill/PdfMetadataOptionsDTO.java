@@ -20,6 +20,8 @@ package se.inera.intyg.certificateprintservice.application.print.dto.fill;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
@@ -30,19 +32,18 @@ import se.inera.intyg.certificateprintservice.application.print.dto.fill.PdfMeta
 @JsonDeserialize(builder = PdfMetadataOptionsDTOBuilder.class)
 public class PdfMetadataOptionsDTO {
 
+  @NotNull
   CertificateStatusDTO status;
   boolean isSent;
   String sentRecipientName;
   boolean availableForCitizen;
+  @NotBlank
   String certificateId;
   String additionalInfoText;
   boolean addPageNumbers;
-  Integer overflowPageIndex;
   int signaturePageIndex;
   int signatureTagIndex;
   String signedDateFieldId;
-  String patientId;
-  String patientIdFieldId;
   int startMcid;
   List<String> untaggedWatermarks;
 

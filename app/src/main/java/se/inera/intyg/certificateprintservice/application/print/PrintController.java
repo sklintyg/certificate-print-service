@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.certificateprintservice.application.print;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,7 +43,7 @@ public class PrintController {
   }
 
   @PostMapping("/fill")
-  FillPdfResponseDTO fill(@RequestBody FillPdfRequestDTO request) {
+  FillPdfResponseDTO fill(@Valid @RequestBody FillPdfRequestDTO request) {
     return fillPdfService.fill(request);
   }
 }
