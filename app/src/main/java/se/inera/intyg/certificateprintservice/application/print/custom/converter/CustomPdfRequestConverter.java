@@ -45,7 +45,7 @@ public class CustomPdfRequestConverter {
   private CustomPdfMetadata convertMetadata(CustomPdfMetadataDTO dto) {
     return CustomPdfMetadata.builder()
         .status(CertificateStatus.valueOf(dto.getStatus().name()))
-        .isSent(dto.isSent())
+        .sent(dto.isSent())
         .sentRecipientName(dto.getSentRecipientName())
         .availableForCitizen(dto.isAvailableForCitizen())
         .certificateId(dto.getCertificateId())

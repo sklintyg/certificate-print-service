@@ -1,0 +1,60 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package se.inera.intyg.certificateprintservice.integrationtest.fk7210;
+
+public class TestSetupFK7210Constants {
+
+  private TestSetupFK7210Constants() {
+    throw new IllegalStateException("Utility class");
+  }
+
+  public static final String PATIENT_ID_FIELD_ID = "form1[0].#subform[0].flt_txtPersonNr[0]";
+  public static final String BIRTH_DATE_FIELD_ID = "form1[0].#subform[0].flt_dat[0]";
+  public static final String SIGNED_DATE_FIELD_ID = "form1[0].#subform[0].flt_datUnderskrift[0]";
+  public static final String SIGNED_BY_NAME_FIELD_ID =
+      "form1[0].#subform[0].flt_txtNamnfortydligande[0]";
+  public static final String PA_TITLE_FIELD_ID = "form1[0].#subform[0].flt_txtBefattning[0]";
+  public static final String SPECIALTY_FIELD_ID =
+      "form1[0].#subform[0].flt_txtEventuellSpecialistkompetens[0]";
+  public static final String HSA_ID_FIELD_ID = "form1[0].#subform[0].flt_txtLakarensHSA-ID[0]";
+  public static final String WORKPLACE_CODE_FIELD_ID =
+      "form1[0].#subform[0].flt_txtArbetsplatskod[0]";
+  public static final String CONTACT_INFORMATION_FIELD_ID =
+      "form1[0].#subform[0].flt_txtVardgivarensNamnAdressTelefon[0]";
+
+  public static final String PATIENT_ID = "191212121212";
+  public static final String BIRTH_DATE = "2025-10-20";
+  public static final String SIGNED_DATE = "2025-03-15";
+  public static final String DOCTOR_NAME = "Anna Lindqvist";
+  public static final String PA_TITLE = "Läkare";
+  public static final String SPECIALTY = "Allmänmedicin";
+  public static final String HSA_ID = "SE2321000016-1C4B";
+  public static final String WORKPLACE_CODE = "1234567";
+  public static final String CONTACT_INFORMATION =
+      "Vårdcentralen Centrum\nStorgatan 1\n111 11 Stockholm\nTel: 08-123 456 78";
+
+  public static final String TAGGED_PDF_RESOURCE = "/templates/fk7210.pdf";
+
+  public static final String CERTIFICATE_ID = "certificateId-fk7210-001";
+  public static final String RECIPIENT_NAME = "Försäkringskassan";
+  public static final String ADDITIONAL_INFO_TEXT = "Intyget är utskriftet från Webcert.";
+  public static final int START_MCID = 100;
+  public static final int SIGNATURE_PAGE_INDEX = 0;
+  public static final int SIGNATURE_TAG_INDEX_WITH_ADDRESS = 15;
+}

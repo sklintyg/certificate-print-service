@@ -104,7 +104,7 @@ class OverlayTextServiceTest {
       final var metadata =
           CustomPdfMetadata.builder()
               .status(CertificateStatus.SIGNED)
-              .isSent(true)
+              .sent(true)
               .sentRecipientName(TestDataFK7210CustomPdfMetadata.RECIPIENT_NAME)
               .availableForCitizen(false)
               .certificateId(TestDataFK7210CustomPdfMetadata.CERTIFICATE_ID)

@@ -26,7 +26,7 @@ import lombok.Value;
 public class CustomPdfMetadata {
 
   CertificateStatus status;
-  boolean isSent;
+  boolean sent;
   String sentRecipientName;
   boolean availableForCitizen;
   String certificateId;

@@ -26,6 +26,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Value;
+import lombok.With;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO.CustomPrintRequestDTOBuilder;
 
 @Value
@@ -33,7 +34,7 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 @JsonDeserialize(builder = CustomPrintRequestDTOBuilder.class)
 public class CustomPrintRequestDTO {
 
-  @NotBlank String template;
+  @With @NotBlank String template;
   @NotNull @Valid CustomPdfMetadataDTO metadata;
   @NotNull Map<String, CustomPdfFieldDTO> fields;
 

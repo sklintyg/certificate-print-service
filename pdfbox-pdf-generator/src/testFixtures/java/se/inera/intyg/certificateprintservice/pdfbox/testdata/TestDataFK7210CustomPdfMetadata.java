@@ -39,7 +39,7 @@ public class TestDataFK7210CustomPdfMetadata {
   public static CustomPdfMetadata metadataWithStatus(CertificateStatus status) {
     return CustomPdfMetadata.builder()
         .status(status)
-        .isSent(false)
+        .sent(false)
         .certificateId(CERTIFICATE_ID)
         .signedDateFieldId(SIGNED_DATE_FIELD_ID)
         .startMcid(START_MCID)
@@ -53,7 +53,7 @@ public class TestDataFK7210CustomPdfMetadata {
   public static CustomPdfMetadata signedMetadata() {
     return CustomPdfMetadata.builder()
         .status(CertificateStatus.SIGNED)
-        .isSent(false)
+        .sent(false)
         .certificateId(CERTIFICATE_ID)
         .additionalInfoText(ADDITIONAL_INFO_TEXT)
         .signaturePageIndex(SIGNATURE_PAGE_INDEX)
@@ -66,7 +66,7 @@ public class TestDataFK7210CustomPdfMetadata {
   public static CustomPdfMetadata signedAndSentMetadata() {
     return CustomPdfMetadata.builder()
         .status(CertificateStatus.SIGNED)
-        .isSent(true)
+        .sent(true)
         .sentRecipientName(RECIPIENT_NAME)
         .availableForCitizen(true)
         .certificateId(CERTIFICATE_ID)
@@ -81,7 +81,7 @@ public class TestDataFK7210CustomPdfMetadata {
   public static CustomPdfMetadata fullMetadata() {
     return CustomPdfMetadata.builder()
         .status(CertificateStatus.SIGNED)
-        .isSent(true)
+        .sent(true)
         .sentRecipientName(RECIPIENT_NAME)
         .availableForCitizen(true)
         .certificateId(CERTIFICATE_ID)

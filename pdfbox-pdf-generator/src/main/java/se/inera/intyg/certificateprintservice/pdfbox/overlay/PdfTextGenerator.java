@@ -105,7 +105,7 @@ public class PdfTextGenerator {
         text,
         fontSize,
         matrix,
-        Color.black,
+        Color.gray,
         null,
         null,
         false,

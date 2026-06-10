@@ -59,7 +59,7 @@ class CustomPrintServiceTest {
 
   @Test
   void shallThrowWhenSentButSentRecipientNameIsMissing() {
-    final var metadata = validMetadataBuilder().isSent(true).build();
+    final var metadata = validMetadataBuilder().sent(true).build();
     final var request = validRequestBuilder().metadata(metadata).build();
 
     final var ex =

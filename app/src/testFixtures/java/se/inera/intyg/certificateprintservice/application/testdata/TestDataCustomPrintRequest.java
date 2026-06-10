@@ -46,7 +46,7 @@ public class TestDataCustomPrintRequest {
   public static CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder fullMetadataBuilder() {
     return CustomPdfMetadataDTO.builder()
         .status(CertificateStatusDTO.SIGNED)
-        .isSent(true)
+        .sent(true)
         .sentRecipientName("Försäkringskassan")
         .availableForCitizen(true)
         .certificateId("cert-123")

@@ -31,23 +31,18 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 @JsonDeserialize(builder = CustomPdfMetadataDTOBuilder.class)
 public class CustomPdfMetadataDTO {
 
-  @NotNull
-  CertificateStatusDTO status;
-  boolean isSent;
+  @NotNull CertificateStatusDTO status;
+  boolean sent;
   String sentRecipientName;
   boolean availableForCitizen;
-  @NotBlank
-  String certificateId;
+  @NotBlank String certificateId;
   String additionalInfoText;
   int signaturePageIndex;
   int signatureTagIndex;
   String signedDateFieldId;
   int startMcid;
-  @NotBlank
-  String title;
+  @NotBlank String title;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class CustomPdfMetadataDTOBuilder {
-
-  }
+  public static class CustomPdfMetadataDTOBuilder {}
 }

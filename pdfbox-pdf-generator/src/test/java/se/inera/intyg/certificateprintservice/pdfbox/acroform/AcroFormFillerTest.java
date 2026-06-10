@@ -57,8 +57,11 @@ class AcroFormFillerTest {
 
   @Test
   void shallThrowWhenFieldIdDoesNotExist() {
-    assertThrows(IllegalArgumentException.class, () -> filler.fill(document,
-        Map.of("nonExistent", CustomPdfField.builder().value("value").build())));
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            filler.fill(
+                document, Map.of("nonExistent", CustomPdfField.builder().value("value").build())));
   }
 
   @Test
