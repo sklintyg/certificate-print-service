@@ -35,4 +35,5 @@ public class CustomPdfMetadata {
   int signatureTagIndex;
   String signedDateFieldId;
   int startMcid;
+  String title;
 }

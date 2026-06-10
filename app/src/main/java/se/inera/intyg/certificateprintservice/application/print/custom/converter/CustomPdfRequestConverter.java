@@ -54,6 +54,7 @@ public class CustomPdfRequestConverter {
         .signatureTagIndex(dto.getSignatureTagIndex())
         .signedDateFieldId(dto.getSignedDateFieldId())
         .startMcid(dto.getStartMcid())
+        .title(dto.getTitle())
         .build();
   }
 

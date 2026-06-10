@@ -50,8 +50,7 @@ public class PdfBoxPdfGenerator implements CustomPdfGenerator {
       document.setAllSecurityToBeRemoved(true);
       acroFormFiller.fill(document, customPdf.getFields());
       overlayTextService.drawOverlays(document, customPdf.getMetadata());
-      // TODO: Set title for document
-      // document.getDocumentInformation().setTitle(...<add title in api>...)
+      document.getDocumentInformation().setTitle(customPdf.getMetadata().getTitle());
       flattenAcroForm(document);
       return toBytes(document);
     } catch (IOException e) {
