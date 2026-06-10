@@ -73,6 +73,13 @@ class CustomPdfRequestConverterTest {
   }
 
   @Test
+  void shallConvertMetadataTitle() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertEquals("fk7210", result.getMetadata().getTitle());
+  }
+
+  @Test
   void shallConvertFieldValue() {
     final var fieldOption = CustomPdfFieldDTO.builder().value("some-value").build();
     final var request =

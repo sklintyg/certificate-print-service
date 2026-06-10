@@ -30,6 +30,7 @@ public class TestDataFK7210CustomPdfMetadata {
   public static final int START_MCID = 100;
   public static final int SIGNATURE_PAGE_INDEX = 0;
   public static final int SIGNATURE_TAG_INDEX_WITH_ADDRESS = 15;
+  private static final String TITLE = "fk7210";
 
   private TestDataFK7210CustomPdfMetadata() {
     throw new IllegalStateException("Utility class");
@@ -89,6 +90,7 @@ public class TestDataFK7210CustomPdfMetadata {
         .signatureTagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
         .signedDateFieldId(SIGNED_DATE_FIELD_ID)
         .startMcid(START_MCID)
+        .title(TITLE)
         .build();
   }
 }

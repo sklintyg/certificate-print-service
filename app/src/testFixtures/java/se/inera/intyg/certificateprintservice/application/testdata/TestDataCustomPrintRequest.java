@@ -54,7 +54,8 @@ public class TestDataCustomPrintRequest {
         .signaturePageIndex(0)
         .signatureTagIndex(5)
         .signedDateFieldId("signed-date-field")
-        .startMcid(100);
+        .startMcid(100)
+        .title("fk7210");
   }
 
   public static CustomPrintRequestDTO buildRequest(
