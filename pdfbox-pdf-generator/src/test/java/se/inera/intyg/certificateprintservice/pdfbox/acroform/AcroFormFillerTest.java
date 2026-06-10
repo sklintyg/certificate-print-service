@@ -19,7 +19,7 @@
 package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 import java.util.Map;
@@ -56,10 +56,9 @@ class AcroFormFillerTest {
   }
 
   @Test
-  void shallNotThrowWhenFieldIdDoesNotExist() {
-    filler.fill(document, Map.of("nonExistent", CustomPdfField.builder().value("value").build()));
-
-    assertNull(acroForm.getField("nonExistent"));
+  void shallThrowWhenFieldIdDoesNotExist() {
+    assertThrows(IllegalArgumentException.class, () -> filler.fill(document,
+        Map.of("nonExistent", CustomPdfField.builder().value("value").build())));
   }
 
   @Test

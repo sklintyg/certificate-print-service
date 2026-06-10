@@ -39,9 +39,8 @@ public class AcroFormFiller {
         (fieldId, fieldOptions) -> {
           final var field = acroForm.getField(fieldId);
           if (field == null) {
-            // TODO: Should we fail fast here? Throw exception as in cs?
-            log.warn("Field '{}' not found in PDF template — skipping", fieldId);
-            return;
+            throw new IllegalArgumentException(
+                "Field '%s' not found in PDF template — skipping".formatted(fieldId));
           }
           try {
             field.setValue(fieldOptions.getValue());
