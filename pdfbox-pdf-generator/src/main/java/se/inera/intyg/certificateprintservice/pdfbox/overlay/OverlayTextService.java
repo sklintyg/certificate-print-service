@@ -18,98 +18,73 @@
  */
 package se.inera.intyg.certificateprintservice.pdfbox.overlay;
 
+import io.micrometer.common.util.StringUtils;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CertificateStatus;
+import se.inera.intyg.certificateprintservice.pdfbox.accessibility.MaxMCIDExtractor;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
 
 @Service
 @RequiredArgsConstructor
 public class OverlayTextService {
 
-  private static final String WATERMARK_TEXT = "UTKAST";
-  private static final String DIGITALLY_SIGNED_TEXT =
-      "Detta är en utskrift av ett elektroniskt intyg. "
-          + "Intyget har signerats elektroniskt av intygsutfärdaren.";
-
-  static final int SIGNATURE_X_PADDING = 60;
-  static final int SIGNATURE_Y_PADDING = 2;
-
   private final PdfTextGenerator pdfTextGenerator;
 
   public void drawOverlays(PDDocument document, CustomPdfMetadata metadata) throws IOException {
-    final var mcid = new AtomicInteger(metadata.getStartMcid());
+    final var mcid = new AtomicInteger(MaxMCIDExtractor.findMaxMcid(document));
 
     drawDraftWatermark(document, metadata, mcid);
-    drawSignatureText(document, metadata, mcid);
-    drawSentText(document, metadata, mcid);
-    drawMarginText(document, metadata, mcid, 0);
+    drawWaterMarks(document, metadata, mcid);
+    drawMarginText(document, metadata, mcid);
   }
 
   private void drawDraftWatermark(
       PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid) throws IOException {
-    if (metadata.getStatus().equals(CertificateStatus.DRAFT)) {
-      pdfTextGenerator.addWatermark(document, WATERMARK_TEXT, mcid.getAndIncrement());
+    if (metadata.isAddDraftWatermark()) {
+      pdfTextGenerator.addWatermark(document, "UTKAST", mcid.getAndIncrement());
     }
   }
 
-  private void drawSignatureText(
-      PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid) throws IOException {
-    if (!metadata.getStatus().equals(CertificateStatus.SIGNED)) {
-      return;
-    }
-
-    final var acroForm = document.getDocumentCatalog().getAcroForm();
-    final var signedDateField = acroForm.getField(metadata.getSignedDateFieldId());
-
-    if (signedDateField == null) {
-      throw new IllegalStateException("Signed date field is missing");
-    }
-
-    final var rectangle = signedDateField.getWidgets().getFirst().getRectangle();
-    final var xPosition = rectangle.getUpperRightX() + SIGNATURE_X_PADDING;
-    final var yPosition = rectangle.getLowerLeftY() + SIGNATURE_Y_PADDING;
-
-    pdfTextGenerator.addDigitalSignatureText(
-        document,
-        DIGITALLY_SIGNED_TEXT,
-        xPosition,
-        yPosition,
-        mcid.getAndIncrement(),
-        metadata.getSignatureTagIndex(),
-        metadata.getSignaturePageIndex());
-  }
-
-  private void drawSentText(PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid)
+  private void drawWaterMarks(PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid)
       throws IOException {
-    if (!metadata.isSent()) {
-      return;
-    }
 
-    final var sentLine =
-        "Intyget har skickats digitalt till %s".formatted(metadata.getSentRecipientName());
-
-    pdfTextGenerator.addSentText(document, sentLine, mcid.getAndIncrement());
-
-    if (metadata.isAvailableForCitizen()) {
-      pdfTextGenerator.addSentVisibilityText(
-          document, "Du kan se intyget genom att logga in på 1177.se", mcid.getAndIncrement());
+    for (CustomText customText : metadata.getCustomTextList()) {
+      drawText(document, customText, mcid.getAndIncrement());
     }
   }
 
-  private void drawMarginText(
-      PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid, int pageIndex)
+  // TODO: refactor addDigitalSignatureText to include font size and be general drawtext, we should
+  // be able to delete addsenttext method.
+  private void drawText(PDDocument document, CustomText customText, int mcid) throws IOException {
+    if (customText.getX() != null
+        && customText.getY() != null
+        && customText.getPageIndex() != null
+        && customText.getTagIndex() != null) {
+      pdfTextGenerator.addDigitalSignatureText(
+          document,
+          customText.getValue(),
+          customText.getX(),
+          customText.getY(),
+          mcid,
+          customText.getTagIndex(),
+          customText.getPageIndex());
+    } else {
+      // For custom text without specific positioning, add as sent text
+      pdfTextGenerator.addSentText(document, customText.getValue(), mcid);
+    }
+  }
+
+  private void drawMarginText(PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid)
       throws IOException {
-    if (!metadata.getStatus().equals(CertificateStatus.SIGNED)) {
+    if (StringUtils.isBlank(metadata.getRightMarginText())) {
       return;
     }
 
-    final var text =
-        "Intygsid: %s. %s".formatted(metadata.getCertificateId(), metadata.getAdditionalInfoText());
-
-    pdfTextGenerator.addMarginText(document, text, mcid.getAndIncrement(), pageIndex);
+    pdfTextGenerator.addMarginText(
+        document, metadata.getRightMarginText(), mcid.getAndIncrement(), 0);
   }
 }

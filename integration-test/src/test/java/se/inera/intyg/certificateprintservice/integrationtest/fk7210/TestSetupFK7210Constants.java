@@ -51,9 +51,8 @@ public class TestSetupFK7210Constants {
 
   public static final String TAGGED_PDF_RESOURCE = "/templates/fk7210.pdf";
 
-  public static final String CERTIFICATE_ID = "certificateId-fk7210-001";
-  public static final String RECIPIENT_NAME = "Försäkringskassan";
-  public static final String ADDITIONAL_INFO_TEXT = "Intyget är utskriftet från Webcert.";
+  public static final String RIGHT_MARGIN_TEXT =
+      "Intygsid: 8996d3d8-cb67-4602-b6a9-81dee33616ce. Intyget är utskrivet från Webcert.";
   public static final int START_MCID = 100;
   public static final int SIGNATURE_PAGE_INDEX = 0;
   public static final int SIGNATURE_TAG_INDEX_WITH_ADDRESS = 15;

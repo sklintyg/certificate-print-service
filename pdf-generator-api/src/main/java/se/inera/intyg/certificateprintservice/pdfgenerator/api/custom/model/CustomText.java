@@ -16,27 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.certificateprintservice.application.print.custom.dto;
+package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import lombok.Builder;
 import lombok.Value;
-import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder;
 
 @Value
 @Builder
-@JsonDeserialize(builder = CustomPdfMetadataDTOBuilder.class)
-public class CustomPdfMetadataDTO {
+public class CustomText {
 
-  @Valid List<CustomTextDTO> customTextDTOList;
-  @NotNull @Valid AccessibilityMetadataDTO accessibilityMetadataDTO;
-  String rightMarginText;
-  boolean addDraftWatermark;
-
-  @JsonPOJOBuilder(withPrefix = "")
-  public static class CustomPdfMetadataDTOBuilder {}
+  String value;
+  Integer x;
+  Integer y;
+  int fontSize;
+  Integer pageIndex;
+  Integer tagIndex;
 }

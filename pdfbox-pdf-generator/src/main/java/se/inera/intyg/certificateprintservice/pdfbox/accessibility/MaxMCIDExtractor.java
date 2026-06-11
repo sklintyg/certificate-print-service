@@ -29,17 +29,21 @@ import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructur
 // sending it through the api
 public class MaxMCIDExtractor {
 
-  public int findMaxMcid(PDDocument document) {
+  public static int findMaxMcid(PDDocument document) {
     final var markInfo = document.getDocumentCatalog().getMarkInfo();
-    if (markInfo == null) return -1;
+    if (markInfo == null) {
+      return -1;
+    }
 
     final var structureTreeRoot = document.getDocumentCatalog().getStructureTreeRoot();
-    if (structureTreeRoot == null) return -1;
+    if (structureTreeRoot == null) {
+      return -1;
+    }
 
     return findMaxMcidInElement(structureTreeRoot);
   }
 
-  private int findMaxMcidInElement(PDStructureNode node) {
+  private static int findMaxMcidInElement(PDStructureNode node) {
     int max = -1;
 
     for (Object kid : node.getKids()) {

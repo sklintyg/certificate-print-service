@@ -21,8 +21,6 @@ package se.inera.intyg.certificateprintservice.application.print.custom.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.certificateprintservice.application.print.custom.converter.CustomPdfRequestConverter;
-import se.inera.intyg.certificateprintservice.application.print.custom.dto.CertificateStatusDTO;
-import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintResponseDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfGenerator;
@@ -35,32 +33,7 @@ public class CustomPrintService {
   private final CustomPdfRequestConverter customPdfRequestConverter;
 
   public CustomPrintResponseDTO get(CustomPrintRequestDTO request) {
-    validateCrossFieldConstraints(request.getMetadata());
     final var customPdf = customPdfRequestConverter.convert(request);
     return CustomPrintResponseDTO.builder().pdfData(customPdfGenerator.get(customPdf)).build();
-  }
-
-  private void validateCrossFieldConstraints(CustomPdfMetadataDTO metadata) {
-    validateSentRecipient(metadata);
-    validateSignedDateField(metadata);
-  }
-
-  private void validateSentRecipient(CustomPdfMetadataDTO metadata) {
-    if (metadata.isSent() && isBlank(metadata.getSentRecipientName())) {
-      throw new IllegalArgumentException(
-          "Invalid request - sentRecipientName is required when isSent is true");
-    }
-  }
-
-  private void validateSignedDateField(CustomPdfMetadataDTO metadata) {
-    if (CertificateStatusDTO.SIGNED.equals(metadata.getStatus())
-        && isBlank(metadata.getSignedDateFieldId())) {
-      throw new IllegalArgumentException(
-          "Invalid request - signedDateFieldId is required when status is SIGNED");
-    }
-  }
-
-  private boolean isBlank(String value) {
-    return value == null || value.isBlank();
   }
 }

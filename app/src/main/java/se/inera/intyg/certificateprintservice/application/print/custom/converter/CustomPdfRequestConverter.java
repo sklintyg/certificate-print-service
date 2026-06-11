@@ -20,16 +20,20 @@ package se.inera.intyg.certificateprintservice.application.print.custom.converte
 
 import java.util.Base64;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.AccessibilityMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CertificateStatus;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
 
 @Component
 public class CustomPdfRequestConverter {
@@ -44,18 +48,30 @@ public class CustomPdfRequestConverter {
 
   private CustomPdfMetadata convertMetadata(CustomPdfMetadataDTO dto) {
     return CustomPdfMetadata.builder()
-        .status(CertificateStatus.valueOf(dto.getStatus().name()))
-        .sent(dto.isSent())
-        .sentRecipientName(dto.getSentRecipientName())
-        .availableForCitizen(dto.isAvailableForCitizen())
-        .certificateId(dto.getCertificateId())
-        .additionalInfoText(dto.getAdditionalInfoText())
-        .signaturePageIndex(dto.getSignaturePageIndex())
-        .signatureTagIndex(dto.getSignatureTagIndex())
-        .signedDateFieldId(dto.getSignedDateFieldId())
-        .startMcid(dto.getStartMcid())
-        .title(dto.getTitle())
+        .customTextList(convertCustomTexts(dto.getCustomTextDTOList()))
+        .rightMarginText(dto.getRightMarginText())
+        .accessibilityMetadata(convertAccessibilityMetadata(dto.getAccessibilityMetadataDTO()))
+        .addDraftWatermark(dto.isAddDraftWatermark())
         .build();
+  }
+
+  private List<CustomText> convertCustomTexts(List<CustomTextDTO> customTextDTOList) {
+    return customTextDTOList.stream().map(this::convertCustomText).collect(Collectors.toList());
+  }
+
+  private CustomText convertCustomText(CustomTextDTO dto) {
+    return CustomText.builder()
+        .value(dto.value())
+        .x(dto.x())
+        .y(dto.y())
+        .fontSize(dto.fontSize())
+        .pageIndex(dto.pageIndex())
+        .tagIndex(dto.tagIndex())
+        .build();
+  }
+
+  private AccessibilityMetadata convertAccessibilityMetadata(AccessibilityMetadataDTO dto) {
+    return AccessibilityMetadata.builder().title(dto.title()).build();
   }
 
   private Map<String, CustomPdfField> convertFields(Map<String, CustomPdfFieldDTO> fields) {

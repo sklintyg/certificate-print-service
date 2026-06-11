@@ -20,6 +20,7 @@ package se.inera.intyg.certificateprintservice.application.print.custom.converte
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.TEMPLATE_BYTES;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.VALID_TEMPLATE;
@@ -31,7 +32,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CertificateStatus;
 
 class CustomPdfRequestConverterTest {
 
@@ -45,38 +45,33 @@ class CustomPdfRequestConverterTest {
   }
 
   @Test
-  void shallConvertMetadataStatus() {
+  void shallConvertMetadataWaterMarks() {
+    // TODO: assert all values for converted metadata
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals(CertificateStatus.SIGNED, result.getMetadata().getStatus());
+    assertNotNull(result.getMetadata().getCustomTextList());
+    assertEquals(3, result.getMetadata().getCustomTextList().size());
+    assertEquals(
+        "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.",
+        result.getMetadata().getCustomTextList().get(0).getValue());
   }
 
   @Test
-  void shallConvertMetadataCertificateId() {
+  void shallConvertMetadataRightMarginText() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals("cert-123", result.getMetadata().getCertificateId());
+    assertNotNull(result.getMetadata().getRightMarginText());
+    assertTrue(result.getMetadata().getRightMarginText().contains("Intygsid:"));
+    assertTrue(result.getMetadata().getRightMarginText().contains("Webcert"));
   }
 
   @Test
-  void shallConvertMetadataIsSent() {
-    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
-    final var result = converter.convert(request);
-    assertTrue(result.getMetadata().isSent());
-  }
+  void shallConvertMetadataAccessibilityMetadata() {
+    // TODO: assert content of getAccessibilityMetadata value
 
-  @Test
-  void shallConvertMetadataSentRecipientName() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals("Försäkringskassan", result.getMetadata().getSentRecipientName());
-  }
-
-  @Test
-  void shallConvertMetadataTitle() {
-    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
-    final var result = converter.convert(request);
-    assertEquals("fk7210", result.getMetadata().getTitle());
+    assertNotNull(result.getMetadata().getAccessibilityMetadata());
   }
 
   @Test

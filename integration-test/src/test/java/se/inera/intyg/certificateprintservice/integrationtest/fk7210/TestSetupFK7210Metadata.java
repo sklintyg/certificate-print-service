@@ -18,32 +18,41 @@
  */
 package se.inera.intyg.certificateprintservice.integrationtest.fk7210;
 
-import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Constants.ADDITIONAL_INFO_TEXT;
-import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Constants.CERTIFICATE_ID;
-import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Constants.RECIPIENT_NAME;
+import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Constants.RIGHT_MARGIN_TEXT;
 import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Constants.SIGNATURE_PAGE_INDEX;
 import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Constants.SIGNATURE_TAG_INDEX_WITH_ADDRESS;
-import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Constants.SIGNED_DATE_FIELD_ID;
-import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Constants.START_MCID;
 
-import se.inera.intyg.certificateprintservice.application.print.custom.dto.CertificateStatusDTO;
+import java.util.List;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.AccessibilityMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
 
 public class TestSetupFK7210Metadata {
 
   public static CustomPdfMetadataDTO fullMetadata() {
     return CustomPdfMetadataDTO.builder()
-        .status(CertificateStatusDTO.SIGNED)
-        .title("Title")
-        .sent(true)
-        .sentRecipientName(RECIPIENT_NAME)
-        .availableForCitizen(true)
-        .certificateId(CERTIFICATE_ID)
-        .additionalInfoText(ADDITIONAL_INFO_TEXT)
-        .signaturePageIndex(SIGNATURE_PAGE_INDEX)
-        .signatureTagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
-        .signedDateFieldId(SIGNED_DATE_FIELD_ID)
-        .startMcid(START_MCID)
+        .customTextDTOList(
+            List.of(
+                CustomTextDTO.builder()
+                    .value(
+                        "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
+                    .fontSize(12)
+                    .x(100)
+                    .y(50)
+                    .pageIndex(SIGNATURE_PAGE_INDEX)
+                    .tagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
+                    .build(),
+                CustomTextDTO.builder()
+                    .value("Intyget har skickats digitalt tillFörsäkringskassan")
+                    .fontSize(16)
+                    .build(),
+                CustomTextDTO.builder()
+                    .value("Du kan se intyget genom att logga in på 1177.se")
+                    .fontSize(14)
+                    .build()))
+        .rightMarginText(RIGHT_MARGIN_TEXT)
+        .accessibilityMetadataDTO(new AccessibilityMetadataDTO("fk7210"))
+        .addDraftWatermark(false)
         .build();
   }
 }

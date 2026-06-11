@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.TAGGED_PDF_RESOURCE;
 
@@ -39,14 +40,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210CustomPdfMetadata;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CertificateStatus;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 
 @ExtendWith(MockitoExtension.class)
 class OverlayTextServiceTest {
 
-  @Mock private PdfTextGenerator pdfTextGenerator;
-  @InjectMocks private OverlayTextService overlayTextService;
+  @Mock
+  private PdfTextGenerator pdfTextGenerator;
+  @InjectMocks
+  private OverlayTextService overlayTextService;
 
   private PDDocument document;
 
@@ -62,67 +63,47 @@ class OverlayTextServiceTest {
   class DraftWatermark {
 
     @Test
-    void shallDrawWatermarkWhenStatusIsDraft() throws IOException {
-      overlayTextService.drawOverlays(
-          document, TestDataFK7210CustomPdfMetadata.metadataWithStatus(CertificateStatus.DRAFT));
+    void shallDrawDraftWatermarkWhenAddDraftWatermarkIsTrue() throws IOException {
+      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.draftMetadata());
 
       verify(pdfTextGenerator).addWatermark(eq(document), eq("UTKAST"), anyInt());
     }
 
     @Test
-    void shallNotDrawWatermarkWhenStatusIsNotDraft() throws IOException {
-      overlayTextService.drawOverlays(
-          document, TestDataFK7210CustomPdfMetadata.metadataWithStatus(CertificateStatus.SIGNED));
+    void shallNotDrawDraftWatermarkWhenAddDraftWatermarkIsFalse() throws IOException {
+      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.signedMetadata());
 
-      verify(pdfTextGenerator, never()).addWatermark(any(), any(), anyInt());
+      verify(pdfTextGenerator, never()).addWatermark(any(), eq("UTKAST"), anyInt());
     }
   }
 
   @Nested
-  class SentText {
+  class WatermarkText {
 
     @Test
-    void shallDrawSentTextWhenIsSent() throws IOException {
+    void shallDrawMultipleWatermarksWhenMetadataContainsMultiple() throws IOException {
       overlayTextService.drawOverlays(
           document, TestDataFK7210CustomPdfMetadata.signedAndSentMetadata());
+
+      // One watermark with specific positioning, two watermarks as sent text
+      verify(pdfTextGenerator, times(1))
+          .addDigitalSignatureText(any(), any(), anyInt(), anyInt(), anyInt(), anyInt(), anyInt());
+      verify(pdfTextGenerator, times(2)).addSentText(any(), any(), anyInt());
+    }
+
+    @Test
+    void shallDrawWatermarkWithSpecificPositioning() throws IOException {
+      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.signedMetadata());
 
       verify(pdfTextGenerator)
-          .addSentText(
-              eq(document), contains(TestDataFK7210CustomPdfMetadata.RECIPIENT_NAME), anyInt());
-    }
-
-    @Test
-    void shallDrawCitizenVisibilityLineWhenAvailableForCitizen() throws IOException {
-      overlayTextService.drawOverlays(
-          document, TestDataFK7210CustomPdfMetadata.signedAndSentMetadata());
-
-      verify(pdfTextGenerator).addSentVisibilityText(eq(document), any(), anyInt());
-    }
-
-    @Test
-    void shallNotDrawCitizenLineWhenNotAvailableForCitizen() throws IOException {
-      final var metadata =
-          CustomPdfMetadata.builder()
-              .status(CertificateStatus.SIGNED)
-              .sent(true)
-              .sentRecipientName(TestDataFK7210CustomPdfMetadata.RECIPIENT_NAME)
-              .availableForCitizen(false)
-              .certificateId(TestDataFK7210CustomPdfMetadata.CERTIFICATE_ID)
-              .signedDateFieldId(TestDataFK7210CustomPdfMetadata.SIGNED_DATE_FIELD_ID)
-              .startMcid(TestDataFK7210CustomPdfMetadata.START_MCID)
-              .build();
-
-      overlayTextService.drawOverlays(document, metadata);
-
-      verify(pdfTextGenerator, never()).addSentVisibilityText(any(), any(), anyInt());
-    }
-
-    @Test
-    void shallNotDrawSentTextWhenNotSent() throws IOException {
-      overlayTextService.drawOverlays(
-          document, TestDataFK7210CustomPdfMetadata.metadataWithStatus(CertificateStatus.SIGNED));
-
-      verify(pdfTextGenerator, never()).addSentText(any(), any(), anyInt());
+          .addDigitalSignatureText(
+              eq(document),
+              contains("Detta är en utskrift av ett elektroniskt intyg"),
+              eq(100),
+              eq(50),
+              anyInt(),
+              eq(15),
+              eq(0));
     }
   }
 
@@ -130,21 +111,20 @@ class OverlayTextServiceTest {
   class MarginText {
 
     @Test
-    void shallDrawMarginTextWhenStatusIsSigned() throws IOException {
+    void shallDrawMarginTextWhenMetadataContainsRightMarginText() throws IOException {
       overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.signedMetadata());
 
       verify(pdfTextGenerator)
           .addMarginText(
               eq(document),
-              contains(TestDataFK7210CustomPdfMetadata.CERTIFICATE_ID),
+              contains(TestDataFK7210CustomPdfMetadata.RIGHT_MARGIN_TEXT),
               anyInt(),
               eq(0));
     }
 
     @Test
-    void shallNotDrawMarginTextWhenStatusIsNotSigned() throws IOException {
-      overlayTextService.drawOverlays(
-          document, TestDataFK7210CustomPdfMetadata.metadataWithStatus(CertificateStatus.DRAFT));
+    void shallNotDrawMarginTextWhenMetadataDoesNotContainRightMarginText() throws IOException {
+      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.draftMetadata());
 
       verify(pdfTextGenerator, never()).addMarginText(any(), any(), anyInt(), anyInt());
     }

@@ -19,12 +19,8 @@
 package se.inera.intyg.certificateprintservice.application.print.custom.service;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
-import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.validMetadataBuilder;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.validRequest;
-import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.validRequestBuilder;
 
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
@@ -33,7 +29,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.certificateprintservice.application.print.custom.converter.CustomPdfRequestConverter;
-import se.inera.intyg.certificateprintservice.application.print.custom.dto.CertificateStatusDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.CustomPdfGenerator;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
 
@@ -55,27 +50,5 @@ class CustomPrintServiceTest {
 
     final var actual = customPrintService.get(request);
     assertArrayEquals(expectedPdfData, actual.getPdfData());
-  }
-
-  @Test
-  void shallThrowWhenSentButSentRecipientNameIsMissing() {
-    final var metadata = validMetadataBuilder().sent(true).build();
-    final var request = validRequestBuilder().metadata(metadata).build();
-
-    final var ex =
-        assertThrows(IllegalArgumentException.class, () -> customPrintService.get(request));
-    assertEquals(
-        "Invalid request - sentRecipientName is required when isSent is true", ex.getMessage());
-  }
-
-  @Test
-  void shallThrowWhenStatusIsSignedButSignedDateFieldIdIsMissing() {
-    final var metadata = validMetadataBuilder().status(CertificateStatusDTO.SIGNED).build();
-    final var request = validRequestBuilder().metadata(metadata).build();
-
-    final var ex =
-        assertThrows(IllegalArgumentException.class, () -> customPrintService.get(request));
-    assertEquals(
-        "Invalid request - signedDateFieldId is required when status is SIGNED", ex.getMessage());
   }
 }

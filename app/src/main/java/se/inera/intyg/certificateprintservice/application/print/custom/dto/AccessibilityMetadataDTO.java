@@ -18,25 +18,6 @@
  */
 package se.inera.intyg.certificateprintservice.application.print.custom.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import java.util.List;
-import lombok.Builder;
-import lombok.Value;
-import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder;
+import jakarta.validation.constraints.NotEmpty;
 
-@Value
-@Builder
-@JsonDeserialize(builder = CustomPdfMetadataDTOBuilder.class)
-public class CustomPdfMetadataDTO {
-
-  @Valid List<CustomTextDTO> customTextDTOList;
-  @NotNull @Valid AccessibilityMetadataDTO accessibilityMetadataDTO;
-  String rightMarginText;
-  boolean addDraftWatermark;
-
-  @JsonPOJOBuilder(withPrefix = "")
-  public static class CustomPdfMetadataDTOBuilder {}
-}
+public record AccessibilityMetadataDTO(@NotEmpty String title) {}

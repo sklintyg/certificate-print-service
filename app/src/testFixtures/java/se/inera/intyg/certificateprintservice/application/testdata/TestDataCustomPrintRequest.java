@@ -21,17 +21,18 @@ package se.inera.intyg.certificateprintservice.application.testdata;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import se.inera.intyg.certificateprintservice.application.print.custom.dto.CertificateStatusDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.AccessibilityMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
 
 public class TestDataCustomPrintRequest {
 
   public static final byte[] TEMPLATE_BYTES = "pdf-template".getBytes(StandardCharsets.UTF_8);
   public static final String VALID_TEMPLATE = Base64.getEncoder().encodeToString(TEMPLATE_BYTES);
-  public static final String CERTIFICATE_ID = "cert-id";
 
   private TestDataCustomPrintRequest() {
     throw new IllegalStateException("Utility class");
@@ -39,23 +40,35 @@ public class TestDataCustomPrintRequest {
 
   public static CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder validMetadataBuilder() {
     return CustomPdfMetadataDTO.builder()
-        .status(CertificateStatusDTO.DRAFT)
-        .certificateId(CERTIFICATE_ID);
+        .customTextDTOList(List.of(CustomTextDTO.builder().value("UTKAST").fontSize(22).build()))
+        .accessibilityMetadataDTO(new AccessibilityMetadataDTO("Intyg-om-graviditet-2026-06-11"))
+        .addDraftWatermark(true);
   }
 
   public static CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder fullMetadataBuilder() {
     return CustomPdfMetadataDTO.builder()
-        .status(CertificateStatusDTO.SIGNED)
-        .sent(true)
-        .sentRecipientName("Försäkringskassan")
-        .availableForCitizen(true)
-        .certificateId("cert-123")
-        .additionalInfoText("Webcert 2.0")
-        .signaturePageIndex(0)
-        .signatureTagIndex(5)
-        .signedDateFieldId("signed-date-field")
-        .startMcid(100)
-        .title("fk7210");
+        .customTextDTOList(
+            List.of(
+                CustomTextDTO.builder()
+                    .value(
+                        "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
+                    .fontSize(12)
+                    .x(100)
+                    .y(200)
+                    .tagIndex(5)
+                    .build(),
+                CustomTextDTO.builder()
+                    .value("Intyget har skickats digitalt till Försäkringskassan")
+                    .fontSize(22)
+                    .build(),
+                CustomTextDTO.builder()
+                    .value("Du kan se intyget genom att logga in på 1177.se")
+                    .fontSize(16)
+                    .build()))
+        .rightMarginText(
+            "Intygsid: 8996d3d8-cb67-4602-b6a9-81dee33616ce. Intyget är utskrivet från Webcert.")
+        .accessibilityMetadataDTO(new AccessibilityMetadataDTO("fk7210"))
+        .addDraftWatermark(false);
   }
 
   public static CustomPrintRequestDTO buildRequest(

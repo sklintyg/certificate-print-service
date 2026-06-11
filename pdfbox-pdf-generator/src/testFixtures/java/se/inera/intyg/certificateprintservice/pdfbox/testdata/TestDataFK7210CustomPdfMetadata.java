@@ -18,79 +18,72 @@
  */
 package se.inera.intyg.certificateprintservice.pdfbox.testdata;
 
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CertificateStatus;
+import java.util.List;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
 
 public class TestDataFK7210CustomPdfMetadata {
 
-  public static final String CERTIFICATE_ID = "certificateId-fk7210-001";
-  public static final String RECIPIENT_NAME = "Försäkringskassan";
-  public static final String ADDITIONAL_INFO_TEXT = "Webcert";
-  public static final String SIGNED_DATE_FIELD_ID = "form1[0].#subform[0].flt_datUnderskrift[0]";
-  public static final int START_MCID = 100;
-  public static final int SIGNATURE_PAGE_INDEX = 0;
-  public static final int SIGNATURE_TAG_INDEX_WITH_ADDRESS = 15;
-  private static final String TITLE = "fk7210";
+  public static final String RIGHT_MARGIN_TEXT = "Webcert";
+  public static final String TITLE = "fk7210";
 
   private TestDataFK7210CustomPdfMetadata() {
     throw new IllegalStateException("Utility class");
   }
 
-  public static CustomPdfMetadata metadataWithStatus(CertificateStatus status) {
-    return CustomPdfMetadata.builder()
-        .status(status)
-        .sent(false)
-        .certificateId(CERTIFICATE_ID)
-        .signedDateFieldId(SIGNED_DATE_FIELD_ID)
-        .startMcid(START_MCID)
-        .build();
-  }
-
   public static CustomPdfMetadata draftMetadata() {
-    return metadataWithStatus(CertificateStatus.DRAFT);
+    return CustomPdfMetadata.builder()
+        .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
+        .addDraftWatermark(true)
+        .build();
   }
 
   public static CustomPdfMetadata signedMetadata() {
     return CustomPdfMetadata.builder()
-        .status(CertificateStatus.SIGNED)
-        .sent(false)
-        .certificateId(CERTIFICATE_ID)
-        .additionalInfoText(ADDITIONAL_INFO_TEXT)
-        .signaturePageIndex(SIGNATURE_PAGE_INDEX)
-        .signatureTagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
-        .signedDateFieldId(SIGNED_DATE_FIELD_ID)
-        .startMcid(START_MCID)
+        .customTextList(
+            List.of(
+                CustomText.builder()
+                    .value(
+                        "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
+                    .x(100)
+                    .y(50)
+                    .fontSize(12)
+                    .tagIndex(15)
+                    .build()))
+        .rightMarginText(RIGHT_MARGIN_TEXT)
+        .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
         .build();
   }
 
   public static CustomPdfMetadata signedAndSentMetadata() {
     return CustomPdfMetadata.builder()
-        .status(CertificateStatus.SIGNED)
-        .sent(true)
-        .sentRecipientName(RECIPIENT_NAME)
-        .availableForCitizen(true)
-        .certificateId(CERTIFICATE_ID)
-        .additionalInfoText(ADDITIONAL_INFO_TEXT)
-        .signaturePageIndex(SIGNATURE_PAGE_INDEX)
-        .signatureTagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
-        .signedDateFieldId(SIGNED_DATE_FIELD_ID)
-        .startMcid(START_MCID)
+        .customTextList(
+            List.of(
+                CustomText.builder()
+                    .value(
+                        "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
+                    .x(100)
+                    .y(50)
+                    .fontSize(12)
+                    .pageIndex(0)
+                    .tagIndex(15)
+                    .build(),
+                CustomText.builder()
+                    .value("Intyget har skickats digitalt till Försäkringskassan")
+                    .fontSize(16)
+                    .build(),
+                CustomText.builder()
+                    .value("Du kan se intyget genom att logga in på 1177.se")
+                    .fontSize(14)
+                    .build()))
+        .rightMarginText(RIGHT_MARGIN_TEXT)
+        .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
+        .addDraftWatermark(false)
         .build();
   }
 
   public static CustomPdfMetadata fullMetadata() {
-    return CustomPdfMetadata.builder()
-        .status(CertificateStatus.SIGNED)
-        .sent(true)
-        .sentRecipientName(RECIPIENT_NAME)
-        .availableForCitizen(true)
-        .certificateId(CERTIFICATE_ID)
-        .additionalInfoText(ADDITIONAL_INFO_TEXT)
-        .signaturePageIndex(SIGNATURE_PAGE_INDEX)
-        .signatureTagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
-        .signedDateFieldId(SIGNED_DATE_FIELD_ID)
-        .startMcid(START_MCID)
-        .title(TITLE)
-        .build();
+    return signedAndSentMetadata();
   }
 }

@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Value;
 
@@ -25,15 +26,8 @@ import lombok.Value;
 @Builder
 public class CustomPdfMetadata {
 
-  CertificateStatus status;
-  boolean sent;
-  String sentRecipientName;
-  boolean availableForCitizen;
-  String certificateId;
-  String additionalInfoText;
-  int signaturePageIndex;
-  int signatureTagIndex;
-  String signedDateFieldId;
-  int startMcid;
-  String title;
+  List<CustomText> customTextList;
+  String rightMarginText;
+  AccessibilityMetadata accessibilityMetadata;
+  boolean addDraftWatermark;
 }

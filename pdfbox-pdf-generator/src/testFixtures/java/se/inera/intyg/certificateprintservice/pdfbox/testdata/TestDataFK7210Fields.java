@@ -18,7 +18,11 @@
  */
 package se.inera.intyg.certificateprintservice.pdfbox.testdata;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 
 /**
@@ -63,6 +67,18 @@ public class TestDataFK7210Fields {
   }
 
   public static final String TAGGED_PDF_RESOURCE = "/tagged-test-template.pdf";
+  public static PDDocument pdDocument;
+
+  static {
+    try (InputStream stream = TestDataFK7210Fields.class.getResourceAsStream(TAGGED_PDF_RESOURCE)) {
+      if (stream == null) {
+        throw new IllegalStateException("Could not load PDF resource: " + TAGGED_PDF_RESOURCE);
+      }
+      pdDocument = Loader.loadPDF(stream.readAllBytes());
+    } catch (IOException e) {
+      throw new IllegalStateException("Failed to load PDF document", e);
+    }
+  }
 
   /**
    * Returns a map of all FK7210 AcroForm field IDs to their realistic test values, as they would
