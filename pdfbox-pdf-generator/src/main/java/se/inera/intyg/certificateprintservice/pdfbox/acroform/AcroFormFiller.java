@@ -40,7 +40,8 @@ public class AcroFormFiller {
           final var field = acroForm.getField(fieldId);
           if (field == null) {
             throw new IllegalArgumentException(
-                "Field '%s' not found in PDF template — skipping".formatted(fieldId));
+                "Field '%s' not found in PDF template — cannot accurately fill in template"
+                    .formatted(fieldId));
           }
           try {
             field.setValue(fieldOptions.getValue());
