@@ -44,10 +44,8 @@ import se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Cust
 @ExtendWith(MockitoExtension.class)
 class OverlayTextServiceTest {
 
-  @Mock
-  private PdfTextGenerator pdfTextGenerator;
-  @InjectMocks
-  private OverlayTextService overlayTextService;
+  @Mock private PdfTextGenerator pdfTextGenerator;
+  @InjectMocks private OverlayTextService overlayTextService;
 
   private PDDocument document;
 

@@ -19,6 +19,7 @@
 package se.inera.intyg.certificateprintservice.application.print.custom.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
@@ -26,6 +27,6 @@ public record CustomTextDTO(
     @NotBlank String value,
     Integer x,
     Integer y,
-    @NotBlank int fontSize,
+    @NotNull Integer fontSize,
     Integer pageIndex,
     Integer tagIndex) {}

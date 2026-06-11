@@ -35,7 +35,7 @@ public class OverlayTextService {
   private final PdfTextGenerator pdfTextGenerator;
 
   public void drawOverlays(PDDocument document, CustomPdfMetadata metadata) throws IOException {
-    final var mcid = new AtomicInteger(MaxMCIDExtractor.findMaxMcid(document));
+    final var mcid = new AtomicInteger(Math.max(0, MaxMCIDExtractor.findMaxMcid(document)));
 
     drawDraftWatermark(document, metadata, mcid);
     drawWaterMarks(document, metadata, mcid);
