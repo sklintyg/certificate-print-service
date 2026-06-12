@@ -41,13 +41,15 @@ public class TestSetupFK7210Constants {
   public static final String PATIENT_ID = "191212121212";
   public static final String BIRTH_DATE = "2025-10-20";
   public static final String SIGNED_DATE = "2025-03-15";
-  public static final String DOCTOR_NAME = "Anna Lindqvist";
-  public static final String PA_TITLE = "Läkare";
-  public static final String SPECIALTY = "Allmänmedicin";
-  public static final String HSA_ID = "SE2321000016-1C4B";
-  public static final String WORKPLACE_CODE = "1234567";
+  public static final String DOCTOR_NAME = "Ajla Doktor";
+  public static final String PA_TITLE = "202010, 208014, 208015";
+  public static final String SPECIALTY = "";
+  public static final String HSA_ID = "TSTNMT2321000156-DRAA";
+  public static final String WORKPLACE_CODE = "12345678";
   public static final String CONTACT_INFORMATION =
-      "Vårdcentralen Centrum\nStorgatan 1\n111 11 Stockholm\nTel: 08-123 456 78";
+      "Alfa Medicincentrum\n"
+          + "Alfagatan 3 a, 65591 Karlstad\n"
+          + "Telefon: 054121314";
 
   public static final String TAGGED_PDF_RESOURCE = "/templates/fk7210.pdf";
 
