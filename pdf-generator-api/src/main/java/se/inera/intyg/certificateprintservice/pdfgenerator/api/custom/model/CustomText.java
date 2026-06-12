@@ -19,20 +19,9 @@
 package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
 import lombok.Builder;
-import lombok.Value;
 
-@Value
 @Builder
-public class CustomText {
+public record CustomText(String value, float x, float y, Appearance appearance, Integer pageIndex,
+                         Integer tagIndex) {
 
-  String value;
-  float x;
-  float y;
-  Appearance appearance;
-  Integer pageIndex;
-  Integer tagIndex;
-
-  public boolean getAppearanceAsString() {
-    return "";
-  }
 }

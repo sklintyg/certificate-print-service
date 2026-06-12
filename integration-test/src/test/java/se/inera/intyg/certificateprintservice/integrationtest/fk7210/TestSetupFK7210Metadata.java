@@ -33,7 +33,7 @@ public class TestSetupFK7210Metadata {
 
   public static CustomPdfMetadataDTO fullMetadata() {
     return CustomPdfMetadataDTO.builder()
-        .customTextDTOList(
+        .customTexts(
             List.of(
                 CustomTextDTO.builder()
                     .value(
@@ -55,7 +55,7 @@ public class TestSetupFK7210Metadata {
                     .pageIndex(0)
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
-        .accessibilityMetadataDTO(new AccessibilityMetadataDTO("fk7210"))
+        .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
         .addDraftWatermark(false)
         .build();
   }

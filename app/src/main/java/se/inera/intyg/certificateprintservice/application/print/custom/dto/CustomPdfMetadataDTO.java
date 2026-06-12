@@ -33,10 +33,10 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 public class CustomPdfMetadataDTO {
 
   @Valid
-  List<List<CustomTextDTO>> customTextDTOList;
+  List<CustomTextDTO> customTexts;
   @NotNull
   @Valid
-  AccessibilityMetadataDTO accessibilityMetadataDTO;
+  AccessibilityMetadataDTO accessibilityMetadata;
   String rightMarginText;
   boolean addDraftWatermark;
 

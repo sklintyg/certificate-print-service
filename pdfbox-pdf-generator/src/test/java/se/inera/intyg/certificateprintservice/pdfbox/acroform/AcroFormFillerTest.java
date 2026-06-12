@@ -78,4 +78,9 @@ class AcroFormFillerTest {
     field.setPartialName(fieldName);
     acroForm.getFields().add(field);
   }
+
+  //TODO: implement
+  void shallThrowIllegalStateExceptionWhenFieldIsNull() {
+
+  }
 }

@@ -42,20 +42,20 @@ public class TestDataCustomPrintRequest {
 
   public static CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder validMetadataBuilder() {
     return CustomPdfMetadataDTO.builder()
-        .customTextDTOList(List.of(CustomTextDTO.builder()
+        .customTexts(List.of(CustomTextDTO.builder()
             .value("UTKAST")
             .x(0f)
             .y(0f)
             .appearance(new AppearanceDTO(22f, null))
             .pageIndex(0)
             .build()))
-        .accessibilityMetadataDTO(new AccessibilityMetadataDTO("Intyg-om-graviditet-2026-06-11"))
+        .accessibilityMetadata(new AccessibilityMetadataDTO("Intyg-om-graviditet-2026-06-11"))
         .addDraftWatermark(true);
   }
 
   public static CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder fullMetadataBuilder() {
     return CustomPdfMetadataDTO.builder()
-        .customTextDTOList(
+        .customTexts(
             List.of(
                 CustomTextDTO.builder()
                     .value(
@@ -82,7 +82,7 @@ public class TestDataCustomPrintRequest {
                     .build()))
         .rightMarginText(
             "Intygsid: 8996d3d8-cb67-4602-b6a9-81dee33616ce. Intyget är utskrivet från Webcert.")
-        .accessibilityMetadataDTO(new AccessibilityMetadataDTO("fk7210"))
+        .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
         .addDraftWatermark(false);
   }
 

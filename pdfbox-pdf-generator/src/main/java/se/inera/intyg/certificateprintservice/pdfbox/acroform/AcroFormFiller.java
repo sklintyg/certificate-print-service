@@ -46,7 +46,8 @@ public class AcroFormFiller {
           try {
             field.setValue(fieldOptions.getValue());
           } catch (IOException e) {
-            log.warn("Failed to set value for field '{}': {}", fieldId, e.getMessage(), e);
+            throw new IllegalStateException(
+                "Failed to set value for field '%s': %s".formatted(fieldId, e.getMessage()), e);
           }
         });
   }

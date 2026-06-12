@@ -51,9 +51,9 @@ public class CustomPdfRequestConverter {
 
   private CustomPdfMetadata convertMetadata(CustomPdfMetadataDTO dto) {
     return CustomPdfMetadata.builder()
-        .customTextList(convertCustomTexts(dto.getCustomTextDTOList()))
+        .customTextList(convertCustomTexts(dto.getCustomTexts()))
         .rightMarginText(dto.getRightMarginText())
-        .accessibilityMetadata(convertAccessibilityMetadata(dto.getAccessibilityMetadataDTO()))
+        .accessibilityMetadata(convertAccessibilityMetadata(dto.getAccessibilityMetadata()))
         .addDraftWatermark(dto.isAddDraftWatermark())
         .build();
   }
@@ -63,14 +63,13 @@ public class CustomPdfRequestConverter {
   }
 
   private CustomText convertCustomText(CustomTextDTO dto) {
-    return CustomText.builder()
-        .value(dto.value())
-        .x(dto.x())
-        .y(dto.y())
-        .appearance(convertAppearance(dto.appearance()))
-        .pageIndex(dto.pageIndex())
-        .tagIndex(dto.tagIndex())
-        .build();
+    return new CustomText(
+        dto.value(),
+        dto.x(),
+        dto.y(),
+        convertAppearance(dto.appearance()),
+        dto.pageIndex(),
+        dto.tagIndex());
   }
 
   private Appearance convertAppearance(AppearanceDTO dto) {

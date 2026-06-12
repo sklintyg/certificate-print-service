@@ -23,8 +23,6 @@ import static se.inera.intyg.certificateprintservice.pdfbox.accessibility.PdfAcc
 import static se.inera.intyg.certificateprintservice.pdfbox.accessibility.PdfAccessibilityUtil.createContentStream;
 import static se.inera.intyg.certificateprintservice.pdfbox.accessibility.PdfAccessibilityUtil.createNewDivOnPage;
 import static se.inera.intyg.certificateprintservice.pdfbox.accessibility.PdfAccessibilityUtil.getDivInQuestionSection;
-import static se.inera.intyg.certificateprintservice.pdfbox.accessibility.PdfAccessibilityUtil.getFirstDiv;
-import static se.inera.intyg.certificateprintservice.pdfbox.accessibility.PdfAccessibilityUtil.getLastDivOfPage;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -38,13 +36,13 @@ import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
 import org.apache.pdfbox.util.Matrix;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appearance;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 
 @Service
 public class PdfTextGenerator {
 
-  private static final float SENT_TEXT_FONT_SIZE = 22f;
-  private static final float SENT_VISIBILITY_TEXT_FONT_SIZE = 16f;
-  private static final float SIGNATURE_TEXT_FONT_SIZE = 8f;
   private static final float MARGIN_TEXT_FONT_SIZE = 8f;
   private static final int WATERMARK_FONT_SIZE = 105;
   private static final float MARGIN_TEXT_OFFSET_X = 30f;
@@ -92,147 +90,63 @@ public class PdfTextGenerator {
     }
   }
 
-  public void addTopWatermark(
-      PDDocument document,
-      String text,
-      Matrix matrix,
-      float fontSize,
-      int mcid,
-      boolean addInExistingTopTag)
-      throws IOException {
-    addText(
-        document,
-        text,
-        fontSize,
-        matrix,
-        Color.gray,
-        null,
-        null,
-        false,
-        mcid,
-        addInExistingTopTag ? getFirstDiv(document) : createNewDivOnPage(document, 0, 0),
-        0,
-        text,
-        false);
-  }
-
   public void addMarginText(PDDocument document, String text, int mcid, int pageIndex)
       throws IOException {
-    addText(
+    drawText(
         document,
-        text,
-        MARGIN_TEXT_FONT_SIZE,
-        Matrix.getRotateInstance(Math.PI / 2, 600, 25),
-        Color.black,
-        MARGIN_TEXT_OFFSET_X,
-        MARGIN_TEXT_OFFSET_Y,
-        false,
-        mcid,
-        getLastDivOfPage(document, pageIndex),
-        pageIndex,
-        text,
-        false);
+        TextInfo.builder()
+            .color(Color.black)
+            .mcid(mcid)
+            .customText(
+                CustomText.builder()
+                    .x(MARGIN_TEXT_OFFSET_X)
+                    .y(MARGIN_TEXT_OFFSET_Y)
+                    .appearance(
+                        Appearance.builder()
+                            .style(FontStyle.NORMAL)
+                            .fontSize(MARGIN_TEXT_FONT_SIZE)
+                            .build())
+                    .value(text)
+                    .pageIndex(pageIndex)
+                    .build())
+            .build(),
+        Matrix.getRotateInstance(Math.PI / 2, 600, 25));
   }
 
-  public void addDigitalSignatureText(
-      PDDocument document,
-      String text,
-      float xPosition,
-      float yPosition,
-      int mcid,
-      int signatureTagIndex,
-      int pageIndex)
-      throws IOException {
-    addText(
-        document,
-        text,
-        SIGNATURE_TEXT_FONT_SIZE,
-        null,
-        Color.gray,
-        xPosition,
-        yPosition,
-        true,
-        mcid,
-        getDivInQuestionSection(document, signatureTagIndex, pageIndex),
-        pageIndex,
-        text,
-        false);
-  }
-
-  public void addSentText(PDDocument document, String text, int mcid) throws IOException {
-    addTopWatermark(
-        document, text, Matrix.getTranslateInstance(40, 685), SENT_TEXT_FONT_SIZE, mcid, false);
-  }
-
-  public void addSentVisibilityText(PDDocument document, String text, int mcid) throws IOException {
-    addTopWatermark(
-        document,
-        text,
-        Matrix.getTranslateInstance(40, 665),
-        SENT_VISIBILITY_TEXT_FONT_SIZE,
-        mcid,
-        true);
-  }
-
-  public void drawText(PDDocument pdf, TextInfo textInfo) throws IOException {
-    final var page = pdf.getPage(textInfo.customText().getPageIndex());
-    try (final var contentStream = createContentStream(pdf, page)) {
-
-      contentStream.beginText();
-      if (offsetX != null && offsetY != null) {
-        contentStream.newLineAtOffset(offsetX, offsetY);
-      }
-      contentStream.setNonStrokingColor(textInfo.color());
-      contentStream.setFont(
-          new PDType1Font(
-              textInfo.customText().getAppearance() ? FontName.HELVETICA_BOLD : FontName.HELVETICA),
-          fontSize);
-      final var dictionary = beginMarkedContent(contentStream, COSName.P, mcid);
-      contentStream.showText(text);
-      contentStream.endMarkedContent();
-      if (section != null) {
-        addContentToCurrentSection(
-            page, dictionary, section, COSName.P, StandardStructureTypes.P, actualText, prepend);
-      }
-      contentStream.endText();
-    }
-  }
-
-  private void addText(
-      PDDocument pdf,
-      String text,
-      float fontSize,
-      Matrix matrix,
-      Color color,
-      Float offsetX,
-      Float offsetY,
-      boolean bold,
-      int mcid,
-      PDStructureElement section,
-      int pageIndex,
-      String actualText,
-      boolean prepend)
-      throws IOException {
-    final var page = pdf.getPage(pageIndex);
+  public void drawText(PDDocument pdf, TextInfo textInfo, Matrix matrix) throws IOException {
+    final var page = pdf.getPage(textInfo.customText().pageIndex());
     try (final var contentStream = createContentStream(pdf, page)) {
       if (matrix != null) {
         contentStream.transform(matrix);
       }
       contentStream.beginText();
-      if (offsetX != null && offsetY != null) {
-        contentStream.newLineAtOffset(offsetX, offsetY);
-      }
-      contentStream.setNonStrokingColor(color);
+      contentStream.newLineAtOffset(textInfo.customText().x(), textInfo.customText().y());
+      contentStream.setNonStrokingColor(textInfo.color());
       contentStream.setFont(
-          new PDType1Font(bold ? FontName.HELVETICA_BOLD : FontName.HELVETICA), fontSize);
-      final var dictionary = beginMarkedContent(contentStream, COSName.P, mcid);
-      contentStream.showText(text);
+          new PDType1Font(
+              textInfo.customText().appearance().getStyle() == FontStyle.BOLD
+                  ? FontName.HELVETICA_BOLD : FontName.HELVETICA),
+          textInfo.customText().appearance().getFontSize());
+      final var dictionary = beginMarkedContent(contentStream, COSName.P, textInfo.mcid());
+      contentStream.showText(textInfo.customText().value());
       contentStream.endMarkedContent();
+      PDStructureElement section = null;
+      if (textInfo.customText().tagIndex() != null) {
+        section = getDivInQuestionSection(pdf, textInfo.customText().tagIndex(),
+            textInfo.customText().pageIndex());
+      } else {
+        section = createNewDivOnPage(pdf, 0, 0);
+      }
       if (section != null) {
         addContentToCurrentSection(
-            page, dictionary, section, COSName.P, StandardStructureTypes.P, actualText, prepend);
+            page, dictionary, section, COSName.P, StandardStructureTypes.P,
+            textInfo.customText().value(), false);
       }
       contentStream.endText();
     }
+  }
+
+  public void drawText(PDDocument pdf, TextInfo textInfo) throws IOException {
+    drawText(pdf, textInfo, null);
   }
 }

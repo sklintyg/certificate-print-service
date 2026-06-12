@@ -54,6 +54,7 @@ public class PdfAccessibilityUtil {
     return dictionary;
   }
 
+  // TODO: delete prepend?
   public static void addContentToCurrentSection(
       PDPage page,
       COSDictionary markedContentDictionary,
