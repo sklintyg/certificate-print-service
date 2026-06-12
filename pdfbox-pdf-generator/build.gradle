@@ -1,13 +1,13 @@
 dependencies {
     implementation project(":pdf-generator-api")
     implementation "org.springframework.boot:spring-boot-starter"
-    implementation "org.apache.pdfbox:pdfbox:3.0.6"
+    implementation "org.apache.pdfbox:pdfbox"
 
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
 
     testFixturesImplementation project(":pdf-generator-api")
-    testFixturesImplementation "org.apache.pdfbox:pdfbox:3.0.6"
+    testFixturesImplementation "org.apache.pdfbox:pdfbox"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

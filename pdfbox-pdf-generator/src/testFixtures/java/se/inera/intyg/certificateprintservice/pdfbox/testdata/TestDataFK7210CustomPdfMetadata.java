@@ -49,6 +49,7 @@ public class TestDataFK7210CustomPdfMetadata {
                     .x(100)
                     .y(50)
                     .fontSize(12)
+                    .pageIndex(3)
                     .tagIndex(15)
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)

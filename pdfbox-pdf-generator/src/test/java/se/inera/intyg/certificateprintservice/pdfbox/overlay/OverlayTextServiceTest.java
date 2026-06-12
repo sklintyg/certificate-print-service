@@ -85,7 +85,15 @@ class OverlayTextServiceTest {
 
       // One watermark with specific positioning, two watermarks as sent text
       verify(pdfTextGenerator, times(1))
-          .addDigitalSignatureText(any(), any(), anyInt(), anyInt(), anyInt(), anyInt(), anyInt());
+          .addDigitalSignatureText(
+              eq(document),
+              contains(
+                  "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren."),
+              eq(100.0f),
+              eq(50.0f),
+              anyInt(),
+              anyInt(),
+              anyInt());
       verify(pdfTextGenerator, times(2)).addSentText(any(), any(), anyInt());
     }
 
@@ -97,11 +105,11 @@ class OverlayTextServiceTest {
           .addDigitalSignatureText(
               eq(document),
               contains("Detta är en utskrift av ett elektroniskt intyg"),
-              eq(100),
-              eq(50),
+              eq(100.0f),
+              eq(50.0f),
               anyInt(),
               eq(15),
-              eq(0));
+              eq(3));
     }
   }
 

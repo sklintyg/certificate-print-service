@@ -29,7 +29,7 @@ import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructur
 // sending it through the api
 public class MaxMCIDExtractor {
 
-  public static int findMaxMcid(PDDocument document) {
+  public static int findNextMcid(PDDocument document) {
     final var markInfo = document.getDocumentCatalog().getMarkInfo();
     if (markInfo == null) {
       return -1;
@@ -40,16 +40,16 @@ public class MaxMCIDExtractor {
       return -1;
     }
 
-    return findMaxMcidInElement(structureTreeRoot);
+    return findNextMcidInElement(structureTreeRoot);
   }
 
-  private static int findMaxMcidInElement(PDStructureNode node) {
+  private static int findNextMcidInElement(PDStructureNode node) {
     int max = -1;
 
     for (Object kid : node.getKids()) {
       if (kid instanceof PDStructureElement element) {
         // Recurse into child structure elements
-        max = Math.max(max, findMaxMcidInElement(element));
+        max = Math.max(max, findNextMcidInElement(element));
       } else if (kid instanceof PDMarkedContentReference mcr) {
         final var dict = mcr.getCOSObject();
         if (dict.containsKey(COSName.MCID)) {
@@ -64,6 +64,6 @@ public class MaxMCIDExtractor {
       }
     }
 
-    return max;
+    return max + 1;
   }
 }

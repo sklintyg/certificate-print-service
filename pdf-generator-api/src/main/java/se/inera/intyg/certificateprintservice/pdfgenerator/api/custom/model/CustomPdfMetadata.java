@@ -20,13 +20,14 @@ package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
 import java.util.List;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Value;
 
 @Value
 @Builder
 public class CustomPdfMetadata {
 
-  List<CustomText> customTextList;
+  @Default List<CustomText> customTextList = List.of();
   String rightMarginText;
   AccessibilityMetadata accessibilityMetadata;
   boolean addDraftWatermark;
