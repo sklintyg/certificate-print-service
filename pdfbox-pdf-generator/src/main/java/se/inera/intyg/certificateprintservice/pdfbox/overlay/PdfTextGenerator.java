@@ -47,6 +47,7 @@ public class PdfTextGenerator {
   private static final int WATERMARK_FONT_SIZE = 105;
   private static final float MARGIN_TEXT_OFFSET_X = 30f;
   private static final float MARGIN_TEXT_OFFSET_Y = 30f;
+  private static final Matrix ROTATE_INSTANCE = Matrix.getRotateInstance(Math.PI / 2, 600, 25);
 
   public void addWatermark(PDDocument document, String text, int mcid) throws IOException {
     int pageIndex = 0;
@@ -110,7 +111,8 @@ public class PdfTextGenerator {
                     .pageIndex(pageIndex)
                     .build())
             .build(),
-        Matrix.getRotateInstance(Math.PI / 2, 600, 25));
+        ROTATE_INSTANCE
+    );
   }
 
   public void drawText(PDDocument pdf, TextInfo textInfo, Matrix matrix) throws IOException {
@@ -130,7 +132,7 @@ public class PdfTextGenerator {
       final var dictionary = beginMarkedContent(contentStream, COSName.P, textInfo.mcid());
       contentStream.showText(textInfo.customText().value());
       contentStream.endMarkedContent();
-      PDStructureElement section = null;
+      PDStructureElement section;
       if (textInfo.customText().tagIndex() != null) {
         section = getDivInQuestionSection(pdf, textInfo.customText().tagIndex(),
             textInfo.customText().pageIndex());
