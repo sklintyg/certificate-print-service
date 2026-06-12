@@ -35,24 +35,11 @@ public class OverlayTextService {
   private final PdfTextGenerator pdfTextGenerator;
 
   public void drawOverlays(PDDocument document, CustomPdfMetadata metadata) throws IOException {
-    var mcid = MaxMCIDExtractor.findNextMcid(document);
+    int mcid = MaxMCIDExtractor.findNextMcid(document);
 
-    mcid = drawDraftWatermark(document, metadata, mcid);
-    mcid = drawTexts(document, metadata, mcid);
-    drawMarginText(document, metadata, mcid);
-  }
-
-  private int drawDraftWatermark(
-      PDDocument document, CustomPdfMetadata metadata, int mcid) throws IOException {
     if (metadata.isAddDraftWatermark()) {
       pdfTextGenerator.addWatermark(document, "UTKAST", ++mcid);
     }
-    return mcid;
-  }
-
-  private int drawTexts(PDDocument document, CustomPdfMetadata metadata, int mcid)
-      throws IOException {
-
     for (CustomText customText : metadata.getCustomTextList()) {
       pdfTextGenerator.drawText(document, TextInfo.builder()
           .customText(customText)
@@ -60,16 +47,9 @@ public class OverlayTextService {
           .mcid(++mcid)
           .build());
     }
-    return mcid;
-  }
-
-  private void drawMarginText(PDDocument document, CustomPdfMetadata metadata, int mcid)
-      throws IOException {
-    if (StringUtils.isBlank(metadata.getRightMarginText())) {
-      return;
+    if (!StringUtils.isBlank(metadata.getRightMarginText())) {
+      pdfTextGenerator.addMarginText(
+          document, metadata.getRightMarginText(), ++mcid, 0);
     }
-
-    pdfTextGenerator.addMarginText(
-        document, metadata.getRightMarginText(), ++mcid, 0);
   }
 }
