@@ -42,13 +42,15 @@ public class TestDataCustomPrintRequest {
 
   public static CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder validMetadataBuilder() {
     return CustomPdfMetadataDTO.builder()
-        .customTexts(List.of(CustomTextDTO.builder()
-            .value("UTKAST")
-            .x(0f)
-            .y(0f)
-            .appearance(new AppearanceDTO(22f, null))
-            .pageIndex(0)
-            .build()))
+        .customTexts(
+            List.of(
+                CustomTextDTO.builder()
+                    .value("UTKAST")
+                    .x(0f)
+                    .y(0f)
+                    .appearance(new AppearanceDTO(22f, null))
+                    .pageIndex(0)
+                    .build()))
         .accessibilityMetadata(new AccessibilityMetadataDTO("Intyg-om-graviditet-2026-06-11"))
         .addDraftWatermark(true);
   }

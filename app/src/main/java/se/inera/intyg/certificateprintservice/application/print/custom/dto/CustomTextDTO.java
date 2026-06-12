@@ -29,6 +29,4 @@ public record CustomTextDTO(
     float y,
     @NotNull AppearanceDTO appearance,
     @NotNull Integer pageIndex,
-    Integer tagIndex) {
-
-}
+    Integer tagIndex) {}

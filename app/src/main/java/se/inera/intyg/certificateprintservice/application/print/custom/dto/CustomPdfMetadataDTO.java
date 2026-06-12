@@ -32,16 +32,11 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 @JsonDeserialize(builder = CustomPdfMetadataDTOBuilder.class)
 public class CustomPdfMetadataDTO {
 
-  @Valid
-  List<CustomTextDTO> customTexts;
-  @NotNull
-  @Valid
-  AccessibilityMetadataDTO accessibilityMetadata;
+  @Valid List<CustomTextDTO> customTexts;
+  @NotNull @Valid AccessibilityMetadataDTO accessibilityMetadata;
   String rightMarginText;
   boolean addDraftWatermark;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class CustomPdfMetadataDTOBuilder {
-
-  }
+  public static class CustomPdfMetadataDTOBuilder {}
 }
