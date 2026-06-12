@@ -26,9 +26,13 @@ import lombok.Value;
 public class CustomText {
 
   String value;
-  Integer x;
-  Integer y;
-  int fontSize;
+  float x;
+  float y;
+  Appearance appearance;
   Integer pageIndex;
   Integer tagIndex;
+
+  public boolean getAppearanceAsString() {
+    return "";
+  }
 }

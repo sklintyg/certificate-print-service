@@ -19,8 +19,8 @@
 package se.inera.intyg.certificateprintservice.pdfbox.overlay;
 
 import io.micrometer.common.util.StringUtils;
+import java.awt.Color;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.stereotype.Service;
@@ -35,56 +35,41 @@ public class OverlayTextService {
   private final PdfTextGenerator pdfTextGenerator;
 
   public void drawOverlays(PDDocument document, CustomPdfMetadata metadata) throws IOException {
-    final var mcid = new AtomicInteger(MaxMCIDExtractor.findNextMcid(document));
+    var mcid = MaxMCIDExtractor.findNextMcid(document);
 
-    drawDraftWatermark(document, metadata, mcid);
-    drawWaterMarks(document, metadata, mcid);
+    mcid = drawDraftWatermark(document, metadata, mcid);
+    mcid = drawTexts(document, metadata, mcid);
     drawMarginText(document, metadata, mcid);
   }
 
-  private void drawDraftWatermark(
-      PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid) throws IOException {
+  private int drawDraftWatermark(
+      PDDocument document, CustomPdfMetadata metadata, int mcid) throws IOException {
     if (metadata.isAddDraftWatermark()) {
-      pdfTextGenerator.addWatermark(document, "UTKAST", mcid.getAndIncrement());
+      pdfTextGenerator.addWatermark(document, "UTKAST", ++mcid);
     }
+    return mcid;
   }
 
-  private void drawWaterMarks(PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid)
+  private int drawTexts(PDDocument document, CustomPdfMetadata metadata, int mcid)
       throws IOException {
 
     for (CustomText customText : metadata.getCustomTextList()) {
-      drawText(document, customText, mcid.getAndIncrement());
+      pdfTextGenerator.drawText(document, TextInfo.builder()
+          .customText(customText)
+          .color(Color.gray)
+          .mcid(++mcid)
+          .build());
     }
+    return mcid;
   }
 
-  // TODO: refactor addDigitalSignatureText to include font size and be general drawtext, we should
-  // be able to delete addsenttext method.
-  private void drawText(PDDocument document, CustomText customText, int mcid) throws IOException {
-    if (customText.getX() != null
-        && customText.getY() != null
-        && customText.getPageIndex() != null
-        && customText.getTagIndex() != null) {
-      pdfTextGenerator.addDigitalSignatureText(
-          document,
-          customText.getValue(),
-          customText.getX(),
-          customText.getY(),
-          mcid,
-          customText.getTagIndex(),
-          customText.getPageIndex());
-    } else {
-      // For custom text without specific positioning, add as sent text
-      pdfTextGenerator.addSentText(document, customText.getValue(), mcid);
-    }
-  }
-
-  private void drawMarginText(PDDocument document, CustomPdfMetadata metadata, AtomicInteger mcid)
+  private void drawMarginText(PDDocument document, CustomPdfMetadata metadata, int mcid)
       throws IOException {
     if (StringUtils.isBlank(metadata.getRightMarginText())) {
       return;
     }
 
     pdfTextGenerator.addMarginText(
-        document, metadata.getRightMarginText(), mcid.getAndIncrement(), 0);
+        document, metadata.getRightMarginText(), ++mcid, 0);
   }
 }

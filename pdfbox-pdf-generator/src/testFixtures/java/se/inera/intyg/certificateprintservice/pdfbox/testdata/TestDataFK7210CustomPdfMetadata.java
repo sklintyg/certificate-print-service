@@ -20,8 +20,10 @@ package se.inera.intyg.certificateprintservice.pdfbox.testdata;
 
 import java.util.List;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appearance;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 
 public class TestDataFK7210CustomPdfMetadata {
 
@@ -46,9 +48,9 @@ public class TestDataFK7210CustomPdfMetadata {
                 CustomText.builder()
                     .value(
                         "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
-                    .x(100)
-                    .y(50)
-                    .fontSize(12)
+                    .x(100f)
+                    .y(50f)
+                    .appearance(Appearance.builder().fontSize(12f).build())
                     .pageIndex(3)
                     .tagIndex(15)
                     .build()))
@@ -64,19 +66,25 @@ public class TestDataFK7210CustomPdfMetadata {
                 CustomText.builder()
                     .value(
                         "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
-                    .x(100)
-                    .y(50)
-                    .fontSize(12)
+                    .x(100f)
+                    .y(50f)
+                    .appearance(Appearance.builder().fontSize(12f).build())
                     .pageIndex(0)
                     .tagIndex(15)
                     .build(),
                 CustomText.builder()
                     .value("Intyget har skickats digitalt till Försäkringskassan")
-                    .fontSize(16)
+                    .x(0f)
+                    .y(0f)
+                    .appearance(Appearance.builder().fontSize(16f).style(FontStyle.BOLD).build())
+                    .pageIndex(0)
                     .build(),
                 CustomText.builder()
                     .value("Du kan se intyget genom att logga in på 1177.se")
-                    .fontSize(14)
+                    .x(0f)
+                    .y(0f)
+                    .appearance(Appearance.builder().fontSize(14f).build())
+                    .pageIndex(0)
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())

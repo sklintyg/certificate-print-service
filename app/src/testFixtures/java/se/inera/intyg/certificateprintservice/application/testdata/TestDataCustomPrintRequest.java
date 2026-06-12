@@ -24,10 +24,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.AccessibilityMetadataDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.AppearanceDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.FontStyleEnumDTO;
 
 public class TestDataCustomPrintRequest {
 
@@ -40,7 +42,13 @@ public class TestDataCustomPrintRequest {
 
   public static CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder validMetadataBuilder() {
     return CustomPdfMetadataDTO.builder()
-        .customTextDTOList(List.of(CustomTextDTO.builder().value("UTKAST").fontSize(22).build()))
+        .customTextDTOList(List.of(CustomTextDTO.builder()
+            .value("UTKAST")
+            .x(0f)
+            .y(0f)
+            .appearance(new AppearanceDTO(22f, null))
+            .pageIndex(0)
+            .build()))
         .accessibilityMetadataDTO(new AccessibilityMetadataDTO("Intyg-om-graviditet-2026-06-11"))
         .addDraftWatermark(true);
   }
@@ -52,18 +60,25 @@ public class TestDataCustomPrintRequest {
                 CustomTextDTO.builder()
                     .value(
                         "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
-                    .fontSize(12)
-                    .x(100)
-                    .y(200)
+                    .appearance(new AppearanceDTO(12f, null))
+                    .x(100f)
+                    .y(200f)
+                    .pageIndex(0)
                     .tagIndex(5)
                     .build(),
                 CustomTextDTO.builder()
                     .value("Intyget har skickats digitalt till Försäkringskassan")
-                    .fontSize(22)
+                    .appearance(new AppearanceDTO(22f, FontStyleEnumDTO.BOLD))
+                    .x(0f)
+                    .y(0f)
+                    .pageIndex(0)
                     .build(),
                 CustomTextDTO.builder()
                     .value("Du kan se intyget genom att logga in på 1177.se")
-                    .fontSize(16)
+                    .appearance(new AppearanceDTO(16f, null))
+                    .x(0f)
+                    .y(0f)
+                    .pageIndex(0)
                     .build()))
         .rightMarginText(
             "Intygsid: 8996d3d8-cb67-4602-b6a9-81dee33616ce. Intyget är utskrivet från Webcert.")

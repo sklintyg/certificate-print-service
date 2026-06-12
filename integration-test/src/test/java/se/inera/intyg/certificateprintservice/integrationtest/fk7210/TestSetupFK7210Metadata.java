@@ -24,8 +24,10 @@ import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.Test
 
 import java.util.List;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.AccessibilityMetadataDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.AppearanceDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.FontStyleEnumDTO;
 
 public class TestSetupFK7210Metadata {
 
@@ -36,19 +38,21 @@ public class TestSetupFK7210Metadata {
                 CustomTextDTO.builder()
                     .value(
                         "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
-                    .fontSize(12)
-                    .x(100)
-                    .y(50)
+                    .appearance(new AppearanceDTO(12f, null))
+                    .x(100f)
+                    .y(50f)
                     .pageIndex(SIGNATURE_PAGE_INDEX)
                     .tagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
                     .build(),
                 CustomTextDTO.builder()
                     .value("Intyget har skickats digitalt tillFörsäkringskassan")
-                    .fontSize(16)
+                    .appearance(new AppearanceDTO(16f, FontStyleEnumDTO.BOLD))
+                    .pageIndex(0)
                     .build(),
                 CustomTextDTO.builder()
                     .value("Du kan se intyget genom att logga in på 1177.se")
-                    .fontSize(14)
+                    .appearance(new AppearanceDTO(14f, null))
+                    .pageIndex(0)
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadataDTO(new AccessibilityMetadataDTO("fk7210"))

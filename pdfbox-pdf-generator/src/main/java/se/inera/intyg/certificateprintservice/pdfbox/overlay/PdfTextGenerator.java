@@ -174,6 +174,30 @@ public class PdfTextGenerator {
         true);
   }
 
+  public void drawText(PDDocument pdf, TextInfo textInfo) throws IOException {
+    final var page = pdf.getPage(textInfo.customText().getPageIndex());
+    try (final var contentStream = createContentStream(pdf, page)) {
+
+      contentStream.beginText();
+      if (offsetX != null && offsetY != null) {
+        contentStream.newLineAtOffset(offsetX, offsetY);
+      }
+      contentStream.setNonStrokingColor(textInfo.color());
+      contentStream.setFont(
+          new PDType1Font(
+              textInfo.customText().getAppearance() ? FontName.HELVETICA_BOLD : FontName.HELVETICA),
+          fontSize);
+      final var dictionary = beginMarkedContent(contentStream, COSName.P, mcid);
+      contentStream.showText(text);
+      contentStream.endMarkedContent();
+      if (section != null) {
+        addContentToCurrentSection(
+            page, dictionary, section, COSName.P, StandardStructureTypes.P, actualText, prepend);
+      }
+      contentStream.endText();
+    }
+  }
+
   private void addText(
       PDDocument pdf,
       String text,

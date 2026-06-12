@@ -16,19 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.certificateprintservice.application.print.custom.dto;
+package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-
-@Builder
-public record CustomTextDTO(
-    @NotBlank String value,
-    float x,
-    float y,
-    @NotNull AppearanceDTO appearance,
-    @NotNull Integer pageIndex,
-    Integer tagIndex) {
-
+public enum FontStyle {
+  BOLD, NORMAL
 }
+

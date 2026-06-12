@@ -25,15 +25,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.AccessibilityMetadataDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.AppearanceDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appearance;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 
 @Component
 public class CustomPdfRequestConverter {
@@ -64,9 +67,16 @@ public class CustomPdfRequestConverter {
         .value(dto.value())
         .x(dto.x())
         .y(dto.y())
-        .fontSize(dto.fontSize())
+        .appearance(convertAppearance(dto.appearance()))
         .pageIndex(dto.pageIndex())
         .tagIndex(dto.tagIndex())
+        .build();
+  }
+
+  private Appearance convertAppearance(AppearanceDTO dto) {
+    return Appearance.builder()
+        .fontSize(dto.fontSize())
+        .style(dto.style() != null ? FontStyle.valueOf(dto.style().name()) : FontStyle.NORMAL)
         .build();
   }
 
