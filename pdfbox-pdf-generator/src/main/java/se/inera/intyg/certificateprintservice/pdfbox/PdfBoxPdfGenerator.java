@@ -41,18 +41,18 @@ public class PdfBoxPdfGenerator implements CustomPdfGenerator {
 
   @Override
   public byte[] get(CustomPdf customPdf) {
-    final var template = customPdf.getTemplate();
+    final var template = customPdf.template();
     if (template == null || template.length == 0) {
       throw new IllegalArgumentException("PDF template bytes must not be null or empty");
     }
 
     try (final var document = Loader.loadPDF(template)) {
       document.setAllSecurityToBeRemoved(true);
-      acroFormFiller.fill(document, customPdf.getFields());
-      overlayTextService.drawOverlays(document, customPdf.getMetadata());
+      acroFormFiller.fill(document, customPdf.fields());
+      overlayTextService.drawOverlays(document, customPdf.metadata());
       document
           .getDocumentInformation()
-          .setTitle(customPdf.getMetadata().getAccessibilityMetadata().getTitle());
+          .setTitle(customPdf.metadata().accessibilityMetadata().title());
       flattenAcroForm(document);
       return toBytes(document);
     } catch (IOException e) {

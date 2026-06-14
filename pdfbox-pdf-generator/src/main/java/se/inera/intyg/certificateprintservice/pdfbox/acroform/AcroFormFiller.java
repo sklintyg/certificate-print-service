@@ -52,7 +52,7 @@ public class AcroFormFiller {
               textAppearance.adjustFieldHeight(1);
             }
 
-            field.setValue(fieldOptions.getValue());
+            field.setValue(fieldOptions.value());
           } catch (IOException e) {
             throw new IllegalStateException(
                 "Failed to set value for field '%s': %s".formatted(fieldId, e.getMessage()), e);

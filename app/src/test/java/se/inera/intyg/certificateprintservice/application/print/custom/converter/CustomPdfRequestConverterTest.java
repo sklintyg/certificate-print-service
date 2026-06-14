@@ -42,14 +42,14 @@ class CustomPdfRequestConverterTest {
   void shallDecodeTemplateFromBase64() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertArrayEquals(TEMPLATE_BYTES, result.getTemplate());
+    assertArrayEquals(TEMPLATE_BYTES, result.template());
   }
 
   @Test
   void shallConvertCustomTextListSize() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals(3, result.getMetadata().getCustomTextList().size());
+    assertEquals(3, result.metadata().customTextList().size());
   }
 
   @Test
@@ -58,43 +58,42 @@ class CustomPdfRequestConverterTest {
     final var result = converter.convert(request);
     assertEquals(
         "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.",
-        result.getMetadata().getCustomTextList().getFirst().value());
+        result.metadata().customTextList().getFirst().value());
   }
 
   @Test
   void shallConvertCustomTextX() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals(100f, result.getMetadata().getCustomTextList().getFirst().x());
+    assertEquals(100f, result.metadata().customTextList().getFirst().x());
   }
 
   @Test
   void shallConvertCustomTextY() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals(200f, result.getMetadata().getCustomTextList().getFirst().y());
+    assertEquals(200f, result.metadata().customTextList().getFirst().y());
   }
 
   @Test
   void shallConvertCustomTextPageIndex() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals(0, result.getMetadata().getCustomTextList().getFirst().pageIndex());
+    assertEquals(0, result.metadata().customTextList().getFirst().pageIndex());
   }
 
   @Test
   void shallConvertCustomTextTagIndex() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals(5, result.getMetadata().getCustomTextList().getFirst().tagIndex());
+    assertEquals(5, result.metadata().customTextList().getFirst().tagIndex());
   }
 
   @Test
   void shallConvertCustomTextAppearanceFontSize() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals(
-        12f, result.getMetadata().getCustomTextList().getFirst().appearance().getFontSize());
+    assertEquals(12f, result.metadata().customTextList().getFirst().appearance().fontSize());
   }
 
   @Test
@@ -102,16 +101,14 @@ class CustomPdfRequestConverterTest {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
     assertEquals(
-        FontStyle.NORMAL,
-        result.getMetadata().getCustomTextList().getFirst().appearance().getStyle());
+        FontStyle.NORMAL, result.metadata().customTextList().getFirst().appearance().style());
   }
 
   @Test
   void shallConvertCustomTextAppearanceStyleBold() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals(
-        FontStyle.BOLD, result.getMetadata().getCustomTextList().get(1).appearance().getStyle());
+    assertEquals(FontStyle.BOLD, result.metadata().customTextList().get(1).appearance().style());
   }
 
   @Test
@@ -120,21 +117,21 @@ class CustomPdfRequestConverterTest {
     final var result = converter.convert(request);
     assertEquals(
         "Intygsid: 8996d3d8-cb67-4602-b6a9-81dee33616ce. Intyget är utskrivet från Webcert.",
-        result.getMetadata().getRightMarginText());
+        result.metadata().rightMarginText());
   }
 
   @Test
   void shallConvertAccessibilityMetadataTitle() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertEquals("fk7210", result.getMetadata().getAccessibilityMetadata().getTitle());
+    assertEquals("fk7210", result.metadata().accessibilityMetadata().title());
   }
 
   @Test
   void shallConvertAddDraftWatermark() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertFalse(result.getMetadata().isAddDraftWatermark());
+    assertFalse(result.metadata().addDraftWatermark());
   }
 
   @Test
@@ -144,7 +141,7 @@ class CustomPdfRequestConverterTest {
             fullMetadataBuilder().build(),
             Map.of("field-id", CustomPdfFieldDTO.builder().value("some-value").build()));
     final var result = converter.convert(request);
-    assertEquals("some-value", result.getFields().get("field-id").getValue());
+    assertEquals("some-value", result.fields().get("field-id").value());
   }
 
   @Test
@@ -156,6 +153,6 @@ class CustomPdfRequestConverterTest {
             .fields(null)
             .build();
     final var result = converter.convert(request);
-    assertTrue(result.getFields().isEmpty());
+    assertTrue(result.fields().isEmpty());
   }
 }
