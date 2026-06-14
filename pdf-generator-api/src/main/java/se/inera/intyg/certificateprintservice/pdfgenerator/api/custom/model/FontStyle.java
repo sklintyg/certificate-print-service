@@ -19,6 +19,6 @@
 package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
 public enum FontStyle {
-  BOLD, NORMAL
+  BOLD,
+  NORMAL
 }
-

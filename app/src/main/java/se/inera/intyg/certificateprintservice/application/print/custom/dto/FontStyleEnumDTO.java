@@ -18,6 +18,16 @@
  */
 package se.inera.intyg.certificateprintservice.application.print.custom.dto;
 
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
+
 public enum FontStyleEnumDTO {
-  BOLD
+  NORMAL,
+  BOLD;
+
+  public static FontStyle toFontStyle(FontStyleEnumDTO dto) {
+    return switch (dto) {
+      case NORMAL -> FontStyle.NORMAL;
+      case BOLD -> FontStyle.BOLD;
+    };
+  }
 }

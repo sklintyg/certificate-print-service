@@ -29,6 +29,7 @@ import java.io.IOException;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
 import org.apache.pdfbox.pdmodel.documentinterchange.taggedpdf.StandardStructureTypes;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -111,13 +112,13 @@ public class PdfTextGenerator {
                     .pageIndex(pageIndex)
                     .build())
             .build(),
-        ROTATE_INSTANCE
-    );
+        ROTATE_INSTANCE);
   }
 
   public void drawText(PDDocument pdf, TextInfo textInfo, Matrix matrix) throws IOException {
     final var page = pdf.getPage(textInfo.customText().pageIndex());
     try (final var contentStream = createContentStream(pdf, page)) {
+      fillContentStream(contentStream);
       if (matrix != null) {
         contentStream.transform(matrix);
       }
@@ -127,26 +128,35 @@ public class PdfTextGenerator {
       contentStream.setFont(
           new PDType1Font(
               textInfo.customText().appearance().getStyle() == FontStyle.BOLD
-                  ? FontName.HELVETICA_BOLD : FontName.HELVETICA),
+                  ? FontName.HELVETICA_BOLD
+                  : FontName.HELVETICA),
           textInfo.customText().appearance().getFontSize());
       final var dictionary = beginMarkedContent(contentStream, COSName.P, textInfo.mcid());
       contentStream.showText(textInfo.customText().value());
       contentStream.endMarkedContent();
       PDStructureElement section;
       if (textInfo.customText().tagIndex() != null) {
-        section = getDivInQuestionSection(pdf, textInfo.customText().tagIndex(),
-            textInfo.customText().pageIndex());
+        section =
+            getDivInQuestionSection(
+                pdf, textInfo.customText().tagIndex(), textInfo.customText().pageIndex());
       } else {
         section = createNewDivOnPage(pdf, 0, 0);
       }
       if (section != null) {
         addContentToCurrentSection(
-            page, dictionary, section, COSName.P, StandardStructureTypes.P,
-            textInfo.customText().value(), false);
+            page,
+            dictionary,
+            section,
+            COSName.P,
+            StandardStructureTypes.P,
+            textInfo.customText().value(),
+            false);
       }
       contentStream.endText();
     }
   }
+
+  private static void fillContentStream(PDPageContentStream contentStream) {}
 
   public void drawText(PDDocument pdf, TextInfo textInfo) throws IOException {
     drawText(pdf, textInfo, null);

@@ -46,7 +46,7 @@ public class AcroFormFiller {
                     .formatted(fieldId));
           }
           try {
-            //TODO Discuss if this should be handled in the api or not
+            // TODO Discuss if this should be handled in the api or not
             if (field instanceof PDVariableText textField) {
               final var textAppearance = new TextFieldAppearance(textField);
               textAppearance.adjustFieldHeight(1);

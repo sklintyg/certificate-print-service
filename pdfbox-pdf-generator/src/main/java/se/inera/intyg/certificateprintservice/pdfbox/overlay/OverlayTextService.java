@@ -41,15 +41,14 @@ public class OverlayTextService {
       pdfTextGenerator.addWatermark(document, "UTKAST", ++mcid);
     }
     for (CustomText customText : metadata.getCustomTextList()) {
-      pdfTextGenerator.drawText(document, TextInfo.builder()
-          .customText(customText)
-          .color(Color.gray)
-          .mcid(++mcid)
-          .build());
+      pdfTextGenerator.drawText(
+          document,
+          TextInfo.builder().customText(customText).color(Color.gray).mcid(++mcid).build());
     }
+    // TODO: Can we extract this logic to the metadata instead? Would enable us to remove this logic
+    // and addMarginText all together.
     if (!StringUtils.isBlank(metadata.getRightMarginText())) {
-      pdfTextGenerator.addMarginText(
-          document, metadata.getRightMarginText(), ++mcid, 0);
+      pdfTextGenerator.addMarginText(document, metadata.getRightMarginText(), ++mcid, 0);
     }
   }
 }

@@ -47,9 +47,7 @@ public class TestSetupFK7210Constants {
   public static final String HSA_ID = "TSTNMT2321000156-DRAA";
   public static final String WORKPLACE_CODE = "12345678";
   public static final String CONTACT_INFORMATION =
-      "Alfa Medicincentrum\n"
-          + "Alfagatan 3 a, 65591 Karlstad\n"
-          + "Telefon: 054121314";
+      "Alfa Medicincentrum\n" + "Alfagatan 3 a, 65591 Karlstad\n" + "Telefon: 054121314";
 
   public static final String TAGGED_PDF_RESOURCE = "/templates/fk7210.pdf";
 

@@ -79,8 +79,6 @@ class AcroFormFillerTest {
     acroForm.getFields().add(field);
   }
 
-  //TODO: implement
-  void shallThrowIllegalStateExceptionWhenFieldIsNull() {
-
-  }
+  // TODO: implement
+  void shallThrowIllegalStateExceptionWhenFieldIsNull() {}
 }

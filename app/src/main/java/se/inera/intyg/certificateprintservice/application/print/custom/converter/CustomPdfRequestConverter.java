@@ -30,13 +30,13 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.FontStyleEnumDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appearance;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 
 @Component
 public class CustomPdfRequestConverter {
@@ -59,7 +59,7 @@ public class CustomPdfRequestConverter {
   }
 
   private List<CustomText> convertCustomTexts(List<CustomTextDTO> customTextDTOList) {
-    return customTextDTOList.stream().map(this::convertCustomText).collect(Collectors.toList());
+    return customTextDTOList.stream().map(this::convertCustomText).toList();
   }
 
   private CustomText convertCustomText(CustomTextDTO dto) {
@@ -75,7 +75,7 @@ public class CustomPdfRequestConverter {
   private Appearance convertAppearance(AppearanceDTO dto) {
     return Appearance.builder()
         .fontSize(dto.fontSize())
-        .style(dto.style() != null ? FontStyle.valueOf(dto.style().name()) : FontStyle.NORMAL)
+        .style(FontStyleEnumDTO.toFontStyle(dto.style()))
         .build();
   }
 
