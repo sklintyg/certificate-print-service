@@ -25,6 +25,9 @@ public enum FontStyleEnumDTO {
   BOLD;
 
   public static FontStyle toFontStyle(FontStyleEnumDTO dto) {
+    if (dto == null) {
+      return FontStyle.NORMAL;
+    }
     return switch (dto) {
       case NORMAL -> FontStyle.NORMAL;
       case BOLD -> FontStyle.BOLD;

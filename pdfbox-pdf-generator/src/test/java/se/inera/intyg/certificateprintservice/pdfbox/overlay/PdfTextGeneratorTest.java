@@ -21,25 +21,26 @@ package se.inera.intyg.certificateprintservice.pdfbox.overlay;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.TAGGED_PDF_RESOURCE;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
-import org.apache.pdfbox.util.Matrix;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.pdfbox.accessibility.PdfAccessibilityUtil;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appearance;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 
 /**
  * Tests for {@link PdfTextGenerator}.
  *
- * <p>Each test loads a tagged PDF from {@code tagged-test-template.pdf} in test resources. If the
- * resource is absent (e.g. during initial development), a programmatic fallback creates the
- * required structure:
+ * <p>Each test loads a tagged PDF from {@code tagged-test-template.pdf} in test resources.
  *
  * <pre>
  *   StructureTreeRoot
@@ -94,114 +95,73 @@ class PdfTextGeneratorTest {
   }
 
   @Nested
-  class AddTopWatermark {
-
-    @Test
-    void shallCreateNewDivWhenAddInExistingTopTagIsFalse() throws IOException {
-      final var pageKidsBefore = getPageElement().getKids().size();
-
-      generator.addTopWatermark(
-          document, "MAKULERAT", Matrix.getTranslateInstance(40, 685), 22f, 1, false);
-
-      assertEquals(pageKidsBefore + 1, getPageElement().getKids().size());
-    }
-
-    @Test
-    void shallReuseFirstDivWhenAddInExistingTopTagIsTrue() throws IOException {
-      final var pageKidsBefore = getPageElement().getKids().size();
-      final var firstDivKidsBefore = getFirstDivElement().getKids().size();
-
-      generator.addTopWatermark(
-          document, "MAKULERAT", Matrix.getTranslateInstance(40, 685), 22f, 1, true);
-
-      assertEquals(pageKidsBefore, getPageElement().getKids().size());
-      assertEquals(firstDivKidsBefore + 1, getFirstDivElement().getKids().size());
-    }
-
-    @Test
-    void shallSetActualTextInStructure() throws IOException {
-      generator.addTopWatermark(
-          document, "MAKULERAT", Matrix.getTranslateInstance(40, 685), 22f, 1, false);
-
-      // New div was inserted at index 0; its first kid is the P element
-      final var newDiv = (PDStructureElement) getPageElement().getKids().getFirst();
-      final var pElement = (PDStructureElement) newDiv.getKids().getFirst();
-
-      assertEquals("MAKULERAT", pElement.getActualText());
-    }
-  }
-
-  @Nested
   class AddMarginText {
 
     @Test
-    void shallAddStructureElementToLastDiv() throws IOException {
-      final var lastDivKidsBefore = getLastDivElement().getKids().size();
+    void shallCreateNewDivOnPage() throws IOException {
+      final var pageKidsBefore = getPageElement().getKids().size();
 
       generator.addMarginText(document, "Webcert/cert-123", 1, 0);
 
-      assertEquals(lastDivKidsBefore + 1, getLastDivElement().getKids().size());
+      assertEquals(pageKidsBefore + 1, getPageElement().getKids().size());
     }
 
     @Test
     void shallSetActualTextInMarginStructure() throws IOException {
       generator.addMarginText(document, "Webcert/cert-123", 1, 0);
 
-      final var lastDiv = getLastDivElement();
-      final var pElement = (PDStructureElement) lastDiv.getKids().getLast();
+      final var newDiv = (PDStructureElement) getPageElement().getKids().getFirst();
+      final var pElement = (PDStructureElement) newDiv.getKids().getFirst();
 
       assertEquals("Webcert/cert-123", pElement.getActualText());
     }
   }
 
   @Nested
-  class AddDigitalSignatureText {
+  class DrawText {
 
     @Test
-    void shallAddStructureElementToCorrectQuestionSectionIndex() throws IOException {
+    void shallAddToQuestionSectionWhenTagIndexIsSet() throws IOException {
       final var targetSection = getQuestionSection(0);
       final var kidsBefore = targetSection.getKids().size();
 
-      generator.addDigitalSignatureText(document, "Signatur", 100f, 200f, 1, 0, 0);
+      generator.drawText(document, buildTextInfo("Test text", 0, 0));
 
       assertEquals(kidsBefore + 1, getQuestionSection(0).getKids().size());
     }
 
     @Test
-    void shallSetActualTextInSignatureStructure() throws IOException {
-      generator.addDigitalSignatureText(document, "Signatur", 100f, 200f, 1, 0, 0);
+    void shallSetActualTextWhenTagIndexIsSet() throws IOException {
+      generator.drawText(document, buildTextInfo("Hello", 0, 0));
 
       final var pElement = (PDStructureElement) getQuestionSection(0).getKids().getLast();
 
-      assertEquals("Signatur", pElement.getActualText());
+      assertEquals("Hello", pElement.getActualText());
     }
-  }
-
-  @Nested
-  class AddSentText {
 
     @Test
-    void shallAddStructureElementForSentText() throws IOException {
+    void shallCreateNewDivOnPageWhenTagIndexIsNull() throws IOException {
       final var pageKidsBefore = getPageElement().getKids().size();
 
-      generator.addSentText(document, "Skickad till Försäkringskassan", 1);
+      generator.drawText(document, buildTextInfo("Test text", 0, null));
 
       assertEquals(pageKidsBefore + 1, getPageElement().getKids().size());
     }
-  }
 
-  @Nested
-  class AddSentVisibilityText {
-
-    @Test
-    void shallReuseFirstDivForVisibilityText() throws IOException {
-      final var pageKidsBefore = getPageElement().getKids().size();
-      final var firstDivKidsBefore = getFirstDivElement().getKids().size();
-
-      generator.addSentVisibilityText(document, "Intyget är tillgängligt för patienten", 1);
-
-      assertEquals(pageKidsBefore, getPageElement().getKids().size());
-      assertEquals(firstDivKidsBefore + 1, getFirstDivElement().getKids().size());
+    private TextInfo buildTextInfo(String value, int pageIndex, Integer tagIndex) {
+      return TextInfo.builder()
+          .customText(
+              CustomText.builder()
+                  .value(value)
+                  .x(100f)
+                  .y(200f)
+                  .appearance(Appearance.builder().style(FontStyle.NORMAL).fontSize(12f).build())
+                  .pageIndex(pageIndex)
+                  .tagIndex(tagIndex)
+                  .build())
+          .color(Color.black)
+          .mcid(1)
+          .build();
     }
   }
 
@@ -213,19 +173,15 @@ class PdfTextGeneratorTest {
     return (PDStructureElement) documentElement.getKids().getFirst();
   }
 
-  private PDStructureElement getFirstDivElement() {
-    return (PDStructureElement) getPageElement().getKids().getFirst();
-  }
-
-  private PDStructureElement getLastDivElement() {
-    return (PDStructureElement) getPageElement().getKids().getLast();
-  }
-
   /**
    * Returns the question-section kid at {@code index} inside the div with the most kids. Mirrors
    * the logic of {@link PdfAccessibilityUtil#getDivInQuestionSection}.
    */
   private PDStructureElement getQuestionSection(int index) {
     return (PDStructureElement) getFirstDivElement().getKids().get(index);
+  }
+
+  private PDStructureElement getFirstDivElement() {
+    return (PDStructureElement) getPageElement().getKids().getFirst();
   }
 }

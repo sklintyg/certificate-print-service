@@ -20,7 +20,7 @@ package se.inera.intyg.certificateprintservice.application.print.custom.converte
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.TEMPLATE_BYTES;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.VALID_TEMPLATE;
@@ -32,6 +32,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 
 class CustomPdfRequestConverterTest {
 
@@ -45,44 +46,104 @@ class CustomPdfRequestConverterTest {
   }
 
   @Test
-  void shallConvertMetadataWaterMarks() {
-    // TODO: assert all values for converted metadata
+  void shallConvertCustomTextListSize() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertNotNull(result.getMetadata().getCustomTextList());
     assertEquals(3, result.getMetadata().getCustomTextList().size());
+  }
+
+  @Test
+  void shallConvertCustomTextValue() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
     assertEquals(
         "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.",
-        result.getMetadata().getCustomTextList().get(0).getValue());
+        result.getMetadata().getCustomTextList().getFirst().value());
   }
 
   @Test
-  void shallConvertMetadataRightMarginText() {
+  void shallConvertCustomTextX() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertNotNull(result.getMetadata().getRightMarginText());
-    assertTrue(result.getMetadata().getRightMarginText().contains("Intygsid:"));
-    assertTrue(result.getMetadata().getRightMarginText().contains("Webcert"));
+    assertEquals(100f, result.getMetadata().getCustomTextList().getFirst().x());
   }
 
   @Test
-  void shallConvertMetadataAccessibilityMetadata() {
-    // TODO: assert content of getAccessibilityMetadata value
-
+  void shallConvertCustomTextY() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertNotNull(result.getMetadata().getAccessibilityMetadata());
+    assertEquals(200f, result.getMetadata().getCustomTextList().getFirst().y());
+  }
+
+  @Test
+  void shallConvertCustomTextPageIndex() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertEquals(0, result.getMetadata().getCustomTextList().getFirst().pageIndex());
+  }
+
+  @Test
+  void shallConvertCustomTextTagIndex() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertEquals(5, result.getMetadata().getCustomTextList().getFirst().tagIndex());
+  }
+
+  @Test
+  void shallConvertCustomTextAppearanceFontSize() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertEquals(
+        12f, result.getMetadata().getCustomTextList().getFirst().appearance().getFontSize());
+  }
+
+  @Test
+  void shallConvertCustomTextAppearanceStyleNormal() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertEquals(
+        FontStyle.NORMAL,
+        result.getMetadata().getCustomTextList().getFirst().appearance().getStyle());
+  }
+
+  @Test
+  void shallConvertCustomTextAppearanceStyleBold() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertEquals(
+        FontStyle.BOLD, result.getMetadata().getCustomTextList().get(1).appearance().getStyle());
+  }
+
+  @Test
+  void shallConvertRightMarginText() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertEquals(
+        "Intygsid: 8996d3d8-cb67-4602-b6a9-81dee33616ce. Intyget är utskrivet från Webcert.",
+        result.getMetadata().getRightMarginText());
+  }
+
+  @Test
+  void shallConvertAccessibilityMetadataTitle() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertEquals("fk7210", result.getMetadata().getAccessibilityMetadata().getTitle());
+  }
+
+  @Test
+  void shallConvertAddDraftWatermark() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertFalse(result.getMetadata().isAddDraftWatermark());
   }
 
   @Test
   void shallConvertFieldValue() {
-    final var fieldOption = CustomPdfFieldDTO.builder().value("some-value").build();
     final var request =
-        buildRequest(fullMetadataBuilder().build(), Map.of("field-id", fieldOption));
-
+        buildRequest(
+            fullMetadataBuilder().build(),
+            Map.of("field-id", CustomPdfFieldDTO.builder().value("some-value").build()));
     final var result = converter.convert(request);
-
-    assertEquals(1, result.getFields().size());
     assertEquals("some-value", result.getFields().get("field-id").getValue());
   }
 

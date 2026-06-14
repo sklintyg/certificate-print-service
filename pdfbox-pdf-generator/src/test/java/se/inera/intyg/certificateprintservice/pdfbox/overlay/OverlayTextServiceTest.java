@@ -79,37 +79,10 @@ class OverlayTextServiceTest {
   class WatermarkText {
 
     @Test
-    void shallDrawMultipleWatermarksWhenMetadataContainsMultiple() throws IOException {
-      overlayTextService.drawOverlays(
-          document, TestDataFK7210CustomPdfMetadata.signedAndSentMetadata());
+    void shallDrawWatermark() throws IOException {
+      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.draftMetadata());
 
-      // One watermark with specific positioning, two watermarks as sent text
-      verify(pdfTextGenerator, times(1))
-          .addDigitalSignatureText(
-              eq(document),
-              contains(
-                  "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren."),
-              eq(100.0f),
-              eq(50.0f),
-              anyInt(),
-              anyInt(),
-              anyInt());
-      verify(pdfTextGenerator, times(2)).addSentText(any(), any(), anyInt());
-    }
-
-    @Test
-    void shallDrawWatermarkWithSpecificPositioning() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.signedMetadata());
-
-      verify(pdfTextGenerator)
-          .addDigitalSignatureText(
-              eq(document),
-              contains("Detta är en utskrift av ett elektroniskt intyg"),
-              eq(100.0f),
-              eq(50.0f),
-              anyInt(),
-              eq(15),
-              eq(3));
+      verify(pdfTextGenerator, times(1)).addWatermark(eq(document), eq("UTKAST"), anyInt());
     }
   }
 
