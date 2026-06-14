@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.certificateprintservice.pdfbox.overlay;
 
-import io.micrometer.common.util.StringUtils;
 import java.awt.Color;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -45,9 +44,8 @@ public class OverlayTextService {
           document,
           TextInfo.builder().customText(customText).color(Color.gray).mcid(++mcid).build());
     }
-    // TODO: Can we extract this logic to the metadata instead? Would enable us to remove this logic
-    // and addMarginText all together.
-    if (!StringUtils.isBlank(metadata.rightMarginText())) {
+
+    if (metadata.hasRightMarginText()) {
       pdfTextGenerator.addMarginText(document, metadata.rightMarginText(), ++mcid, 0);
     }
   }
