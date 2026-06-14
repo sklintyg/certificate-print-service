@@ -21,7 +21,12 @@ package se.inera.intyg.certificateprintservice.integrationtest.fk7210;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Constants.TAGGED_PDF_RESOURCE;
 import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Fields.allFields;
+import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Fields.minimalFields;
 import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Metadata.fullMetadata;
+import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Metadata.metadataWithDraftWatermark;
+import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Metadata.metadataWithSignatureTextOnly;
+import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Metadata.metadataWithoutCustomTexts;
+import static se.inera.intyg.certificateprintservice.integrationtest.fk7210.TestSetupFK7210Metadata.metadataWithoutRightMarginText;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +35,44 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 
 public class TestSetupFK7210 {
 
-  public CustomPrintRequestDTO.CustomPrintRequestDTOBuilder fk7210SignedAndSent() {
+  public CustomPrintRequestDTO.CustomPrintRequestDTOBuilder fk7210WithAllFields() {
     return CustomPrintRequestDTO.builder()
         .fields(allFields())
+        .metadata(fullMetadata())
+        .template(TAGGED_PDF_RESOURCE);
+  }
+
+  public CustomPrintRequestDTO.CustomPrintRequestDTOBuilder fk7210WithDraftWatermark() {
+    return CustomPrintRequestDTO.builder()
+        .fields(allFields())
+        .metadata(metadataWithDraftWatermark())
+        .template(TAGGED_PDF_RESOURCE);
+  }
+
+  public CustomPrintRequestDTO.CustomPrintRequestDTOBuilder fk7210WithoutRightMarginText() {
+    return CustomPrintRequestDTO.builder()
+        .fields(allFields())
+        .metadata(metadataWithoutRightMarginText())
+        .template(TAGGED_PDF_RESOURCE);
+  }
+
+  public CustomPrintRequestDTO.CustomPrintRequestDTOBuilder fk7210WithoutCustomTexts() {
+    return CustomPrintRequestDTO.builder()
+        .fields(allFields())
+        .metadata(metadataWithoutCustomTexts())
+        .template(TAGGED_PDF_RESOURCE);
+  }
+
+  public CustomPrintRequestDTO.CustomPrintRequestDTOBuilder fk7210WithSignatureTextOnly() {
+    return CustomPrintRequestDTO.builder()
+        .fields(allFields())
+        .metadata(metadataWithSignatureTextOnly())
+        .template(TAGGED_PDF_RESOURCE);
+  }
+
+  public CustomPrintRequestDTO.CustomPrintRequestDTOBuilder fk7210WithMinimalFields() {
+    return CustomPrintRequestDTO.builder()
+        .fields(minimalFields())
         .metadata(fullMetadata())
         .template(TAGGED_PDF_RESOURCE);
   }

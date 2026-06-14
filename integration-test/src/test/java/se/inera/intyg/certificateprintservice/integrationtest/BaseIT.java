@@ -36,9 +36,11 @@ public abstract class BaseIT {
 
   private static final String API_PATH = "/api/print/custom";
 
-  @LocalServerPort protected int port;
+  @LocalServerPort
+  protected int port;
 
-  @Autowired protected TestRestTemplate restTemplate;
+  @Autowired
+  protected TestRestTemplate restTemplate;
 
   protected String baseUrl() {
     return "http://localhost:" + port;
@@ -46,5 +48,9 @@ public abstract class BaseIT {
 
   protected ResponseEntity<CustomPrintResponseDTO> postCustom(CustomPrintRequestDTO request) {
     return restTemplate.postForEntity(baseUrl() + API_PATH, request, CustomPrintResponseDTO.class);
+  }
+
+  protected ResponseEntity<String> postCustomError(CustomPrintRequestDTO request) {
+    return restTemplate.postForEntity(baseUrl() + API_PATH, request, String.class);
   }
 }
