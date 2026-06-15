@@ -39,6 +39,12 @@ public class PrintController {
   private final GeneralPrintService generalPrintService;
   private final CustomPrintService customPrintService;
 
+  @Deprecated(forRemoval = true)
+  @PostMapping("")
+  PrintCertificateResponseDTO get(@RequestBody PrintCertificateRequestDTO request) {
+    return generalPrintService.get(request);
+  }
+
   @PostMapping("/general")
   PrintCertificateResponseDTO general(@RequestBody PrintCertificateRequestDTO request) {
     return generalPrintService.get(request);
