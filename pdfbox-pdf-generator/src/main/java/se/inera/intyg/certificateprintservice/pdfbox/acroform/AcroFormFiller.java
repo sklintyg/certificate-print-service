@@ -51,7 +51,7 @@ public class AcroFormFiller {
             if (field instanceof PDVariableText textField) {
               final var textAppearance = new TextFieldAppearance(textField);
               textAppearance.adjustFieldHeight(
-                  Optional.ofNullable(fieldOptions.offset()).orElse(1));
+                  Optional.ofNullable(fieldOptions.offset()).orElse(0));
             }
 
             field.setValue(fieldOptions.value());
