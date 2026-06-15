@@ -21,8 +21,8 @@ package se.inera.intyg.certificateprintservice.playwright.converters;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.GeneralPrintText;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Metadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.GeneralPrintText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.Metadata;
 
 class LeftMarginInfoConverterTest {
 

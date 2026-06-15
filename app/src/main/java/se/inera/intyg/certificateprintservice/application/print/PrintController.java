@@ -18,23 +18,40 @@
  */
 package se.inera.intyg.certificateprintservice.application.print;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateRequestDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.service.CustomPrintService;
+import se.inera.intyg.certificateprintservice.application.print.general.dto.PrintCertificateRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.general.dto.PrintCertificateResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.general.service.GeneralPrintService;
 
 @RestController
 @RequestMapping("api/print")
 @RequiredArgsConstructor
 public class PrintController {
 
-  private final GeneratePrintService printService;
+  private final GeneralPrintService generalPrintService;
+  private final CustomPrintService customPrintService;
 
-  @PostMapping()
+  @Deprecated(forRemoval = true)
+  @PostMapping("")
   PrintCertificateResponseDTO get(@RequestBody PrintCertificateRequestDTO request) {
-    return printService.get(request);
+    return generalPrintService.get(request);
+  }
+
+  @PostMapping("/general")
+  PrintCertificateResponseDTO general(@RequestBody PrintCertificateRequestDTO request) {
+    return generalPrintService.get(request);
+  }
+
+  @PostMapping("/custom")
+  CustomPrintResponseDTO custom(@Valid @RequestBody CustomPrintRequestDTO request) {
+    return customPrintService.get(request);
   }
 }

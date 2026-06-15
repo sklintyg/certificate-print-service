@@ -22,11 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueLabeledList;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueLabeledText;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueList;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueTable;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueLabeledList;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueLabeledText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueList;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueTable;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueText;
 import se.inera.intyg.certificateprintservice.playwright.element.BasicElementFactory;
 
 class ElementValueConverterTest {

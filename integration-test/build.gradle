@@ -1,0 +1,44 @@
+
+dependencies {
+    testImplementation project(':app')
+
+    testImplementation platform("se.inera.intyg.bom:platform:${intygBomVersion}")
+    testAnnotationProcessor platform("se.inera.intyg.bom:platform:${intygBomVersion}")
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+}
+
+test {
+    enabled = false
+}
+
+testing {
+    suites {
+        integrationTest(JvmTestSuite) {
+            description = 'Runs integration tests.'
+            group = 'verification'
+
+            sources {
+                java {
+                    srcDirs = ['src/test/java']
+                }
+                resources {
+                    srcDirs = ['src/test/resources']
+                }
+            }
+            configurations {
+                integrationTestAnnotationProcessor.extendsFrom testAnnotationProcessor
+                integrationTestImplementation.extendsFrom testImplementation
+                integrationTestCompileOnly.extendsFrom testCompileOnly
+            }
+            targets.all {
+                testTask.configure {
+                    shouldRunAfter(test)
+                    minHeapSize = "512m"
+                    maxHeapSize = "3g"
+                }
+            }
+        }
+    }
+}

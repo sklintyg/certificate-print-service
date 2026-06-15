@@ -1,5 +1,5 @@
 ### Create PDF
-POST http://localhost:18040/api/print
+POST http://localhost:18040/api/print/general
 Content-Type: application/json
 
 {

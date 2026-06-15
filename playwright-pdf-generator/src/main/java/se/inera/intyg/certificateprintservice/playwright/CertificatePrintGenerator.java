@@ -29,11 +29,11 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.certificateprintservice.pdfgenerator.PrintCertificateGenerator;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Certificate;
-import se.inera.intyg.certificateprintservice.pdfgenerator.event.CertificatePrintEventService;
-import se.inera.intyg.certificateprintservice.pdfgenerator.event.model.CertificatePrintEvent;
-import se.inera.intyg.certificateprintservice.pdfgenerator.event.model.CertificatePrintEventType;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.event.CertificatePrintEventPublisher;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.event.model.CertificatePrintEvent;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.event.model.CertificatePrintEventType;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.PrintCertificateGenerator;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.Certificate;
 import se.inera.intyg.certificateprintservice.playwright.browserpool.BrowserPool;
 import se.inera.intyg.certificateprintservice.playwright.browserpool.PlaywrightBrowser;
 import se.inera.intyg.certificateprintservice.playwright.converters.ContentConverter;
@@ -56,7 +56,7 @@ public class CertificatePrintGenerator implements PrintCertificateGenerator, Ini
   private final ContentConverter contentConverter;
   private final FooterConverter footerConverter;
   private final HeaderConverter headerConverter;
-  private final CertificatePrintEventService certificatePrintEventService;
+  private final CertificatePrintEventPublisher certificatePrintEventPublisher;
   private String tailwindCSS;
 
   @Override
@@ -76,7 +76,7 @@ public class CertificatePrintGenerator implements PrintCertificateGenerator, Ini
       throw new IllegalStateException("Failure creating certificate pdf", e);
     } finally {
       browserPool.returnObject(playwrightBrowser);
-      certificatePrintEventService.publish(
+      certificatePrintEventPublisher.publish(
           CertificatePrintEvent.builder()
               .start(start)
               .end(LocalDateTime.now(ZoneId.systemDefault()))

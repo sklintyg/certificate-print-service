@@ -24,7 +24,7 @@ import javax.swing.text.html.HTML.Tag;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jsoup.nodes.Element;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.Question;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.Question;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QuestionConverter {

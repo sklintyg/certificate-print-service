@@ -26,13 +26,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateRequestDTO;
-import se.inera.intyg.certificateprintservice.application.print.dto.PrintCertificateResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.service.CustomPrintService;
+import se.inera.intyg.certificateprintservice.application.print.general.dto.PrintCertificateRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.general.dto.PrintCertificateResponseDTO;
+import se.inera.intyg.certificateprintservice.application.print.general.service.GeneralPrintService;
 
 @ExtendWith(MockitoExtension.class)
 class PrintControllerTest {
 
-  @Mock GeneratePrintService generatePrintService;
+  @Mock GeneralPrintService generalPrintService;
+  @Mock CustomPrintService customPrintService;
   @InjectMocks PrintController printController;
 
   @Test
@@ -40,9 +45,20 @@ class PrintControllerTest {
     final var request = PrintCertificateRequestDTO.builder().build();
     final var expectedResponse = PrintCertificateResponseDTO.builder().build();
 
-    doReturn(expectedResponse).when(generatePrintService).get(request);
+    doReturn(expectedResponse).when(generalPrintService).get(request);
 
-    final var actualResponse = printController.get(request);
+    final var actualResponse = printController.general(request);
+    assertEquals(expectedResponse, actualResponse);
+  }
+
+  @Test
+  void shallReturnCustomPrintResponse() {
+    final var request = CustomPrintRequestDTO.builder().build();
+    final var expectedResponse = CustomPrintResponseDTO.builder().build();
+
+    doReturn(expectedResponse).when(customPrintService).get(request);
+
+    final var actualResponse = printController.custom(request);
     assertEquals(expectedResponse, actualResponse);
   }
 }

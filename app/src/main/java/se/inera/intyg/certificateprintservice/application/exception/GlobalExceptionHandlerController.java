@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -30,6 +31,31 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandlerController {
+
+  @ExceptionHandler({MethodArgumentNotValidException.class})
+  public ResponseEntity<String> handleMethodArgumentNotValidException(
+      MethodArgumentNotValidException exception) {
+    final var message =
+        exception.getBindingResult().getFieldErrors().stream()
+            .map(
+                error ->
+                    "Invalid request - '%s' %s"
+                        .formatted(error.getField(), error.getDefaultMessage()))
+            .findFirst()
+            .orElse("Invalid request");
+    log.warn("Bad request. Reason: %s.".formatted(message));
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+        .body(message);
+  }
+
+  @ExceptionHandler({IllegalArgumentException.class})
+  public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
+    log.warn("Bad request. Reason: %s.".formatted(exception.getMessage()));
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+        .body(exception.getMessage());
+  }
 
   @ExceptionHandler({Exception.class})
   public ResponseEntity<String> handleRuntimeExceptions(Exception exception) {

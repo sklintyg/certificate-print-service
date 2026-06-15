@@ -11,12 +11,14 @@ def applicationDir = "${rootProject.projectDir}/devops/dev"
 
 dependencies {
     implementation project(':playwright-pdf-generator')
+    implementation project(':pdfbox-pdf-generator')
     implementation project(':pdf-generator-api')
     implementation project(':logging')
 
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

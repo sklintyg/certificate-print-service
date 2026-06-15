@@ -22,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueLabeledList;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueLabeledText;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.value.ElementValueTable;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueLabeledList;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueLabeledText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.value.ElementValueTable;
 
 class BasicElementFactoryTest {
 
@@ -70,16 +70,16 @@ class BasicElementFactoryTest {
 
     assertEquals(
         """
-        <div class="mb-2">
-         <div class="mb-2">
-          <p class="text-sm font-bold pt-[1mm] px-[5mm] text-neutral-600">L1</p>
-          <p class="text-sm italic px-[5mm]">T1</p>
-         </div>
-         <div class="mb-2">
-          <p class="text-sm font-bold pt-[1mm] px-[5mm] text-neutral-600">L2</p>
-          <p class="text-sm italic px-[5mm]">T2</p>
-         </div>
-        </div>""",
+            <div class="mb-2">
+             <div class="mb-2">
+              <p class="text-sm font-bold pt-[1mm] px-[5mm] text-neutral-600">L1</p>
+              <p class="text-sm italic px-[5mm]">T1</p>
+             </div>
+             <div class="mb-2">
+              <p class="text-sm font-bold pt-[1mm] px-[5mm] text-neutral-600">L2</p>
+              <p class="text-sm italic px-[5mm]">T2</p>
+             </div>
+            </div>""",
         result.toString());
   }
 }
