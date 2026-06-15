@@ -139,9 +139,10 @@ class CustomPdfRequestConverterTest {
     final var request =
         buildRequest(
             fullMetadataBuilder().build(),
-            Map.of("field-id", CustomPdfFieldDTO.builder().value("some-value").build()));
+            Map.of("field-id", CustomPdfFieldDTO.builder().value("some-value").offset(5).build()));
     final var result = converter.convert(request);
     assertEquals("some-value", result.fields().get("field-id").value());
+    assertEquals(5, result.fields().get("field-id").offset());
   }
 
   @Test

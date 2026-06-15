@@ -87,6 +87,6 @@ public class CustomPdfRequestConverter {
   }
 
   private CustomPdfField convertField(CustomPdfFieldDTO dto) {
-    return new CustomPdfField(dto.getValue());
+    return new CustomPdfField(dto.getValue(), dto.getOffset());
   }
 }

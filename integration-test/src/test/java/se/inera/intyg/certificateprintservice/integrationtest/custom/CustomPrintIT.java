@@ -67,8 +67,7 @@ class CustomPrintIT extends BaseIT {
   @Test
   void shallReturnValidPdfWithoutRightMarginText() throws IOException {
     final var setup = new TestSetupFK7210();
-    final var request =
-        setup.loadTemplateAsBase64(setup.fk7210WithoutRightMarginText().build());
+    final var request = setup.loadTemplateAsBase64(setup.fk7210WithoutRightMarginText().build());
 
     final var response = postCustom(request);
 
@@ -92,8 +91,7 @@ class CustomPrintIT extends BaseIT {
   @Test
   void shallReturnValidPdfWithSignatureTextOnly() throws IOException {
     final var setup = new TestSetupFK7210();
-    final var request =
-        setup.loadTemplateAsBase64(setup.fk7210WithSignatureTextOnly().build());
+    final var request = setup.loadTemplateAsBase64(setup.fk7210WithSignatureTextOnly().build());
 
     final var response = postCustom(request);
 
@@ -127,9 +125,7 @@ class CustomPrintIT extends BaseIT {
             .fields(
                 Map.of(
                     TestSetupFK7210Constants.PATIENT_ID_FIELD_ID,
-                    CustomPdfFieldDTO.builder()
-                        .value(TestSetupFK7210Constants.PATIENT_ID)
-                        .build()))
+                    CustomPdfFieldDTO.builder().value(TestSetupFK7210Constants.PATIENT_ID).build()))
             .build();
 
     final var response = postCustomError(request);

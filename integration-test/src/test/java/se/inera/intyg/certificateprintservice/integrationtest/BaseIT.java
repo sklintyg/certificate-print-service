@@ -36,11 +36,9 @@ public abstract class BaseIT {
 
   private static final String API_PATH = "/api/print/custom";
 
-  @LocalServerPort
-  protected int port;
+  @LocalServerPort protected int port;
 
-  @Autowired
-  protected TestRestTemplate restTemplate;
+  @Autowired protected TestRestTemplate restTemplate;
 
   protected String baseUrl() {
     return "http://localhost:" + port;

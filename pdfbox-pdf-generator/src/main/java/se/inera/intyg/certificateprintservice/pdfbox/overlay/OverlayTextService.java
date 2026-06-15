@@ -39,6 +39,7 @@ public class OverlayTextService {
     if (metadata.addDraftWatermark()) {
       pdfTextGenerator.addWatermark(document, "UTKAST", ++mcid);
     }
+
     for (CustomText customText : metadata.customTextList()) {
       pdfTextGenerator.drawText(
           document,

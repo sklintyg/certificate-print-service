@@ -65,8 +65,6 @@ public class TestSetupFK7210Fields {
   }
 
   public static Map<String, CustomPdfFieldDTO> minimalFields() {
-    return Map.of(
-        PATIENT_ID_FIELD_ID,
-        CustomPdfFieldDTO.builder().value(PATIENT_ID).build());
+    return Map.of(PATIENT_ID_FIELD_ID, CustomPdfFieldDTO.builder().value(PATIENT_ID).build());
   }
 }

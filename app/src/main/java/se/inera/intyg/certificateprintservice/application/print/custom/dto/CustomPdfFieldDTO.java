@@ -30,6 +30,7 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 public class CustomPdfFieldDTO {
 
   String value;
+  Integer offset;
 
   @JsonPOJOBuilder(withPrefix = "")
   public static class CustomPdfFieldDTOBuilder {}

@@ -20,6 +20,7 @@ package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -46,10 +47,11 @@ public class AcroFormFiller {
                     .formatted(fieldId));
           }
           try {
-            // TODO Discuss if this should be handled in the api or not
+
             if (field instanceof PDVariableText textField) {
               final var textAppearance = new TextFieldAppearance(textField);
-              textAppearance.adjustFieldHeight(1);
+              textAppearance.adjustFieldHeight(
+                  Optional.ofNullable(fieldOptions.offset()).orElse(1));
             }
 
             field.setValue(fieldOptions.value());

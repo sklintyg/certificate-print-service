@@ -62,14 +62,16 @@ class OverlayTextServiceTest {
 
     @Test
     void shallDrawDraftWatermarkWhenAddDraftWatermarkIsTrue() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
 
       verify(pdfTextGenerator).addWatermark(eq(document), eq("UTKAST"), anyInt());
     }
 
     @Test
     void shallNotDrawDraftWatermarkWhenAddDraftWatermarkIsFalse() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.metadataWithCustomTextAndMargin());
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithCustomTextAndMargin());
 
       verify(pdfTextGenerator, never()).addWatermark(any(), eq("UTKAST"), anyInt());
     }
@@ -80,7 +82,8 @@ class OverlayTextServiceTest {
 
     @Test
     void shallDrawWatermark() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
 
       verify(pdfTextGenerator, times(1)).addWatermark(eq(document), eq("UTKAST"), anyInt());
     }
@@ -91,7 +94,8 @@ class OverlayTextServiceTest {
 
     @Test
     void shallDrawMarginTextWhenMetadataContainsRightMarginText() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.metadataWithCustomTextAndMargin());
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithCustomTextAndMargin());
 
       verify(pdfTextGenerator)
           .addMarginText(
@@ -103,7 +107,8 @@ class OverlayTextServiceTest {
 
     @Test
     void shallNotDrawMarginTextWhenMetadataDoesNotContainRightMarginText() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
 
       verify(pdfTextGenerator, never()).addMarginText(any(), any(), anyInt(), anyInt());
     }

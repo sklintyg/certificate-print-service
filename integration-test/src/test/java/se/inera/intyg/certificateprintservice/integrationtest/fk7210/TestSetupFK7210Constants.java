@@ -39,8 +39,8 @@ public class TestSetupFK7210Constants {
       "form1[0].#subform[0].flt_txtVardgivarensNamnAdressTelefon[0]";
 
   public static final String PATIENT_ID = "191212121212";
-  public static final String BIRTH_DATE = "2025-10-20";
-  public static final String SIGNED_DATE = "2025-03-15";
+  public static final String BIRTH_DATE = "2026-12-31";
+  public static final String SIGNED_DATE = "2026-06-14";
   public static final String DOCTOR_NAME = "Ajla Doktor";
   public static final String PA_TITLE = "202010, 208014, 208015";
   public static final String SPECIALTY = "";
