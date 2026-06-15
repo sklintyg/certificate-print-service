@@ -19,13 +19,6 @@
 package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
 import lombok.Builder;
-import lombok.Value;
 
-@Value
 @Builder
-public class Appearance {
-
-  float fontSize;
-  FontStyle style;
-}
-
+public record Appearance(float fontSize, FontStyle style) {}

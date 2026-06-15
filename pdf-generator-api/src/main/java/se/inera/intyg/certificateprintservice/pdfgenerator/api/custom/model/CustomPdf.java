@@ -20,13 +20,7 @@ package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
 import java.util.Map;
 import lombok.Builder;
-import lombok.Value;
 
-@Value
 @Builder
-public class CustomPdf {
-
-  byte[] template;
-  CustomPdfMetadata metadata;
-  Map<String, CustomPdfField> fields;
-}
+public record CustomPdf(
+    byte[] template, CustomPdfMetadata metadata, Map<String, CustomPdfField> fields) {}

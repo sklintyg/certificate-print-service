@@ -34,14 +34,14 @@ public class TestDataFK7210CustomPdfMetadata {
     throw new IllegalStateException("Utility class");
   }
 
-  public static CustomPdfMetadata draftMetadata() {
+  public static CustomPdfMetadata metadataWithDraftWatermark() {
     return CustomPdfMetadata.builder()
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
         .addDraftWatermark(true)
         .build();
   }
 
-  public static CustomPdfMetadata signedMetadata() {
+  public static CustomPdfMetadata metadataWithCustomTextAndMargin() {
     return CustomPdfMetadata.builder()
         .customTextList(
             List.of(
@@ -59,7 +59,7 @@ public class TestDataFK7210CustomPdfMetadata {
         .build();
   }
 
-  public static CustomPdfMetadata signedAndSentMetadata() {
+  public static CustomPdfMetadata metadataWithAllCustomTextsAndMargin() {
     return CustomPdfMetadata.builder()
         .customTextList(
             List.of(
@@ -90,9 +90,5 @@ public class TestDataFK7210CustomPdfMetadata {
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
         .addDraftWatermark(false)
         .build();
-  }
-
-  public static CustomPdfMetadata fullMetadata() {
-    return signedAndSentMetadata();
   }
 }

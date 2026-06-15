@@ -20,20 +20,23 @@ package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.interactive.form.PDVariableText;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AcroFormFiller {
 
   public void fill(PDDocument document, Map<String, CustomPdfField> fields) {
     if (fields == null || fields.isEmpty()) {
       return;
     }
-
     final var acroForm = document.getDocumentCatalog().getAcroForm();
     fields.forEach(
         (fieldId, fieldOptions) -> {
@@ -44,7 +47,14 @@ public class AcroFormFiller {
                     .formatted(fieldId));
           }
           try {
-            field.setValue(fieldOptions.getValue());
+
+            if (field instanceof PDVariableText textField) {
+              final var textAppearance = new TextFieldAppearance(textField);
+              textAppearance.adjustFieldHeight(
+                  Optional.ofNullable(fieldOptions.offset()).orElse(1));
+            }
+
+            field.setValue(fieldOptions.value());
           } catch (IOException e) {
             throw new IllegalStateException(
                 "Failed to set value for field '%s': %s".formatted(fieldId, e.getMessage()), e);

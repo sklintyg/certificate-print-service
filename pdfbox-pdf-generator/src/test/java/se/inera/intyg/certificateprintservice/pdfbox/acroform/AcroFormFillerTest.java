@@ -20,13 +20,19 @@ package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.BIRTH_DATE_FIELD_ID;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.PATIENT_ID;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.PATIENT_ID_FIELD_ID;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Fields.TAGGED_PDF_RESOURCE;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
-import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
@@ -36,23 +42,34 @@ class AcroFormFillerTest {
   private final AcroFormFiller filler = new AcroFormFiller();
 
   private PDDocument document;
-  private PDAcroForm acroForm;
 
   @BeforeEach
-  void setUp() {
-    document = new PDDocument();
-    document.addPage(new PDPage());
-    acroForm = new PDAcroForm(document);
-    document.getDocumentCatalog().setAcroForm(acroForm);
+  void setUp() throws IOException {
+    try (InputStream stream = getClass().getResourceAsStream(TAGGED_PDF_RESOURCE)) {
+      Assertions.assertNotNull(stream);
+      document = Loader.loadPDF(stream.readAllBytes());
+    }
+  }
+
+  @AfterEach
+  void tearDown() throws IOException {
+    if (document != null) {
+      document.close();
+    }
   }
 
   @Test
   void shallFillFieldWithGivenValue() {
-    addTextField("myField");
+    filler.fill(
+        document, Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(PATIENT_ID).build()));
 
-    filler.fill(document, Map.of("myField", CustomPdfField.builder().value("Expected").build()));
-
-    assertEquals("Expected", acroForm.getField("myField").getValueAsString());
+    assertEquals(
+        PATIENT_ID,
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(PATIENT_ID_FIELD_ID)
+            .getValueAsString());
   }
 
   @Test
@@ -66,21 +83,28 @@ class AcroFormFillerTest {
 
   @Test
   void shallDoNothingWhenFieldsMapIsEmpty() {
-    addTextField("myField");
-
     filler.fill(document, Collections.emptyMap());
 
-    assertEquals("", acroForm.getField("myField").getValueAsString());
+    assertEquals(
+        "",
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(PATIENT_ID_FIELD_ID)
+            .getValueAsString());
   }
 
-  private void addTextField(String fieldName) {
-    final var field = new PDTextField(acroForm);
-    field.setPartialName(fieldName);
-    acroForm.getFields().add(field);
-  }
+  @Test
+  void shallNotModifyUnspecifiedFields() {
+    filler.fill(
+        document, Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(PATIENT_ID).build()));
 
-  //TODO: implement
-  void shallThrowIllegalStateExceptionWhenFieldIsNull() {
-
+    assertEquals(
+        "",
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(BIRTH_DATE_FIELD_ID)
+            .getValueAsString());
   }
 }

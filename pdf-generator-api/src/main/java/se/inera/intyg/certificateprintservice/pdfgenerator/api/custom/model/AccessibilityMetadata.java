@@ -19,11 +19,6 @@
 package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
 import lombok.Builder;
-import lombok.Value;
 
-@Value
 @Builder
-public class AccessibilityMetadata {
-
-  String title;
-}
+public record AccessibilityMetadata(String title) {}

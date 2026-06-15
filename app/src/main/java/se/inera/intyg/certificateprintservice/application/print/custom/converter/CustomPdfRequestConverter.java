@@ -30,36 +30,34 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.FontStyleEnumDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appearance;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 
 @Component
 public class CustomPdfRequestConverter {
 
   public CustomPdf convert(CustomPrintRequestDTO request) {
-    return CustomPdf.builder()
-        .template(Base64.getDecoder().decode(request.getTemplate()))
-        .metadata(convertMetadata(request.getMetadata()))
-        .fields(convertFields(request.getFields()))
-        .build();
+    return new CustomPdf(
+        Base64.getDecoder().decode(request.getTemplate()),
+        convertMetadata(request.getMetadata()),
+        convertFields(request.getFields()));
   }
 
   private CustomPdfMetadata convertMetadata(CustomPdfMetadataDTO dto) {
-    return CustomPdfMetadata.builder()
-        .customTextList(convertCustomTexts(dto.getCustomTexts()))
-        .rightMarginText(dto.getRightMarginText())
-        .accessibilityMetadata(convertAccessibilityMetadata(dto.getAccessibilityMetadata()))
-        .addDraftWatermark(dto.isAddDraftWatermark())
-        .build();
+    return new CustomPdfMetadata(
+        convertCustomTexts(dto.getCustomTexts()),
+        dto.getRightMarginText(),
+        convertAccessibilityMetadata(dto.getAccessibilityMetadata()),
+        dto.isAddDraftWatermark());
   }
 
   private List<CustomText> convertCustomTexts(List<CustomTextDTO> customTextDTOList) {
-    return customTextDTOList.stream().map(this::convertCustomText).collect(Collectors.toList());
+    return customTextDTOList.stream().map(this::convertCustomText).toList();
   }
 
   private CustomText convertCustomText(CustomTextDTO dto) {
@@ -73,14 +71,11 @@ public class CustomPdfRequestConverter {
   }
 
   private Appearance convertAppearance(AppearanceDTO dto) {
-    return Appearance.builder()
-        .fontSize(dto.fontSize())
-        .style(dto.style() != null ? FontStyle.valueOf(dto.style().name()) : FontStyle.NORMAL)
-        .build();
+    return new Appearance(dto.fontSize(), FontStyleEnumDTO.toFontStyle(dto.style()));
   }
 
   private AccessibilityMetadata convertAccessibilityMetadata(AccessibilityMetadataDTO dto) {
-    return AccessibilityMetadata.builder().title(dto.title()).build();
+    return new AccessibilityMetadata(dto.title());
   }
 
   private Map<String, CustomPdfField> convertFields(Map<String, CustomPdfFieldDTO> fields) {
@@ -92,6 +87,6 @@ public class CustomPdfRequestConverter {
   }
 
   private CustomPdfField convertField(CustomPdfFieldDTO dto) {
-    return CustomPdfField.builder().value(dto.getValue()).build();
+    return new CustomPdfField(dto.getValue(), dto.getOffset());
   }
 }

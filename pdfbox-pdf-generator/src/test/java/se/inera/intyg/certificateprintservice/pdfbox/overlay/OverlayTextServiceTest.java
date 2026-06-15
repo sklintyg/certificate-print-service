@@ -62,14 +62,16 @@ class OverlayTextServiceTest {
 
     @Test
     void shallDrawDraftWatermarkWhenAddDraftWatermarkIsTrue() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.draftMetadata());
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
 
       verify(pdfTextGenerator).addWatermark(eq(document), eq("UTKAST"), anyInt());
     }
 
     @Test
     void shallNotDrawDraftWatermarkWhenAddDraftWatermarkIsFalse() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.signedMetadata());
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithCustomTextAndMargin());
 
       verify(pdfTextGenerator, never()).addWatermark(any(), eq("UTKAST"), anyInt());
     }
@@ -79,37 +81,11 @@ class OverlayTextServiceTest {
   class WatermarkText {
 
     @Test
-    void shallDrawMultipleWatermarksWhenMetadataContainsMultiple() throws IOException {
+    void shallDrawWatermark() throws IOException {
       overlayTextService.drawOverlays(
-          document, TestDataFK7210CustomPdfMetadata.signedAndSentMetadata());
+          document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
 
-      // One watermark with specific positioning, two watermarks as sent text
-      verify(pdfTextGenerator, times(1))
-          .addDigitalSignatureText(
-              eq(document),
-              contains(
-                  "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren."),
-              eq(100.0f),
-              eq(50.0f),
-              anyInt(),
-              anyInt(),
-              anyInt());
-      verify(pdfTextGenerator, times(2)).addSentText(any(), any(), anyInt());
-    }
-
-    @Test
-    void shallDrawWatermarkWithSpecificPositioning() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.signedMetadata());
-
-      verify(pdfTextGenerator)
-          .addDigitalSignatureText(
-              eq(document),
-              contains("Detta är en utskrift av ett elektroniskt intyg"),
-              eq(100.0f),
-              eq(50.0f),
-              anyInt(),
-              eq(15),
-              eq(3));
+      verify(pdfTextGenerator, times(1)).addWatermark(eq(document), eq("UTKAST"), anyInt());
     }
   }
 
@@ -118,7 +94,8 @@ class OverlayTextServiceTest {
 
     @Test
     void shallDrawMarginTextWhenMetadataContainsRightMarginText() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.signedMetadata());
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithCustomTextAndMargin());
 
       verify(pdfTextGenerator)
           .addMarginText(
@@ -130,7 +107,8 @@ class OverlayTextServiceTest {
 
     @Test
     void shallNotDrawMarginTextWhenMetadataDoesNotContainRightMarginText() throws IOException {
-      overlayTextService.drawOverlays(document, TestDataFK7210CustomPdfMetadata.draftMetadata());
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
 
       verify(pdfTextGenerator, never()).addMarginText(any(), any(), anyInt(), anyInt());
     }

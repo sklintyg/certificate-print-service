@@ -29,6 +29,7 @@ import java.io.IOException;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
 import org.apache.pdfbox.pdmodel.documentinterchange.taggedpdf.StandardStructureTypes;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -47,6 +48,7 @@ public class PdfTextGenerator {
   private static final int WATERMARK_FONT_SIZE = 105;
   private static final float MARGIN_TEXT_OFFSET_X = 30f;
   private static final float MARGIN_TEXT_OFFSET_Y = 30f;
+  private static final Matrix ROTATE_INSTANCE = Matrix.getRotateInstance(Math.PI / 2, 600, 25);
 
   public void addWatermark(PDDocument document, String text, int mcid) throws IOException {
     int pageIndex = 0;
@@ -110,12 +112,13 @@ public class PdfTextGenerator {
                     .pageIndex(pageIndex)
                     .build())
             .build(),
-        Matrix.getRotateInstance(Math.PI / 2, 600, 25));
+        ROTATE_INSTANCE);
   }
 
   public void drawText(PDDocument pdf, TextInfo textInfo, Matrix matrix) throws IOException {
     final var page = pdf.getPage(textInfo.customText().pageIndex());
     try (final var contentStream = createContentStream(pdf, page)) {
+      fillContentStream(contentStream);
       if (matrix != null) {
         contentStream.transform(matrix);
       }
@@ -124,27 +127,36 @@ public class PdfTextGenerator {
       contentStream.setNonStrokingColor(textInfo.color());
       contentStream.setFont(
           new PDType1Font(
-              textInfo.customText().appearance().getStyle() == FontStyle.BOLD
-                  ? FontName.HELVETICA_BOLD : FontName.HELVETICA),
-          textInfo.customText().appearance().getFontSize());
+              textInfo.customText().appearance().style() == FontStyle.BOLD
+                  ? FontName.HELVETICA_BOLD
+                  : FontName.HELVETICA),
+          textInfo.customText().appearance().fontSize());
       final var dictionary = beginMarkedContent(contentStream, COSName.P, textInfo.mcid());
       contentStream.showText(textInfo.customText().value());
       contentStream.endMarkedContent();
-      PDStructureElement section = null;
+      PDStructureElement section;
       if (textInfo.customText().tagIndex() != null) {
-        section = getDivInQuestionSection(pdf, textInfo.customText().tagIndex(),
-            textInfo.customText().pageIndex());
+        section =
+            getDivInQuestionSection(
+                pdf, textInfo.customText().tagIndex(), textInfo.customText().pageIndex());
       } else {
         section = createNewDivOnPage(pdf, 0, 0);
       }
       if (section != null) {
         addContentToCurrentSection(
-            page, dictionary, section, COSName.P, StandardStructureTypes.P,
-            textInfo.customText().value(), false);
+            page,
+            dictionary,
+            section,
+            COSName.P,
+            StandardStructureTypes.P,
+            textInfo.customText().value(),
+            false);
       }
       contentStream.endText();
     }
   }
+
+  private static void fillContentStream(PDPageContentStream contentStream) {}
 
   public void drawText(PDDocument pdf, TextInfo textInfo) throws IOException {
     drawText(pdf, textInfo, null);

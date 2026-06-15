@@ -47,4 +47,8 @@ public abstract class BaseIT {
   protected ResponseEntity<CustomPrintResponseDTO> postCustom(CustomPrintRequestDTO request) {
     return restTemplate.postForEntity(baseUrl() + API_PATH, request, CustomPrintResponseDTO.class);
   }
+
+  protected ResponseEntity<String> postCustomError(CustomPrintRequestDTO request) {
+    return restTemplate.postForEntity(baseUrl() + API_PATH, request, String.class);
+  }
 }

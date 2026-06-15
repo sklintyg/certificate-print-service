@@ -18,23 +18,31 @@
  */
 package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
-import java.util.List;
-import lombok.Builder;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Builder
-public record CustomPdfMetadata(
-    List<CustomText> customTextList,
-    String rightMarginText,
-    AccessibilityMetadata accessibilityMetadata,
-    boolean addDraftWatermark) {
+import org.junit.jupiter.api.Test;
 
-  public CustomPdfMetadata {
-    if (customTextList == null) {
-      customTextList = List.of();
-    }
+class CustomPdfMetadataTest {
+
+  @Test
+  void shouldReturnTrueWhenRightMarginTextIsSet() {
+    assertTrue(
+        CustomPdfMetadata.builder().rightMarginText("some text").build().hasRightMarginText());
   }
 
-  public boolean hasRightMarginText() {
-    return rightMarginText != null && !rightMarginText.isBlank();
+  @Test
+  void shouldReturnFalseWhenRightMarginTextIsNull() {
+    assertFalse(CustomPdfMetadata.builder().rightMarginText(null).build().hasRightMarginText());
+  }
+
+  @Test
+  void shouldReturnFalseWhenRightMarginTextIsEmpty() {
+    assertFalse(CustomPdfMetadata.builder().rightMarginText("").build().hasRightMarginText());
+  }
+
+  @Test
+  void shouldReturnFalseWhenRightMarginTextIsBlank() {
+    assertFalse(CustomPdfMetadata.builder().rightMarginText("   ").build().hasRightMarginText());
   }
 }

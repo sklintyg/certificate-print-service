@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.certificateprintservice.pdfbox.overlay;
 
-import io.micrometer.common.util.StringUtils;
 import java.awt.Color;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -37,19 +36,18 @@ public class OverlayTextService {
   public void drawOverlays(PDDocument document, CustomPdfMetadata metadata) throws IOException {
     int mcid = MaxMCIDExtractor.findNextMcid(document);
 
-    if (metadata.isAddDraftWatermark()) {
+    if (metadata.addDraftWatermark()) {
       pdfTextGenerator.addWatermark(document, "UTKAST", ++mcid);
     }
-    for (CustomText customText : metadata.getCustomTextList()) {
-      pdfTextGenerator.drawText(document, TextInfo.builder()
-          .customText(customText)
-          .color(Color.gray)
-          .mcid(++mcid)
-          .build());
+
+    for (CustomText customText : metadata.customTextList()) {
+      pdfTextGenerator.drawText(
+          document,
+          TextInfo.builder().customText(customText).color(Color.gray).mcid(++mcid).build());
     }
-    if (!StringUtils.isBlank(metadata.getRightMarginText())) {
-      pdfTextGenerator.addMarginText(
-          document, metadata.getRightMarginText(), ++mcid, 0);
+
+    if (metadata.hasRightMarginText()) {
+      pdfTextGenerator.addMarginText(document, metadata.rightMarginText(), ++mcid, 0);
     }
   }
 }

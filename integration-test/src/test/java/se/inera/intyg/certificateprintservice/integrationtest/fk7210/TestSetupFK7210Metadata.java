@@ -38,21 +38,105 @@ public class TestSetupFK7210Metadata {
                 CustomTextDTO.builder()
                     .value(
                         "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
-                    .appearance(new AppearanceDTO(12f, null))
-                    .x(100f)
-                    .y(50f)
+                    .appearance(new AppearanceDTO(8f, FontStyleEnumDTO.BOLD))
+                    .x(173f)
+                    .y(523f)
                     .pageIndex(SIGNATURE_PAGE_INDEX)
                     .tagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
                     .build(),
                 CustomTextDTO.builder()
-                    .value("Intyget har skickats digitalt tillFörsäkringskassan")
-                    .appearance(new AppearanceDTO(16f, FontStyleEnumDTO.BOLD))
+                    .value("Intyget har skickats digitalt till Försäkringskassan")
+                    .appearance(new AppearanceDTO(22f, null))
+                    .x(40f)
+                    .y(685f)
                     .pageIndex(0)
                     .build(),
                 CustomTextDTO.builder()
                     .value("Du kan se intyget genom att logga in på 1177.se")
-                    .appearance(new AppearanceDTO(14f, null))
+                    .appearance(new AppearanceDTO(16f, null))
+                    .x(40f)
+                    .y(665f)
                     .pageIndex(0)
+                    .build()))
+        .rightMarginText(RIGHT_MARGIN_TEXT)
+        .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
+        .addDraftWatermark(false)
+        .build();
+  }
+
+  public static CustomPdfMetadataDTO metadataWithDraftWatermark() {
+    return CustomPdfMetadataDTO.builder()
+        .customTexts(
+            List.of(
+                CustomTextDTO.builder()
+                    .value(
+                        "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
+                    .appearance(new AppearanceDTO(8f, FontStyleEnumDTO.BOLD))
+                    .x(173f)
+                    .y(523f)
+                    .pageIndex(SIGNATURE_PAGE_INDEX)
+                    .tagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
+                    .build()))
+        .rightMarginText(RIGHT_MARGIN_TEXT)
+        .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
+        .addDraftWatermark(true)
+        .build();
+  }
+
+  public static CustomPdfMetadataDTO metadataWithoutRightMarginText() {
+    return CustomPdfMetadataDTO.builder()
+        .customTexts(
+            List.of(
+                CustomTextDTO.builder()
+                    .value(
+                        "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
+                    .appearance(new AppearanceDTO(8f, FontStyleEnumDTO.BOLD))
+                    .x(173f)
+                    .y(523f)
+                    .pageIndex(SIGNATURE_PAGE_INDEX)
+                    .tagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
+                    .build(),
+                CustomTextDTO.builder()
+                    .value("Intyget har skickats digitalt till Försäkringskassan")
+                    .appearance(new AppearanceDTO(22f, null))
+                    .x(40f)
+                    .y(685f)
+                    .pageIndex(0)
+                    .build(),
+                CustomTextDTO.builder()
+                    .value("Du kan se intyget genom att logga in på 1177.se")
+                    .appearance(new AppearanceDTO(16f, null))
+                    .x(40f)
+                    .y(665f)
+                    .pageIndex(0)
+                    .build()))
+        .rightMarginText(null)
+        .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
+        .addDraftWatermark(false)
+        .build();
+  }
+
+  public static CustomPdfMetadataDTO metadataWithoutCustomTexts() {
+    return CustomPdfMetadataDTO.builder()
+        .customTexts(List.of())
+        .rightMarginText(RIGHT_MARGIN_TEXT)
+        .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
+        .addDraftWatermark(false)
+        .build();
+  }
+
+  public static CustomPdfMetadataDTO metadataWithSignatureTextOnly() {
+    return CustomPdfMetadataDTO.builder()
+        .customTexts(
+            List.of(
+                CustomTextDTO.builder()
+                    .value(
+                        "Detta är en utskrift av ett elektroniskt intyg. Intyget har signerats elektroniskt av intygsutfärdaren.")
+                    .appearance(new AppearanceDTO(8f, FontStyleEnumDTO.BOLD))
+                    .x(173f)
+                    .y(523f)
+                    .pageIndex(SIGNATURE_PAGE_INDEX)
+                    .tagIndex(SIGNATURE_TAG_INDEX_WITH_ADDRESS)
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))

@@ -27,7 +27,7 @@ public class TestDataFK7210CustomPdf {
   public static CustomPdf build7210CustomPdfWithTemplate(byte[] template) {
     return CustomPdf.builder()
         .template(template)
-        .metadata(TestDataFK7210CustomPdfMetadata.fullMetadata())
+        .metadata(TestDataFK7210CustomPdfMetadata.metadataWithAllCustomTextsAndMargin())
         .fields(fk7210Fields())
         .build();
   }
