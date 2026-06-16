@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Map;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -106,5 +107,21 @@ class AcroFormFillerTest {
             .getAcroForm()
             .getField(BIRTH_DATE_FIELD_ID)
             .getValueAsString());
+  }
+
+  @Test
+  void shallSetAppearance() {
+    filler.fill(
+        document,
+        Map.of(
+            PATIENT_ID_FIELD_ID,
+            CustomPdfField.builder().value(PATIENT_ID).appearance("/ArialMT 9.00 Tf 0 g").build()));
+
+    final var textField = getTextField(document, PATIENT_ID_FIELD_ID);
+    assertEquals("/ArialMT 9.00 Tf 0 g", textField.getDefaultAppearance());
+  }
+
+  private static PDTextField getTextField(PDDocument document, String fieldId) {
+    return (PDTextField) document.getDocumentCatalog().getAcroForm().getField(fieldId);
   }
 }

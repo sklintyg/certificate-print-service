@@ -21,4 +21,4 @@ package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 import lombok.Builder;
 
 @Builder
-public record CustomPdfField(String value, Integer offset) {}
+public record CustomPdfField(String value, Integer offset, String appearance) {}

@@ -31,6 +31,7 @@ public class CustomPdfFieldDTO {
 
   String value;
   Integer offset;
+  String appearance;
 
   @JsonPOJOBuilder(withPrefix = "")
   public static class CustomPdfFieldDTOBuilder {}
