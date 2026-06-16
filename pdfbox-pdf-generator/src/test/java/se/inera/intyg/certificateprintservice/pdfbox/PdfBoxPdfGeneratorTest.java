@@ -31,13 +31,16 @@ import org.apache.pdfbox.Loader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.AcroFormFiller;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.FieldValueProcessor;
 import se.inera.intyg.certificateprintservice.pdfbox.overlay.OverlayTextService;
 import se.inera.intyg.certificateprintservice.pdfbox.overlay.PdfTextGenerator;
 
 class PdfBoxPdfGeneratorTest {
 
   private final PdfBoxPdfGenerator generator =
-      new PdfBoxPdfGenerator(new AcroFormFiller(), new OverlayTextService(new PdfTextGenerator()));
+      new PdfBoxPdfGenerator(
+          new AcroFormFiller(new FieldValueProcessor()),
+          new OverlayTextService(new PdfTextGenerator()));
 
   @Test
   void shallThrowWhenTemplateIsNull() {

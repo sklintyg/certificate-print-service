@@ -39,7 +39,7 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Over
 
 class AcroFormFillerOverflowTest {
 
-  private final AcroFormFiller filler = new AcroFormFiller();
+  private final AcroFormFiller filler = new AcroFormFiller(new FieldValueProcessor());
   private PDDocument document;
 
   @BeforeEach

@@ -41,7 +41,7 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Over
 
 class AcroFormFillerTest {
 
-  private final AcroFormFiller filler = new AcroFormFiller();
+  private final AcroFormFiller filler = new AcroFormFiller(new FieldValueProcessor());
 
   private PDDocument document;
 
