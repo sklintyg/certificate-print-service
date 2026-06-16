@@ -72,9 +72,12 @@ public class FieldValueProcessor {
 
     final var truncatedPrimary = primaryValue.substring(0, splitIndex) + " " + suffix;
 
+    final var originalSplitIndex =
+        field.shouldRemoveLineBreaks() ? mapIndexToOriginal(originalValue, splitIndex) : splitIndex;
+
     final var remainder =
         OVERFLOW_REMAINDER_PREFIX
-            + originalValue.substring(Math.min(splitIndex, originalValue.length())).trim();
+            + originalValue.substring(Math.min(originalSplitIndex, originalValue.length())).trim();
 
     return new FieldValueResult(truncatedPrimary, remainder);
   }
@@ -84,5 +87,18 @@ public class FieldValueProcessor {
     final var lastSpace = value.lastIndexOf(' ', effectiveLimit);
     final var splitIndex = lastSpace > 0 ? lastSpace : effectiveLimit;
     return value.substring(0, splitIndex) + TRUNCATION_SUFFIX;
+  }
+
+  private int mapIndexToOriginal(String original, int strippedIndex) {
+    var count = 0;
+    for (var i = 0; i < original.length(); i++) {
+      if (original.charAt(i) != '\n') {
+        if (count == strippedIndex) {
+          return i;
+        }
+        count++;
+      }
+    }
+    return original.length();
   }
 }

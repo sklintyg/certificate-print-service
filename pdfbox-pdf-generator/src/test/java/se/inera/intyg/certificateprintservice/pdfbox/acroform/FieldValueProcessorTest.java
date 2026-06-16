@@ -201,6 +201,35 @@ class FieldValueProcessorTest {
     }
 
     @Test
+    void shallSplitOverflowRemainderAtCorrectWordBoundaryWhenLineBreaksRemoved() {
+      final var value = "Hello\nworld this is a test of overflow splitting with newlines inside";
+      final var field =
+          CustomPdfField.builder()
+              .value(value)
+              .maxLength(40)
+              .shouldRemoveLineBreaks(true)
+              .overflow(
+                  OverflowConfig.builder()
+                      .overflowFieldId("overflow")
+                      .overflowLabel("Label")
+                      .build())
+              .build();
+
+      final var result = processor.process(field);
+
+      final var primaryWithoutSuffix = result.primaryValue().replaceAll("\\s*\\.{3}.*$", "").trim();
+      final var remainderContent =
+          result.overflowRemainder().replaceFirst("^\\.{3}\\s*", "").trim();
+
+      assertTrue(
+          !primaryWithoutSuffix.endsWith("worl"),
+          "Primary should not end mid-word, got: " + result.primaryValue());
+      assertTrue(
+          !remainderContent.startsWith("d "),
+          "Remainder should not start mid-word, got: " + result.overflowRemainder());
+    }
+
+    @Test
     void shallRemoveLineBreaksOnlyFromPrimaryValue() {
       final var value =
           "Short\ntext that will overflow when line breaks are removed and this is long";
