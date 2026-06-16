@@ -31,12 +31,14 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.FontStyleEnumDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.OverflowConfigDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appearance;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.OverflowConfig;
 
 @Component
 public class CustomPdfRequestConverter {
@@ -87,6 +89,19 @@ public class CustomPdfRequestConverter {
   }
 
   private CustomPdfField convertField(CustomPdfFieldDTO dto) {
-    return new CustomPdfField(dto.getValue(), dto.getOffset(), dto.getAppearance());
+    return new CustomPdfField(
+        dto.getValue(),
+        dto.getOffset(),
+        dto.getAppearance(),
+        dto.getMaxLength(),
+        dto.isShouldRemoveLineBreaks(),
+        convertOverflowConfig(dto.getOverflow()));
+  }
+
+  private OverflowConfig convertOverflowConfig(OverflowConfigDTO dto) {
+    if (dto == null) {
+      return null;
+    }
+    return new OverflowConfig(dto.getOverflowFieldId(), dto.getOverflowLabel());
   }
 }

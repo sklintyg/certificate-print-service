@@ -16,15 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
+package se.inera.intyg.certificateprintservice.application.print.custom.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
+import lombok.Value;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.OverflowConfigDTO.OverflowConfigDTOBuilder;
 
+@Value
 @Builder
-public record CustomPdfField(
-    String value,
-    Integer offset,
-    String appearance,
-    Integer maxLength,
-    boolean shouldRemoveLineBreaks,
-    OverflowConfig overflow) {}
+@JsonDeserialize(builder = OverflowConfigDTOBuilder.class)
+public class OverflowConfigDTO {
+
+  String overflowFieldId;
+  String overflowLabel;
+
+  @JsonPOJOBuilder(withPrefix = "")
+  public static class OverflowConfigDTOBuilder {}
+}
