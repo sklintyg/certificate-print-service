@@ -24,6 +24,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDVariableText;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
@@ -47,6 +48,9 @@ public class AcroFormFiller {
                     .formatted(fieldId));
           }
           try {
+            if (field instanceof PDTextField textField && fieldOptions.appearance() != null) {
+              textField.setDefaultAppearance(fieldOptions.appearance());
+            }
 
             if (field instanceof PDVariableText textField) {
               final var textAppearance = new TextFieldAppearance(textField);

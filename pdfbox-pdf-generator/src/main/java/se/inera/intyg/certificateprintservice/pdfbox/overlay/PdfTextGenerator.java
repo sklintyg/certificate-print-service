@@ -29,7 +29,6 @@ import java.io.IOException;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
 import org.apache.pdfbox.pdmodel.documentinterchange.taggedpdf.StandardStructureTypes;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -118,7 +117,6 @@ public class PdfTextGenerator {
   public void drawText(PDDocument pdf, TextInfo textInfo, Matrix matrix) throws IOException {
     final var page = pdf.getPage(textInfo.customText().pageIndex());
     try (final var contentStream = createContentStream(pdf, page)) {
-      fillContentStream(contentStream);
       if (matrix != null) {
         contentStream.transform(matrix);
       }
@@ -155,8 +153,6 @@ public class PdfTextGenerator {
       contentStream.endText();
     }
   }
-
-  private static void fillContentStream(PDPageContentStream contentStream) {}
 
   public void drawText(PDDocument pdf, TextInfo textInfo) throws IOException {
     drawText(pdf, textInfo, null);
