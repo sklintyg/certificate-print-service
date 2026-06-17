@@ -34,6 +34,18 @@ import se.inera.intyg.certificateprintservice.integrationtest.BaseIT;
 class FK7804OverflowIT extends BaseIT {
 
   @Test
+  void shallReturnValidPdfWithAllFields() throws IOException {
+    final var setup = new TestSetupFK7804();
+    final var request = setup.buildRequest(TestSetupFK7804Fields.allFields());
+
+    final var response = postCustom(request);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    final var pdfBytes = assertValidPdf(response);
+    savePdf(pdfBytes, "FK7804_ALL_FIELDS");
+  }
+
+  @Test
   void shallReturnValidPdfWithSingleFieldOverflow() throws IOException {
     final var setup = new TestSetupFK7804();
     final var request = setup.buildRequest(TestSetupFK7804Fields.fieldsWithSingleOverflow());
