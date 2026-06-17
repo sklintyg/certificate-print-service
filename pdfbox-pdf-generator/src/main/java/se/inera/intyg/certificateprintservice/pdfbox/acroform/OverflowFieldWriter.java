@@ -19,7 +19,6 @@
 package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,6 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPaginationService;
-import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 
 @Slf4j
 @Component
@@ -37,29 +35,6 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Cust
 public class OverflowFieldWriter {
 
   private final OverflowPaginationService overflowPaginationService;
-
-  public Map<String, StringBuilder> createAccumulator() {
-    return new LinkedHashMap<>();
-  }
-
-  public void accumulate(
-      CustomPdfField fieldOptions,
-      FieldValueResult result,
-      Map<String, StringBuilder> accumulator) {
-    if (result.overflowRemainder() == null || fieldOptions.overflow() == null) {
-      return;
-    }
-
-    final var overflowFieldId = fieldOptions.overflow().overflowFieldId();
-    final var label = fieldOptions.overflow().overflowLabel();
-
-    accumulator
-        .computeIfAbsent(overflowFieldId, k -> new StringBuilder())
-        .append(label)
-        .append("\n")
-        .append(result.overflowRemainder())
-        .append("\n");
-  }
 
   public void writeAll(
       PDDocument document,
