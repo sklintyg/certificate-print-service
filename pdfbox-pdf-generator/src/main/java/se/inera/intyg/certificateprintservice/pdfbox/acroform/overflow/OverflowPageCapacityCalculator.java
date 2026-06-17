@@ -16,26 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
+package se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow;
 
-import java.util.List;
-import lombok.Builder;
+import org.springframework.stereotype.Component;
 
-@Builder
-public record CustomPdfMetadata(
-    List<CustomText> customTextList,
-    String rightMarginText,
-    AccessibilityMetadata accessibilityMetadata,
-    boolean addDraftWatermark,
-    Integer overflowPageIndex) {
+@Component
+public class OverflowPageCapacityCalculator {
 
-  public CustomPdfMetadata {
-    if (customTextList == null) {
-      customTextList = List.of();
-    }
+  public int calculateMaxLines(float fieldHeight, float fontSize, float lineSpacing) {
+    return calculateMaxLines(fieldHeight, fontSize, lineSpacing, 0f);
   }
 
-  public boolean hasRightMarginText() {
-    return rightMarginText != null && !rightMarginText.isBlank();
+  public int calculateMaxLines(
+      float fieldHeight, float fontSize, float lineSpacing, float topMargin) {
+    final var availableHeight = fieldHeight - topMargin;
+    if (availableHeight <= 0) {
+      return 0;
+    }
+    final var lineHeight = fontSize * lineSpacing;
+    return (int) Math.floor(availableHeight / lineHeight);
   }
 }

@@ -39,7 +39,19 @@ class PdfBoxPdfGeneratorTest {
 
   private final PdfBoxPdfGenerator generator =
       new PdfBoxPdfGenerator(
-          new AcroFormFiller(new FieldValueProcessor()),
+          new AcroFormFiller(
+              new FieldValueProcessor(),
+              new se.inera.intyg.certificateprintservice.pdfbox.acroform.OverflowFieldWriter(
+                  new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
+                      .OverflowPaginationService(
+                      new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
+                          .OverflowPagePaginator(
+                          new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
+                              .TextLineWrapper(),
+                          new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
+                              .OverflowPageCapacityCalculator()),
+                      new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
+                          .OverflowPageRenderer()))),
           new OverlayTextService(new PdfTextGenerator()));
 
   @Test

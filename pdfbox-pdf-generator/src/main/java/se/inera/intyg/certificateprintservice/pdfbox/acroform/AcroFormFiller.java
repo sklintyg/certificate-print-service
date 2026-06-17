@@ -19,7 +19,6 @@
 package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -38,14 +37,16 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Cust
 public class AcroFormFiller {
 
   private final FieldValueProcessor fieldValueProcessor;
+  private final OverflowFieldWriter overflowFieldWriter;
 
-  public void fill(PDDocument document, Map<String, CustomPdfField> fields) {
+  public void fill(
+      PDDocument document, Map<String, CustomPdfField> fields, Integer overflowPageIndex) {
     if (fields == null || fields.isEmpty()) {
       return;
     }
 
     final var acroForm = document.getDocumentCatalog().getAcroForm();
-    final var overflowAccumulator = new LinkedHashMap<String, StringBuilder>();
+    final var overflowAccumulator = overflowFieldWriter.createAccumulator();
 
     fields.forEach(
         (fieldId, fieldOptions) -> {
@@ -55,10 +56,10 @@ public class AcroFormFiller {
 
           final var result = fieldValueProcessor.process(fieldOptions);
           setValue(field, fieldId, result.primaryValue());
-          accumulateOverflow(fieldOptions, result, overflowAccumulator);
+          overflowFieldWriter.accumulate(fieldOptions, result, overflowAccumulator);
         });
 
-    writeOverflowFields(acroForm, overflowAccumulator);
+    overflowFieldWriter.writeAll(document, acroForm, overflowAccumulator, overflowPageIndex);
   }
 
   private PDField lookupField(PDAcroForm acroForm, String fieldId) {
@@ -84,25 +85,6 @@ public class AcroFormFiller {
     }
   }
 
-  private void accumulateOverflow(
-      CustomPdfField fieldOptions,
-      FieldValueResult result,
-      Map<String, StringBuilder> overflowAccumulator) {
-    if (result.overflowRemainder() == null || fieldOptions.overflow() == null) {
-      return;
-    }
-
-    final var overflowFieldId = fieldOptions.overflow().overflowFieldId();
-    final var label = fieldOptions.overflow().overflowLabel();
-
-    overflowAccumulator
-        .computeIfAbsent(overflowFieldId, k -> new StringBuilder())
-        .append(label)
-        .append("\n")
-        .append(result.overflowRemainder())
-        .append("\n");
-  }
-
   private void setValue(PDField field, String fieldId, String value) {
     try {
       field.setValue(value);
@@ -110,14 +92,5 @@ public class AcroFormFiller {
       throw new IllegalStateException(
           "Failed to set value for field '%s': %s".formatted(fieldId, e.getMessage()), e);
     }
-  }
-
-  private void writeOverflowFields(
-      PDAcroForm acroForm, Map<String, StringBuilder> overflowAccumulator) {
-    overflowAccumulator.forEach(
-        (overflowFieldId, content) -> {
-          final var field = lookupField(acroForm, overflowFieldId);
-          setValue(field, overflowFieldId, content.toString());
-        });
   }
 }

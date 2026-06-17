@@ -48,7 +48,7 @@ public class PdfBoxPdfGenerator implements CustomPdfGenerator {
 
     try (final var document = Loader.loadPDF(template)) {
       document.setAllSecurityToBeRemoved(true);
-      acroFormFiller.fill(document, customPdf.fields());
+      acroFormFiller.fill(document, customPdf.fields(), customPdf.metadata().overflowPageIndex());
       overlayTextService.drawOverlays(document, customPdf.metadata());
       document
           .getDocumentInformation()

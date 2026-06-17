@@ -39,7 +39,20 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Over
 
 class AcroFormFillerOverflowTest {
 
-  private final AcroFormFiller filler = new AcroFormFiller(new FieldValueProcessor());
+  private final AcroFormFiller filler =
+      new AcroFormFiller(
+          new FieldValueProcessor(),
+          new OverflowFieldWriter(
+              new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
+                  .OverflowPaginationService(
+                  new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
+                      .OverflowPagePaginator(
+                      new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
+                          .TextLineWrapper(),
+                      new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
+                          .OverflowPageCapacityCalculator()),
+                  new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
+                      .OverflowPageRenderer())));
   private PDDocument document;
 
   @BeforeEach
@@ -78,7 +91,7 @@ class AcroFormFillerOverflowTest {
       final var fields = new LinkedHashMap<String, CustomPdfField>();
       fields.put(FUNKTIONSNEDSATTNING_FIELD_ID, field);
 
-      filler.fill(document, fields);
+      filler.fill(document, fields, null);
 
       final var mainFieldValue = getFieldValue(FUNKTIONSNEDSATTNING_FIELD_ID);
       assertTrue(
@@ -106,7 +119,7 @@ class AcroFormFillerOverflowTest {
       final var fields = new LinkedHashMap<String, CustomPdfField>();
       fields.put(FUNKTIONSNEDSATTNING_FIELD_ID, field);
 
-      filler.fill(document, fields);
+      filler.fill(document, fields, null);
 
       final var overflowValue = getFieldValue(OVERFLOW_FIELD_ID);
       assertTrue(
@@ -134,7 +147,7 @@ class AcroFormFillerOverflowTest {
       final var fields = new LinkedHashMap<String, CustomPdfField>();
       fields.put(FUNKTIONSNEDSATTNING_FIELD_ID, field);
 
-      filler.fill(document, fields);
+      filler.fill(document, fields, null);
 
       final var mainFieldValue = getFieldValue(FUNKTIONSNEDSATTNING_FIELD_ID);
       assertTrue(
@@ -179,7 +192,7 @@ class AcroFormFillerOverflowTest {
                       .build())
               .build());
 
-      filler.fill(document, fields);
+      filler.fill(document, fields, null);
 
       final var overflowValue = getFieldValue(OVERFLOW_FIELD_ID);
       final var labelIndex1 = overflowValue.indexOf("Funktionsnedsättning");
@@ -219,7 +232,7 @@ class AcroFormFillerOverflowTest {
                       .build())
               .build());
 
-      filler.fill(document, fields);
+      filler.fill(document, fields, null);
 
       final var overflowValue = getFieldValue(OVERFLOW_FIELD_ID);
       assertTrue(
