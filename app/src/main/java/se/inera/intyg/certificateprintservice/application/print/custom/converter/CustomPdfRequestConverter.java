@@ -20,6 +20,7 @@ package se.inera.intyg.certificateprintservice.application.print.custom.converte
 
 import java.util.Base64;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -85,7 +86,12 @@ public class CustomPdfRequestConverter {
       return Collections.emptyMap();
     }
     return fields.entrySet().stream()
-        .collect(Collectors.toMap(Map.Entry::getKey, e -> convertField(e.getValue())));
+        .collect(
+            Collectors.toMap(
+                Map.Entry::getKey,
+                e -> convertField(e.getValue()),
+                (a, b) -> a,
+                LinkedHashMap::new));
   }
 
   private CustomPdfField convertField(CustomPdfFieldDTO dto) {
