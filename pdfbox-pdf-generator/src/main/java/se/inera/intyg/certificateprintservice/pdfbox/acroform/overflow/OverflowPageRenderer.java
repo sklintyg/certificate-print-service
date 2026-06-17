@@ -75,39 +75,6 @@ public class OverflowPageRenderer {
     }
   }
 
-  public void renderAdditionalPages(
-      PDDocument document,
-      int overflowPageIndex,
-      List<List<String>> pages,
-      PDFont font,
-      float fontSize,
-      PDRectangle fieldRectangle)
-      throws IOException {
-    if (pages.size() <= 1) {
-      return;
-    }
-
-    for (var i = 1; i < pages.size(); i++) {
-      final var pageLines = pages.get(i);
-      final var newPage = cloneOverflowPage(document, overflowPageIndex);
-      document.addPage(newPage);
-
-      final var pageIndex = document.getPages().getCount() - 1;
-      renderTextOnPage(document, newPage, pageIndex, pageLines, font, fontSize, fieldRectangle);
-    }
-  }
-
-  private PDPage cloneOverflowPage(PDDocument document, int overflowPageIndex) {
-    final var templatePage = document.getPage(overflowPageIndex);
-    final var clonedDictionary = new COSDictionary(templatePage.getCOSObject());
-    clonedDictionary.removeItem(org.apache.pdfbox.cos.COSName.ANNOTS);
-    clonedDictionary.removeItem(org.apache.pdfbox.cos.COSName.STRUCT_PARENTS);
-
-    final var newPage = new PDPage(clonedDictionary);
-    newPage.setResources(templatePage.getResources());
-    return newPage;
-  }
-
   private void renderTextOnPage(
       PDDocument document,
       PDPage page,
@@ -144,6 +111,17 @@ public class OverflowPageRenderer {
       }
       contentStream.endText();
     }
+  }
+
+  private PDPage cloneOverflowPage(PDDocument document, int overflowPageIndex) {
+    final var templatePage = document.getPage(overflowPageIndex);
+    final var clonedDictionary = new COSDictionary(templatePage.getCOSObject());
+    clonedDictionary.removeItem(org.apache.pdfbox.cos.COSName.ANNOTS);
+    clonedDictionary.removeItem(org.apache.pdfbox.cos.COSName.STRUCT_PARENTS);
+
+    final var newPage = new PDPage(clonedDictionary);
+    newPage.setResources(templatePage.getResources());
+    return newPage;
   }
 
   private PDStructureElement getOrCreateStructureSection(PDDocument document, int pageIndex) {

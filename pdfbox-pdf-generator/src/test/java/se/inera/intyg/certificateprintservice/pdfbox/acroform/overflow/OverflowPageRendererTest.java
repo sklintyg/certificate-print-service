@@ -50,7 +50,7 @@ class OverflowPageRendererTest {
       final var initialPageCount = document.getNumberOfPages();
       final var pages = List.of(List.of("Line 1", "Line 2"));
 
-      renderer.renderAdditionalPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
 
       assertEquals(initialPageCount, document.getNumberOfPages());
     }
@@ -62,7 +62,7 @@ class OverflowPageRendererTest {
       final var initialPageCount = document.getNumberOfPages();
       final var pages = List.of(List.of("Line 1", "Line 2"), List.of("Line 3", "Line 4"));
 
-      renderer.renderAdditionalPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
 
       assertEquals(initialPageCount + 1, document.getNumberOfPages());
     }
@@ -74,7 +74,7 @@ class OverflowPageRendererTest {
       final var initialPageCount = document.getNumberOfPages();
       final var pages = List.of(List.of("Line 1"), List.of("Line 2"), List.of("Line 3"));
 
-      renderer.renderAdditionalPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
 
       assertEquals(initialPageCount + 2, document.getNumberOfPages());
     }
@@ -87,7 +87,7 @@ class OverflowPageRendererTest {
       final var expectedWidth = overflowPage.getMediaBox().getWidth();
       final var pages = List.of(List.of("Line 1"), List.of("Line 2"));
 
-      renderer.renderAdditionalPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
 
       final var newPage = document.getPage(document.getNumberOfPages() - 1);
       assertEquals(expectedWidth, newPage.getMediaBox().getWidth());
