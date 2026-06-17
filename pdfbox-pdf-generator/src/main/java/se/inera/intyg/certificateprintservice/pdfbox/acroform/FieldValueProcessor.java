@@ -70,7 +70,7 @@ public class FieldValueProcessor {
     final var lastSpace = primaryValue.lastIndexOf(' ', effectiveLimit);
     final var splitIndex = lastSpace > 0 ? lastSpace : effectiveLimit;
 
-    final var truncatedPrimary = primaryValue.substring(0, splitIndex) + " " + suffix;
+    final var primaryValueWithSuffix = primaryValue.substring(0, splitIndex) + " " + suffix;
 
     final var originalSplitIndex =
         field.shouldRemoveLineBreaks() ? mapIndexToOriginal(originalValue, splitIndex) : splitIndex;
@@ -79,7 +79,7 @@ public class FieldValueProcessor {
         OVERFLOW_REMAINDER_PREFIX
             + originalValue.substring(Math.min(originalSplitIndex, originalValue.length())).trim();
 
-    return new FieldValueResult(truncatedPrimary, remainder);
+    return new FieldValueResult(primaryValueWithSuffix, remainder);
   }
 
   private String truncate(String value, int maxLength) {
