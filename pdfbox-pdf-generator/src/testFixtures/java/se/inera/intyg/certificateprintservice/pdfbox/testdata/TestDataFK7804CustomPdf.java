@@ -16,15 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
+package se.inera.intyg.certificateprintservice.pdfbox.testdata;
 
-import lombok.Builder;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7804Fields.fk7804Fields;
 
-@Builder
-public record CustomPdfField(
-    String value,
-    Integer offset,
-    String appearance,
-    Integer maxLength,
-    boolean shouldRemoveLineBreaks,
-    OverflowConfig overflow) {}
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
+
+public class TestDataFK7804CustomPdf {
+
+  private TestDataFK7804CustomPdf() {
+    throw new IllegalStateException("Utility class");
+  }
+
+  public static CustomPdf build7804CustomPdfWithTemplate(byte[] template) {
+    return CustomPdf.builder()
+        .template(template)
+        .metadata(TestDataFK7804CustomPdfMetadata.metadataWithAllCustomTextsAndMargin())
+        .fields(fk7804Fields())
+        .build();
+  }
+}

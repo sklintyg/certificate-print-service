@@ -134,6 +134,16 @@ public class PdfAccessibilityUtil {
     return (PDStructureElement) containerWithMostKids.get().get(index);
   }
 
+  public static PDStructureElement createStructureForNewPage(PDDocument pdf) {
+    final var structuredTree = pdf.getDocumentCatalog().getStructureTreeRoot();
+    final var documentTag = getFirstChildFromStructuredElement(structuredTree.getKids());
+    final var pageElement = new PDStructureElement(StandardStructureTypes.SECT, documentTag);
+    documentTag.appendKid(pageElement);
+    final var divElement = new PDStructureElement(StandardStructureTypes.DIV, pageElement);
+    pageElement.appendKid(divElement);
+    return divElement;
+  }
+
   // --- Private helpers ---
 
   private static PDStructureElement getPageTag(PDStructureTreeRoot structuredTree, int pageIndex) {

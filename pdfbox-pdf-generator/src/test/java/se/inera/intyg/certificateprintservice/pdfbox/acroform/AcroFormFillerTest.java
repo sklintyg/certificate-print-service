@@ -36,11 +36,25 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPageCapacityCalculator;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPagePaginator;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPageRenderer;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPageStructureCloner;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPaginationService;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.TextLineWrapper;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.OverflowConfig;
 
 class AcroFormFillerTest {
 
-  private final AcroFormFiller filler = new AcroFormFiller();
+  private final AcroFormFiller filler =
+      new AcroFormFiller(
+          new FieldValueProcessor(),
+          new OverflowFieldWriter(
+              new OverflowPaginationService(
+                  new OverflowPagePaginator(
+                      new TextLineWrapper(), new OverflowPageCapacityCalculator()),
+                  new OverflowPageRenderer(new OverflowPageStructureCloner()))));
 
   private PDDocument document;
 
@@ -62,7 +76,40 @@ class AcroFormFillerTest {
   @Test
   void shallFillFieldWithGivenValue() {
     filler.fill(
-        document, Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(PATIENT_ID).build()));
+        document,
+        Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(PATIENT_ID).build()),
+        null);
+
+    assertEquals(
+        PATIENT_ID,
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(PATIENT_ID_FIELD_ID)
+            .getValueAsString());
+  }
+
+  @Test
+  void shallFillFieldDirectlyWhenMaxLengthIsNull() {
+    final var field = CustomPdfField.builder().value(PATIENT_ID).maxLength(null).build();
+
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+
+    assertEquals(
+        PATIENT_ID,
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(PATIENT_ID_FIELD_ID)
+            .getValueAsString());
+  }
+
+  @Test
+  void shallFillFieldDirectlyWhenValueLengthIsWithinMaxLength() {
+    final var field =
+        CustomPdfField.builder().value(PATIENT_ID).maxLength(PATIENT_ID.length() + 10).build();
+
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
 
     assertEquals(
         PATIENT_ID,
@@ -79,12 +126,14 @@ class AcroFormFillerTest {
         IllegalArgumentException.class,
         () ->
             filler.fill(
-                document, Map.of("nonExistent", CustomPdfField.builder().value("value").build())));
+                document,
+                Map.of("nonExistent", CustomPdfField.builder().value("value").build()),
+                null));
   }
 
   @Test
   void shallDoNothingWhenFieldsMapIsEmpty() {
-    filler.fill(document, Collections.emptyMap());
+    filler.fill(document, Collections.emptyMap(), null);
 
     assertEquals(
         "",
@@ -98,7 +147,9 @@ class AcroFormFillerTest {
   @Test
   void shallNotModifyUnspecifiedFields() {
     filler.fill(
-        document, Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(PATIENT_ID).build()));
+        document,
+        Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(PATIENT_ID).build()),
+        null);
 
     assertEquals(
         "",
@@ -115,10 +166,122 @@ class AcroFormFillerTest {
         document,
         Map.of(
             PATIENT_ID_FIELD_ID,
-            CustomPdfField.builder().value(PATIENT_ID).appearance("/ArialMT 9.00 Tf 0 g").build()));
+            CustomPdfField.builder().value(PATIENT_ID).appearance("/ArialMT 9.00 Tf 0 g").build()),
+        null);
 
     final var textField = getTextField(document, PATIENT_ID_FIELD_ID);
     assertEquals("/ArialMT 9.00 Tf 0 g", textField.getDefaultAppearance());
+  }
+
+  @Test
+  void shallRemoveLineBreaksFromValueWhenShouldRemoveLineBreaksIsTrue() {
+    final var valueWithLineBreaks = "Line one\nLine two\nLine three";
+    final var field =
+        CustomPdfField.builder().value(valueWithLineBreaks).shouldRemoveLineBreaks(true).build();
+
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+
+    assertEquals(
+        "Line oneLine twoLine three",
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(PATIENT_ID_FIELD_ID)
+            .getValueAsString());
+  }
+
+  @Test
+  void shallPreserveLineBreaksWhenShouldRemoveLineBreaksIsFalse() {
+    final var valueWithLineBreaks = "Line one\nLine two";
+    final var field =
+        CustomPdfField.builder().value(valueWithLineBreaks).shouldRemoveLineBreaks(false).build();
+
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+
+    assertEquals(
+        valueWithLineBreaks,
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(PATIENT_ID_FIELD_ID)
+            .getValueAsString());
+  }
+
+  @Test
+  void shallTruncateWithEllipsisWhenMaxLengthExceededAndNoOverflow() {
+    final var longValue = "This is a long text that exceeds the max length limit set for field";
+    final var maxLength = 30;
+    final var field = CustomPdfField.builder().value(longValue).maxLength(maxLength).build();
+
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+
+    final var result =
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(PATIENT_ID_FIELD_ID)
+            .getValueAsString();
+    assertEquals("This is a long text that...", result);
+  }
+
+  @Test
+  void shallTruncateWithEllipsisWhenMaxLengthExceededAndOverflowFieldIdIsNull() {
+    final var longValue = "This is a long text that exceeds the max length limit set for field";
+    final var maxLength = 30;
+    final var field =
+        CustomPdfField.builder()
+            .value(longValue)
+            .maxLength(maxLength)
+            .overflow(OverflowConfig.builder().overflowFieldId(null).overflowLabel(null).build())
+            .build();
+
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+
+    final var result =
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(PATIENT_ID_FIELD_ID)
+            .getValueAsString();
+    assertEquals("This is a long text that...", result);
+  }
+
+  @Test
+  void shallNotTruncateWhenValueFitsWithinMaxLength() {
+    final var shortValue = "Short text";
+    final var field = CustomPdfField.builder().value(shortValue).maxLength(100).build();
+
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+
+    assertEquals(
+        shortValue,
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(PATIENT_ID_FIELD_ID)
+            .getValueAsString());
+  }
+
+  @Test
+  void shallRemoveLineBreaksBeforeTruncation() {
+    final var valueWithBreaks = "This is\na long text\nthat exceeds the max length limit";
+    final var maxLength = 30;
+    final var field =
+        CustomPdfField.builder()
+            .value(valueWithBreaks)
+            .maxLength(maxLength)
+            .shouldRemoveLineBreaks(true)
+            .build();
+
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+
+    final var result =
+        document
+            .getDocumentCatalog()
+            .getAcroForm()
+            .getField(PATIENT_ID_FIELD_ID)
+            .getValueAsString();
+    assertEquals("This isa long textthat...", result);
   }
 
   private static PDTextField getTextField(PDDocument document, String fieldId) {

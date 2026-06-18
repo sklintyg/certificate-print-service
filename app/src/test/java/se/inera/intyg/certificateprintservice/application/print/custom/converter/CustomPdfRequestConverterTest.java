@@ -135,6 +135,14 @@ class CustomPdfRequestConverterTest {
   }
 
   @Test
+  void shallConvertOverflowPageIndex() {
+    final var request =
+        buildRequest(fullMetadataBuilder().overflowPageIndex(3).build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertEquals(3, result.metadata().overflowPageIndex());
+  }
+
+  @Test
   void shallConvertFieldValue() {
     final var request =
         buildRequest(

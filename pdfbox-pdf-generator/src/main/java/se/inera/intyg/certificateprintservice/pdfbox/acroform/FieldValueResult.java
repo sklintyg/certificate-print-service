@@ -16,15 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
+package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
-import lombok.Builder;
-
-@Builder
-public record CustomPdfField(
-    String value,
-    Integer offset,
-    String appearance,
-    Integer maxLength,
-    boolean shouldRemoveLineBreaks,
-    OverflowConfig overflow) {}
+public record FieldValueResult(String primaryValue, String overflowRemainder) {}

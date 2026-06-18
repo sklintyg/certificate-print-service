@@ -21,10 +21,4 @@ package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 import lombok.Builder;
 
 @Builder
-public record CustomPdfField(
-    String value,
-    Integer offset,
-    String appearance,
-    Integer maxLength,
-    boolean shouldRemoveLineBreaks,
-    OverflowConfig overflow) {}
+public record OverflowConfig(String overflowFieldId, String overflowLabel) {}

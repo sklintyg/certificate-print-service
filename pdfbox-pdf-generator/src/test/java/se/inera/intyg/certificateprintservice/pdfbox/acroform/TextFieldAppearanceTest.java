@@ -19,13 +19,20 @@
 package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.Arrays;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
+import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,5 +76,42 @@ class TextFieldAppearanceTest {
     assertEquals(expected.getLowerLeftY(), actual.getLowerLeftY());
     assertEquals(expected.getWidth(), actual.getWidth());
     assertEquals(expected.getHeight(), actual.getHeight());
+  }
+
+  @Test
+  void shouldResolveFontFromAcroFormResources() throws IOException {
+    final var acroForm = mock(PDAcroForm.class);
+    final var resources = mock(PDResources.class);
+    final var expectedFont = mock(PDFont.class);
+
+    when(field.getDefaultAppearance()).thenReturn("/Helv 9 Tf 0 g");
+    when(acroForm.getDefaultResources()).thenReturn(resources);
+    when(resources.getFont(COSName.getPDFName("Helv"))).thenReturn(expectedFont);
+
+    final var result = textfieldAppearance.getFont(acroForm);
+
+    assertNotNull(result);
+    assertEquals(expectedFont, result);
+  }
+
+  @Test
+  void shouldThrowWhenFontNotFoundInResources() {
+    final var acroForm = mock(PDAcroForm.class);
+    final var resources = mock(PDResources.class);
+
+    when(field.getDefaultAppearance()).thenReturn("/UnknownFont 10 Tf 0 g");
+    when(acroForm.getDefaultResources()).thenReturn(resources);
+
+    assertThrows(IOException.class, () -> textfieldAppearance.getFont(acroForm));
+  }
+
+  @Test
+  void shouldThrowWhenNoDefaultResources() {
+    final var acroForm = mock(PDAcroForm.class);
+
+    when(field.getDefaultAppearance()).thenReturn("/Helv 9 Tf 0 g");
+    when(acroForm.getDefaultResources()).thenReturn(null);
+
+    assertThrows(IOException.class, () -> textfieldAppearance.getFont(acroForm));
   }
 }
