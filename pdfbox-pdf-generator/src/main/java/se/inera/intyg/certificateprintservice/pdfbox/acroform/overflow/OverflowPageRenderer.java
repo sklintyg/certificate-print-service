@@ -31,8 +31,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
 import org.apache.pdfbox.pdmodel.documentinterchange.taggedpdf.StandardStructureTypes;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.certificateprintservice.pdfbox.accessibility.MaxMCIDExtractor;
 import se.inera.intyg.certificateprintservice.pdfbox.accessibility.PdfAccessibilityUtil;
@@ -152,10 +150,6 @@ public class OverflowPageRenderer {
     } catch (Exception e) {
       return PdfAccessibilityUtil.createStructureForNewPage(document);
     }
-  }
-
-  public PDFont getDefaultOverflowFont() {
-    return new PDType1Font(FontName.HELVETICA);
   }
 
   public float getLineSpacing() {

@@ -19,7 +19,6 @@
 package se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.io.IOException;
 import java.util.List;
@@ -93,12 +92,6 @@ class OverflowPageRendererTest {
       final var newPage = document.getPage(document.getNumberOfPages() - 1);
       assertEquals(expectedWidth, newPage.getMediaBox().getWidth());
     }
-  }
-
-  @Test
-  void shouldProvideDefaultFont() {
-    final var defaultFont = renderer.getDefaultOverflowFont();
-    assertInstanceOf(PDType1Font.class, defaultFont);
   }
 
   private org.apache.pdfbox.pdmodel.PDDocument loadTestTemplate() throws IOException {

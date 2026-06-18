@@ -36,8 +36,10 @@ public class OverflowPaginationService {
   public void writeWithPagination(
       PDDocument document, PDTextField textField, String content, int overflowPageIndex)
       throws IOException {
-    final var font = renderer.getDefaultOverflowFont();
-    final var fontSize = new TextFieldAppearance(textField).getFontSize();
+    final var acroForm = document.getDocumentCatalog().getAcroForm();
+    final var textAppearance = new TextFieldAppearance(textField);
+    final var font = textAppearance.getFont(acroForm);
+    final var fontSize = textAppearance.getFontSize();
     final var fieldRect = getFieldRectangle(textField);
     final var lineSpacing = renderer.getLineSpacing();
     final var topMargin = renderer.getTopMargin();
