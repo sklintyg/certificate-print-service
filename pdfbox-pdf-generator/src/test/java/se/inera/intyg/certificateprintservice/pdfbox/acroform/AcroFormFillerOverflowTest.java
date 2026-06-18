@@ -18,10 +18,12 @@
  */
 package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7804Fields.AKTIVITETSBEGRANSNING_FIELD_ID;
 import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7804Fields.FUNKTIONSNEDSATTNING_FIELD_ID;
 import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7804Fields.OVERFLOW_FIELD_ID;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7804Fields.PATIENT_ID_FIELD_ID_1;
 import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7804Fields.TAGGED_PDF_OVERFLOW_RESOURCE;
 
 import java.io.IOException;
@@ -238,6 +240,34 @@ class AcroFormFillerOverflowTest {
       assertTrue(
           overflowValue.indexOf("First") < overflowValue.indexOf("Second"),
           "Labels must appear in insertion order. Overflow content: " + overflowValue);
+    }
+  }
+
+  @Nested
+  class OverflowPageRemoval {
+
+    private static final int OVERFLOW_PAGE_INDEX = 4;
+
+    @Test
+    void shallRemoveOverflowPageWhenNoFieldsOverflow() {
+      final var initialPageCount = document.getNumberOfPages();
+      final var fields = new LinkedHashMap<String, CustomPdfField>();
+      fields.put(PATIENT_ID_FIELD_ID_1, CustomPdfField.builder().value("Short value").build());
+
+      filler.fill(document, fields, OVERFLOW_PAGE_INDEX);
+
+      assertEquals(initialPageCount - 1, document.getNumberOfPages());
+    }
+
+    @Test
+    void shallNotRemovePageWhenOverflowPageIndexIsNull() {
+      final var initialPageCount = document.getNumberOfPages();
+      final var fields = new LinkedHashMap<String, CustomPdfField>();
+      fields.put(PATIENT_ID_FIELD_ID_1, CustomPdfField.builder().value("Short value").build());
+
+      filler.fill(document, fields, null);
+
+      assertEquals(initialPageCount, document.getNumberOfPages());
     }
   }
 

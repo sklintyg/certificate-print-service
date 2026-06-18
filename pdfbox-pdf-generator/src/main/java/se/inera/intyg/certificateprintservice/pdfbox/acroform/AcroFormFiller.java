@@ -60,7 +60,11 @@ public class AcroFormFiller {
           accumulateOverflow(fieldOptions, result, overflowAccumulator);
         });
 
-    overflowFieldWriter.writeAll(document, acroForm, overflowAccumulator, overflowPageIndex);
+    if (overflowAccumulator.isEmpty() && overflowPageIndex != null) {
+      document.removePage(overflowPageIndex);
+    } else {
+      overflowFieldWriter.writeAll(document, acroForm, overflowAccumulator, overflowPageIndex);
+    }
   }
 
   private PDField lookupField(PDAcroForm acroForm, String fieldId) {
