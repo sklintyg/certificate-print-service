@@ -36,6 +36,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPageCapacityCalculator;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPagePaginator;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPageRenderer;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPageStructureCloner;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPaginationService;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.TextLineWrapper;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.OverflowConfig;
 
@@ -45,16 +51,10 @@ class AcroFormFillerTest {
       new AcroFormFiller(
           new FieldValueProcessor(),
           new OverflowFieldWriter(
-              new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                  .OverflowPaginationService(
-                  new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                      .OverflowPagePaginator(
-                      new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                          .TextLineWrapper(),
-                      new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                          .OverflowPageCapacityCalculator()),
-                  new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                      .OverflowPageRenderer())));
+              new OverflowPaginationService(
+                  new OverflowPagePaginator(
+                      new TextLineWrapper(), new OverflowPageCapacityCalculator()),
+                  new OverflowPageRenderer(new OverflowPageStructureCloner()))));
 
   private PDDocument document;
 

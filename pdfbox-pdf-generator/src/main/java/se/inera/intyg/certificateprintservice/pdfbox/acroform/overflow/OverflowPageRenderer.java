@@ -20,6 +20,7 @@ package se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.cos.COSDictionary;
@@ -45,6 +46,8 @@ public class OverflowPageRenderer {
   private static final float LINE_SPACING = 1.2f;
   private static final float ACROFORM_FIELD_HORIZONTAL_INSET = 4f;
 
+  private final OverflowPageStructureCloner structureCloner;
+
   public void renderAllOverflowPages(
       PDDocument document,
       int overflowPageIndex,
@@ -57,38 +60,49 @@ public class OverflowPageRenderer {
       return;
     }
 
+    final var clonedPageSections = new HashMap<PDPage, PDStructureElement>();
     final var additionalPages = new ArrayList<PDPage>();
     for (var i = 1; i < pages.size(); i++) {
-      additionalPages.add(cloneOverflowPage(document, overflowPageIndex));
+      final var clonedPage = cloneOverflowPage(document, overflowPageIndex);
+      additionalPages.add(clonedPage);
+      final var overflowDiv =
+          structureCloner.cloneStructureForPage(document, overflowPageIndex, clonedPage);
+      clonedPageSections.put(clonedPage, overflowDiv);
     }
 
     final var firstPage = document.getPage(overflowPageIndex);
     renderTextOnPage(
-        document, firstPage, overflowPageIndex, pages.getFirst(), font, fontSize, fieldRectangle);
+        document,
+        firstPage,
+        pages.getFirst(),
+        font,
+        fontSize,
+        fieldRectangle,
+        getOrCreateStructureSection(document, overflowPageIndex));
 
     for (var i = 0; i < additionalPages.size(); i++) {
       final var newPage = additionalPages.get(i);
       document.addPage(newPage);
-      final var pageIndex = document.getPages().getCount() - 1;
+      final var section = clonedPageSections.get(newPage);
       renderTextOnPage(
-          document, newPage, pageIndex, pages.get(i + 1), font, fontSize, fieldRectangle);
+          document, newPage, pages.get(i + 1), font, fontSize, fieldRectangle, section);
+      structureCloner.updateParentTreeForPage(document, newPage);
     }
   }
 
   private void renderTextOnPage(
       PDDocument document,
       PDPage page,
-      int pageIndex,
       List<String> lines,
       PDFont font,
       float fontSize,
-      PDRectangle fieldRectangle)
+      PDRectangle fieldRectangle,
+      PDStructureElement section)
       throws IOException {
     final var lineHeight = fontSize * LINE_SPACING;
     final var startX = fieldRectangle.getLowerLeftX() + X_MARGIN_APPENDIX_PAGE;
     final var startY = fieldRectangle.getUpperRightY() - Y_MARGIN_APPENDIX_PAGE;
 
-    final var section = getOrCreateStructureSection(document, pageIndex);
     var mcid = MaxMCIDExtractor.findNextMcid(document);
 
     try (final var contentStream = PdfAccessibilityUtil.createContentStream(document, page)) {
@@ -96,19 +110,27 @@ public class OverflowPageRenderer {
       contentStream.setFont(font, fontSize);
       contentStream.newLineAtOffset(startX, startY);
 
-      for (var i = 0; i < lines.size(); i++) {
-        final var dictionary =
-            PdfAccessibilityUtil.beginMarkedContent(contentStream, COSName.P, ++mcid);
-        contentStream.showText(lines.get(i));
-        contentStream.endMarkedContent();
+      final var paragraphText = new StringBuilder();
+      final var dictionary =
+          PdfAccessibilityUtil.beginMarkedContent(contentStream, COSName.P, ++mcid);
 
-        PdfAccessibilityUtil.addContentToCurrentSection(
-            page, dictionary, section, COSName.P, StandardStructureTypes.P, lines.get(i));
+      for (var i = 0; i < lines.size(); i++) {
+        final var line = lines.get(i);
+        contentStream.showText(line);
+        if (!paragraphText.isEmpty()) {
+          paragraphText.append("\n");
+        }
+        paragraphText.append(line);
 
         if (i < lines.size() - 1) {
           contentStream.newLineAtOffset(0, -lineHeight);
         }
       }
+
+      contentStream.endMarkedContent();
+      PdfAccessibilityUtil.addContentToCurrentSection(
+          page, dictionary, section, COSName.P, StandardStructureTypes.P, paragraphText.toString());
+
       contentStream.endText();
     }
   }
@@ -116,8 +138,8 @@ public class OverflowPageRenderer {
   private PDPage cloneOverflowPage(PDDocument document, int overflowPageIndex) {
     final var templatePage = document.getPage(overflowPageIndex);
     final var clonedDictionary = new COSDictionary(templatePage.getCOSObject());
-    clonedDictionary.removeItem(org.apache.pdfbox.cos.COSName.ANNOTS);
-    clonedDictionary.removeItem(org.apache.pdfbox.cos.COSName.STRUCT_PARENTS);
+    clonedDictionary.removeItem(COSName.ANNOTS);
+    clonedDictionary.removeItem(COSName.STRUCT_PARENTS);
 
     final var newPage = new PDPage(clonedDictionary);
     newPage.setResources(templatePage.getResources());

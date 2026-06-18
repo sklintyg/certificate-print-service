@@ -19,10 +19,11 @@
 package se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -40,7 +41,7 @@ class OverflowPageRendererTest {
 
   @BeforeEach
   void setUp() {
-    renderer = new OverflowPageRenderer();
+    renderer = new OverflowPageRenderer(new OverflowPageStructureCloner());
     font = new PDType1Font(FontName.HELVETICA);
   }
 
@@ -97,12 +98,13 @@ class OverflowPageRendererTest {
   @Test
   void shouldProvideDefaultFont() {
     final var defaultFont = renderer.getDefaultOverflowFont();
-    assertTrue(defaultFont instanceof PDType1Font);
+    assertInstanceOf(PDType1Font.class, defaultFont);
   }
 
   private org.apache.pdfbox.pdmodel.PDDocument loadTestTemplate() throws IOException {
     final var templateBytes =
-        getClass().getResourceAsStream("/tagged-test-template-overflow.pdf").readAllBytes();
+        Objects.requireNonNull(getClass().getResourceAsStream("/tagged-test-template-overflow.pdf"))
+            .readAllBytes();
     return Loader.loadPDF(templateBytes);
   }
 }
