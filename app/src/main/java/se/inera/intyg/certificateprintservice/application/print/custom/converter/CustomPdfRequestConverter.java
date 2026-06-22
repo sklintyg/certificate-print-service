@@ -57,7 +57,8 @@ public class CustomPdfRequestConverter {
         dto.getRightMarginText(),
         convertAccessibilityMetadata(dto.getAccessibilityMetadata()),
         dto.isAddDraftWatermark(),
-        dto.getOverflowPageIndex());
+        dto.getOverflowPageIndex(),
+        dto.isAddPageNumbers());
   }
 
   private List<CustomText> convertCustomTexts(List<CustomTextDTO> customTextDTOList) {

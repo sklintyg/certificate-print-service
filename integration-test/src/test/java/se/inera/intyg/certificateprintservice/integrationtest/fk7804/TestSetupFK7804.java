@@ -50,6 +50,7 @@ public class TestSetupFK7804 {
         .accessibilityMetadata(new AccessibilityMetadataDTO("fk7804"))
         .addDraftWatermark(false)
         .overflowPageIndex(4)
+        .addPageNumbers(true)
         .build();
   }
 

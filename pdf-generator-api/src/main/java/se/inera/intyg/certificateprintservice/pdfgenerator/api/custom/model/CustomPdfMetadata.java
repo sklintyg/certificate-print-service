@@ -27,7 +27,8 @@ public record CustomPdfMetadata(
     String rightMarginText,
     AccessibilityMetadata accessibilityMetadata,
     boolean addDraftWatermark,
-    Integer overflowPageIndex) {
+    Integer overflowPageIndex,
+    boolean addPageNumbers) {
 
   public CustomPdfMetadata {
     if (customTextList == null) {

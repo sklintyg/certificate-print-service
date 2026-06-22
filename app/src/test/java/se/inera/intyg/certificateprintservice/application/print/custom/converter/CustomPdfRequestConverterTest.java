@@ -143,6 +143,22 @@ class CustomPdfRequestConverterTest {
   }
 
   @Test
+  void shallConvertAddPageNumbersWhenTrue() {
+    final var request =
+        buildRequest(fullMetadataBuilder().addPageNumbers(true).build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertTrue(result.metadata().addPageNumbers());
+  }
+
+  @Test
+  void shallConvertAddPageNumbersWhenFalse() {
+    final var request =
+        buildRequest(fullMetadataBuilder().addPageNumbers(false).build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertFalse(result.metadata().addPageNumbers());
+  }
+
+  @Test
   void shallConvertFieldValue() {
     final var request =
         buildRequest(

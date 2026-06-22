@@ -32,6 +32,7 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Cust
 public class OverlayTextService {
 
   private final PdfTextGenerator pdfTextGenerator;
+  private final PageNumberStamper pageNumberStamper;
 
   public void drawOverlays(PDDocument document, CustomPdfMetadata metadata) throws IOException {
     int mcid = MaxMCIDExtractor.findNextMcid(document);
@@ -48,6 +49,10 @@ public class OverlayTextService {
 
     if (metadata.hasRightMarginText()) {
       pdfTextGenerator.addMarginText(document, metadata.rightMarginText(), ++mcid, 0);
+    }
+
+    if (metadata.addPageNumbers()) {
+      pageNumberStamper.stamp(document, ++mcid);
     }
   }
 }

@@ -59,6 +59,20 @@ public class TestDataFK7210CustomPdfMetadata {
         .build();
   }
 
+  public static CustomPdfMetadata metadataWithPageNumbers() {
+    return CustomPdfMetadata.builder()
+        .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
+        .addPageNumbers(true)
+        .build();
+  }
+
+  public static CustomPdfMetadata metadataWithoutPageNumbers() {
+    return CustomPdfMetadata.builder()
+        .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
+        .addPageNumbers(false)
+        .build();
+  }
+
   public static CustomPdfMetadata metadataWithAllCustomTextsAndMargin() {
     return CustomPdfMetadata.builder()
         .customTextList(

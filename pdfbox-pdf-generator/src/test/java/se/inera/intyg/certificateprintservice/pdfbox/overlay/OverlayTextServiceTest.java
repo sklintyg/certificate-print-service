@@ -45,6 +45,7 @@ import se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Cust
 class OverlayTextServiceTest {
 
   @Mock private PdfTextGenerator pdfTextGenerator;
+  @Mock private PageNumberStamper pageNumberStamper;
   @InjectMocks private OverlayTextService overlayTextService;
 
   private PDDocument document;
@@ -111,6 +112,26 @@ class OverlayTextServiceTest {
           document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
 
       verify(pdfTextGenerator, never()).addMarginText(any(), any(), anyInt(), anyInt());
+    }
+  }
+
+  @Nested
+  class PageNumbers {
+
+    @Test
+    void shallStampPageNumbersWhenAddPageNumbersIsTrue() throws IOException {
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithPageNumbers());
+
+      verify(pageNumberStamper).stamp(eq(document), anyInt());
+    }
+
+    @Test
+    void shallNotStampPageNumbersWhenAddPageNumbersIsFalse() throws IOException {
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithoutPageNumbers());
+
+      verify(pageNumberStamper, never()).stamp(any(), anyInt());
     }
   }
 }

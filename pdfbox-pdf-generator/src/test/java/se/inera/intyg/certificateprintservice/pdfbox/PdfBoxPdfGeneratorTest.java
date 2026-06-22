@@ -54,7 +54,9 @@ class PdfBoxPdfGeneratorTest {
                           .OverflowPageRenderer(
                           new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
                               .OverflowPageStructureCloner())))),
-          new OverlayTextService(new PdfTextGenerator()));
+          new OverlayTextService(
+              new PdfTextGenerator(),
+              new se.inera.intyg.certificateprintservice.pdfbox.overlay.PageNumberStamper()));
 
   @Test
   void shallThrowWhenTemplateIsNull() {
