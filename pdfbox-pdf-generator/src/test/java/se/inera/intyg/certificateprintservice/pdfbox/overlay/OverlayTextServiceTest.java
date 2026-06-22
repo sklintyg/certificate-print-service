@@ -116,7 +116,7 @@ class OverlayTextServiceTest {
   class PageNumbers {
 
     @Test
-    void shallStampPageNumbersWhenAddPageNumbersIsTrue() throws IOException {
+    void shallStampPageNumbersWhenOverflowPageIndexIsSet() throws IOException {
       overlayTextService.drawOverlays(
           document, TestDataFK7210CustomPdfMetadata.metadataWithPageNumbers());
 
@@ -124,7 +124,7 @@ class OverlayTextServiceTest {
     }
 
     @Test
-    void shallNotStampPageNumbersWhenAddPageNumbersIsFalse() throws IOException {
+    void shallNotStampPageNumbersWhenOverflowPageIndexIsNull() throws IOException {
       overlayTextService.drawOverlays(
           document, TestDataFK7210CustomPdfMetadata.metadataWithoutPageNumbers());
 

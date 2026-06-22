@@ -62,14 +62,13 @@ public class TestDataFK7210CustomPdfMetadata {
   public static CustomPdfMetadata metadataWithPageNumbers() {
     return CustomPdfMetadata.builder()
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
-        .addPageNumbers(true)
+        .overflowPageIndex(0)
         .build();
   }
 
   public static CustomPdfMetadata metadataWithoutPageNumbers() {
     return CustomPdfMetadata.builder()
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
-        .addPageNumbers(false)
         .build();
   }
 

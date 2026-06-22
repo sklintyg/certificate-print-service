@@ -37,7 +37,6 @@ public class CustomPdfMetadataDTO {
   String rightMarginText;
   boolean addDraftWatermark;
   Integer overflowPageIndex;
-  boolean addPageNumbers;
 
   @JsonPOJOBuilder(withPrefix = "")
   public static class CustomPdfMetadataDTOBuilder {}

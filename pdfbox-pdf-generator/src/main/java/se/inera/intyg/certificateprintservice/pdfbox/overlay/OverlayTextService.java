@@ -51,7 +51,7 @@ public class OverlayTextService {
       pdfTextGenerator.addMarginText(document, metadata.rightMarginText(), ++mcid);
     }
 
-    if (metadata.addPageNumbers()) {
+    if (metadata.overflowPageIndex() != null) {
       pageNumberStamper.stamp(document, ++mcid);
     }
   }
