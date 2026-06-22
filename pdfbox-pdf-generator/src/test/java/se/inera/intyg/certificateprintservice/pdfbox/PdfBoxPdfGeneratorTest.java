@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.AcroFormFiller;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.FieldValueProcessor;
 import se.inera.intyg.certificateprintservice.pdfbox.overlay.OverlayTextService;
+import se.inera.intyg.certificateprintservice.pdfbox.overlay.PageNumberStamper;
 import se.inera.intyg.certificateprintservice.pdfbox.overlay.PdfTextGenerator;
 
 class PdfBoxPdfGeneratorTest {
@@ -54,9 +55,7 @@ class PdfBoxPdfGeneratorTest {
                           .OverflowPageRenderer(
                           new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
                               .OverflowPageStructureCloner())))),
-          new OverlayTextService(
-              new PdfTextGenerator(),
-              new se.inera.intyg.certificateprintservice.pdfbox.overlay.PageNumberStamper()));
+          new OverlayTextService(new PdfTextGenerator(), new PageNumberStamper()));
 
   @Test
   void shallThrowWhenTemplateIsNull() {
