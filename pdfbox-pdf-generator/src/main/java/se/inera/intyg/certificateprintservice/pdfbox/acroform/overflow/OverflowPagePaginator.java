@@ -24,6 +24,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.OverflowEntry;
 
 @Component
 @RequiredArgsConstructor
@@ -32,35 +33,61 @@ public class OverflowPagePaginator {
   private final TextLineWrapper textLineWrapper;
   private final OverflowPageCapacityCalculator capacityCalculator;
 
-  public List<List<String>> paginate(
-      String text,
+  public List<List<OverflowLine>> paginate(
+      List<OverflowEntry> entries,
       PDFont font,
+      PDFont boldFont,
       float fontSize,
       float fieldWidth,
       float fieldHeight,
       float lineSpacing,
       float topMargin)
       throws IOException {
-    final var wrappedLines = textLineWrapper.wrapLines(text, font, fontSize, fieldWidth);
-    if (wrappedLines.isEmpty()) {
+    final var allLines = buildLines(entries, font, boldFont, fontSize, fieldWidth);
+    if (allLines.isEmpty()) {
       return List.of();
     }
 
     final var maxLinesPerPage =
         capacityCalculator.calculateMaxLines(fieldHeight, fontSize, lineSpacing, topMargin);
     if (maxLinesPerPage <= 0) {
-      return List.of(wrappedLines);
+      return List.of(allLines);
     }
 
-    final var pages = new ArrayList<List<String>>();
+    final var pages = new ArrayList<List<OverflowLine>>();
     var fromIndex = 0;
 
-    while (fromIndex < wrappedLines.size()) {
-      final var toIndex = Math.min(fromIndex + maxLinesPerPage, wrappedLines.size());
-      pages.add(new ArrayList<>(wrappedLines.subList(fromIndex, toIndex)));
+    while (fromIndex < allLines.size()) {
+      final var toIndex = Math.min(fromIndex + maxLinesPerPage, allLines.size());
+      pages.add(new ArrayList<>(allLines.subList(fromIndex, toIndex)));
       fromIndex = toIndex;
     }
 
     return pages;
+  }
+
+  private List<OverflowLine> buildLines(
+      List<OverflowEntry> entries, PDFont font, PDFont boldFont, float fontSize, float fieldWidth)
+      throws IOException {
+    final var allLines = new ArrayList<OverflowLine>();
+
+    for (var i = 0; i < entries.size(); i++) {
+      final var entry = entries.get(i);
+
+      for (final var labelLine :
+          textLineWrapper.wrapLines(entry.label(), boldFont, fontSize, fieldWidth)) {
+        allLines.add(new OverflowLine(labelLine, true));
+      }
+
+      for (final var contentLine :
+          textLineWrapper.wrapLines(entry.content(), font, fontSize, fieldWidth)) {
+        allLines.add(new OverflowLine(contentLine, false));
+      }
+
+      allLines.add(new OverflowLine("", false));
+      allLines.add(new OverflowLine("", false));
+    }
+
+    return allLines;
   }
 }

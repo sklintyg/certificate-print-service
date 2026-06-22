@@ -49,8 +49,9 @@ public class OverflowPageRenderer {
   public void renderAllOverflowPages(
       PDDocument document,
       int overflowPageIndex,
-      List<List<String>> pages,
+      List<List<OverflowLine>> pages,
       PDFont font,
+      PDFont boldFont,
       float fontSize,
       PDRectangle fieldRectangle)
       throws IOException {
@@ -74,6 +75,7 @@ public class OverflowPageRenderer {
         firstPage,
         pages.getFirst(),
         font,
+        boldFont,
         fontSize,
         fieldRectangle,
         getOrCreateStructureSection(document, overflowPageIndex));
@@ -83,7 +85,7 @@ public class OverflowPageRenderer {
       document.addPage(newPage);
       final var section = clonedPageSections.get(newPage);
       renderTextOnPage(
-          document, newPage, pages.get(i + 1), font, fontSize, fieldRectangle, section);
+          document, newPage, pages.get(i + 1), font, boldFont, fontSize, fieldRectangle, section);
       structureCloner.updateParentTreeForPage(document, newPage);
     }
   }
@@ -91,8 +93,9 @@ public class OverflowPageRenderer {
   private void renderTextOnPage(
       PDDocument document,
       PDPage page,
-      List<String> lines,
+      List<OverflowLine> lines,
       PDFont font,
+      PDFont boldFont,
       float fontSize,
       PDRectangle fieldRectangle,
       PDStructureElement section)
@@ -112,13 +115,19 @@ public class OverflowPageRenderer {
       final var dictionary =
           PdfAccessibilityUtil.beginMarkedContent(contentStream, COSName.P, ++mcid);
 
+      PDFont currentFont = font;
       for (var i = 0; i < lines.size(); i++) {
         final var line = lines.get(i);
-        contentStream.showText(line);
+        final var lineFont = line.bold() ? boldFont : font;
+        if (!lineFont.equals(currentFont)) {
+          contentStream.setFont(lineFont, fontSize);
+          currentFont = lineFont;
+        }
+        contentStream.showText(line.text());
         if (!paragraphText.isEmpty()) {
           paragraphText.append("\n");
         }
-        paragraphText.append(line);
+        paragraphText.append(line.text());
 
         if (i < lines.size() - 1) {
           contentStream.newLineAtOffset(0, -lineHeight);
