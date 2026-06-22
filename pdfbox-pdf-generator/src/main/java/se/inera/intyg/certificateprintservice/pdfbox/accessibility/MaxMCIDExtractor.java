@@ -25,8 +25,6 @@ import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDMarkedCo
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureNode;
 
-// TODO: Is it possible to use this to identify the MCID to increment from instead of hardcoding and
-// sending it through the api
 public class MaxMCIDExtractor {
 
   public static int findNextMcid(PDDocument document) {
