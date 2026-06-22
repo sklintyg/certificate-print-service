@@ -51,6 +51,8 @@ public class TestSetupFK7804 {
         .addDraftWatermark(false)
         .overflowPageIndex(4)
         .addPageNumbers(true)
+        .rightMarginText(
+            "Intygsid: 8996d3d8-cb67-4602-b6a9-81dee33616ce. Intyget är utskrivet från Webcert.")
         .build();
   }
 

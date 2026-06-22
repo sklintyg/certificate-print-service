@@ -48,7 +48,7 @@ public class OverlayTextService {
     }
 
     if (metadata.hasRightMarginText()) {
-      pdfTextGenerator.addMarginText(document, metadata.rightMarginText(), ++mcid, 0);
+      pdfTextGenerator.addMarginText(document, metadata.rightMarginText(), ++mcid);
     }
 
     if (metadata.addPageNumbers()) {

@@ -100,10 +100,7 @@ class OverlayTextServiceTest {
 
       verify(pdfTextGenerator)
           .addMarginText(
-              eq(document),
-              contains(TestDataFK7210CustomPdfMetadata.RIGHT_MARGIN_TEXT),
-              anyInt(),
-              eq(0));
+              eq(document), contains(TestDataFK7210CustomPdfMetadata.RIGHT_MARGIN_TEXT), eq(8));
     }
 
     @Test
@@ -111,7 +108,7 @@ class OverlayTextServiceTest {
       overlayTextService.drawOverlays(
           document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
 
-      verify(pdfTextGenerator, never()).addMarginText(any(), any(), anyInt(), anyInt());
+      verify(pdfTextGenerator, never()).addMarginText(any(), any(), anyInt());
     }
   }
 
