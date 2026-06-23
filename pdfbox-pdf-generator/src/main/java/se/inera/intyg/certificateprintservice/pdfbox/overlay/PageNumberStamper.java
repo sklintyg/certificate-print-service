@@ -30,6 +30,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.documentinterchange.taggedpdf.StandardStructureTypes;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.FontResolver;
 
 @Component
 public class PageNumberStamper {
@@ -44,7 +45,9 @@ public class PageNumberStamper {
     }
 
     final var totalPages = document.getNumberOfPages();
-    final var font = resolveFont(document);
+    final var font =
+        FontResolver.getFont(
+            document.getDocumentCatalog().getAcroForm().getFieldTree().iterator().next());
     var mcid = startMcid;
 
     for (int pageIndex = 0; pageIndex < totalPages; pageIndex++) {
@@ -52,24 +55,6 @@ public class PageNumberStamper {
       final var pageNumberText = formatPageNumber(pageIndex + 1, totalPages);
       stampPageNumber(document, page, pageIndex, pageNumberText, font, ++mcid);
     }
-  }
-
-  private PDFont resolveFont(PDDocument document) throws IOException {
-    final var acroForm = document.getDocumentCatalog().getAcroForm();
-    if (acroForm != null) {
-      final var resources = acroForm.getDefaultResources();
-      if (resources != null) {
-        final var fontIterator = resources.getFontNames().iterator();
-        if (fontIterator.hasNext()) {
-          final var fontName = fontIterator.next();
-          final var font = resources.getFont(fontName);
-          if (font != null) {
-            return font;
-          }
-        }
-      }
-    }
-    throw new IOException("No font found in document AcroForm default resources");
   }
 
   private void stampPageNumber(
