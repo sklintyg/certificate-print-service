@@ -20,7 +20,6 @@ package se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -70,20 +69,9 @@ public class OverflowPaginationService {
       throw new IllegalStateException("No pages for overflow was found");
     }
 
-    if (pages.size() == 1) {
-      textField.setValue(toFlatText(entries));
-      return;
-    }
-
     textField.setValue("");
     renderer.renderAllOverflowPages(
         document, overflowPageIndex, pages, font, boldFont, fontSize, fieldRect);
-  }
-
-  private String toFlatText(List<OverflowEntry> entries) {
-    return entries.stream()
-        .map(e -> e.label() + "\n" + e.content() + "\n\n")
-        .collect(Collectors.joining());
   }
 
   private PDRectangle getFieldRectangle(PDTextField textField) {
