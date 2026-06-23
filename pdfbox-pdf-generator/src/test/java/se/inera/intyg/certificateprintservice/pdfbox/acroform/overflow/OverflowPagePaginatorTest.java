@@ -111,8 +111,8 @@ class OverflowPagePaginatorTest {
             TOP_MARGIN);
 
     final var totalLines = result.stream().mapToInt(List::size).sum();
-    // 1 label line + 20 content lines + 2 trailing blank lines = 23
-    assertEquals(23, totalLines);
+    // 1 label line + 20 content lines = 21
+    assertEquals(21, totalLines);
   }
 
   @Test

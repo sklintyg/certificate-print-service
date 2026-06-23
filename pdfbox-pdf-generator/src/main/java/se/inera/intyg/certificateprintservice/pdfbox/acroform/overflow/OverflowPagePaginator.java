@@ -84,10 +84,16 @@ public class OverflowPagePaginator {
         allLines.add(new OverflowLine(contentLine, false));
       }
 
-      allLines.add(new OverflowLine("", false));
-      allLines.add(new OverflowLine("", false));
+      if (notLastEntry(entries, i)) {
+        allLines.add(new OverflowLine("", false));
+        allLines.add(new OverflowLine("", false));
+      }
     }
 
     return allLines;
+  }
+
+  private static boolean notLastEntry(List<OverflowEntry> entries, int i) {
+    return i < entries.size() - 1;
   }
 }
