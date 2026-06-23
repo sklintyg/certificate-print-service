@@ -91,27 +91,28 @@ public class PdfTextGenerator {
     }
   }
 
-  public void addMarginText(PDDocument document, String text, int mcid, int pageIndex)
-      throws IOException {
-    drawText(
-        document,
-        TextInfo.builder()
-            .color(Color.black)
-            .mcid(mcid)
-            .customText(
-                CustomText.builder()
-                    .x(MARGIN_TEXT_OFFSET_X)
-                    .y(MARGIN_TEXT_OFFSET_Y)
-                    .appearance(
-                        Appearance.builder()
-                            .style(FontStyle.NORMAL)
-                            .fontSize(MARGIN_TEXT_FONT_SIZE)
-                            .build())
-                    .value(text)
-                    .pageIndex(pageIndex)
-                    .build())
-            .build(),
-        ROTATE_INSTANCE);
+  public void addMarginText(PDDocument document, String text, int mcid) throws IOException {
+    for (int pageIndex = 0; pageIndex < document.getNumberOfPages(); pageIndex++) {
+      drawText(
+          document,
+          TextInfo.builder()
+              .color(Color.black)
+              .mcid(mcid)
+              .customText(
+                  CustomText.builder()
+                      .x(MARGIN_TEXT_OFFSET_X)
+                      .y(MARGIN_TEXT_OFFSET_Y)
+                      .appearance(
+                          Appearance.builder()
+                              .style(FontStyle.NORMAL)
+                              .fontSize(MARGIN_TEXT_FONT_SIZE)
+                              .build())
+                      .value(text)
+                      .pageIndex(pageIndex)
+                      .build())
+              .build(),
+          ROTATE_INSTANCE);
+    }
   }
 
   public void drawText(PDDocument pdf, TextInfo textInfo, Matrix matrix) throws IOException {

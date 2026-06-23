@@ -45,6 +45,7 @@ import se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210Cust
 class OverlayTextServiceTest {
 
   @Mock private PdfTextGenerator pdfTextGenerator;
+  @Mock private PageNumberStamper pageNumberStamper;
   @InjectMocks private OverlayTextService overlayTextService;
 
   private PDDocument document;
@@ -99,10 +100,7 @@ class OverlayTextServiceTest {
 
       verify(pdfTextGenerator)
           .addMarginText(
-              eq(document),
-              contains(TestDataFK7210CustomPdfMetadata.RIGHT_MARGIN_TEXT),
-              anyInt(),
-              eq(0));
+              eq(document), contains(TestDataFK7210CustomPdfMetadata.RIGHT_MARGIN_TEXT), eq(8));
     }
 
     @Test
@@ -110,7 +108,27 @@ class OverlayTextServiceTest {
       overlayTextService.drawOverlays(
           document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
 
-      verify(pdfTextGenerator, never()).addMarginText(any(), any(), anyInt(), anyInt());
+      verify(pdfTextGenerator, never()).addMarginText(any(), any(), anyInt());
+    }
+  }
+
+  @Nested
+  class PageNumbers {
+
+    @Test
+    void shallStampPageNumbersWhenOverflowPageIndexIsSet() throws IOException {
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithPageNumbers());
+
+      verify(pageNumberStamper).stamp(eq(document), anyInt());
+    }
+
+    @Test
+    void shallNotStampPageNumbersWhenOverflowPageIndexIsNull() throws IOException {
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithoutPageNumbers());
+
+      verify(pageNumberStamper, never()).stamp(any(), anyInt());
     }
   }
 }
