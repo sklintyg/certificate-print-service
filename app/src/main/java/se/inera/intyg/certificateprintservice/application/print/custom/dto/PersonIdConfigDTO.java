@@ -22,16 +22,16 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
 import lombok.Value;
-import se.inera.intyg.certificateprintservice.application.print.custom.dto.PersonIdConfigDTO.PersonIdDTOBuilder;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.PersonIdConfigDTO.PersonIdConfigDTOBuilder;
 
 @Value
 @Builder
-@JsonDeserialize(builder = PersonIdDTOBuilder.class)
+@JsonDeserialize(builder = PersonIdConfigDTOBuilder.class)
 public class PersonIdConfigDTO {
 
   String fieldId;
   String value;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class PersonIdDTOBuilder {}
+  public static class PersonIdConfigDTOBuilder {}
 }
