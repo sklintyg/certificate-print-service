@@ -63,9 +63,10 @@ public class OverflowPageStructureCloner {
    * @param document the PDF document
    * @param templatePageIndex the index of the template overflow page
    * @param clonedPage the newly cloned page
-   * @return the DIV element where overflow text should be rendered
+   * @return a {@link ClonedPageStructure} containing the SECT element and the DIV element where
+   *     overflow text should be rendered
    */
-  public PDStructureElement cloneStructureForPage(
+  public ClonedPageStructure cloneStructureForPage(
       PDDocument document, int templatePageIndex, PDPage clonedPage) {
     final var structuredTree = document.getDocumentCatalog().getStructureTreeRoot();
     final var documentTag = (PDStructureElement) structuredTree.getKids().getFirst();
@@ -105,7 +106,7 @@ public class OverflowPageStructureCloner {
 
     newPageSectDict.setItem(K, newKidsArray);
     assignStructParentsKey(document, clonedPage);
-    return overflowDiv;
+    return new ClonedPageStructure(newPageSect, overflowDiv);
   }
 
   /**

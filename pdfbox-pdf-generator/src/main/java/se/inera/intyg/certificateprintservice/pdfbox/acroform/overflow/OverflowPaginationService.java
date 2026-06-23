@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.FontResolver;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.OverflowEntry;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.TextFieldAppearance;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.PersonIdConfig;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +44,8 @@ public class OverflowPaginationService {
       PDDocument document,
       PDTextField textField,
       List<OverflowEntry> entries,
-      int overflowPageIndex)
+      int overflowPageIndex,
+      PersonIdConfig personIdConfig)
       throws IOException {
     final var font = FontResolver.getFont(textField);
     final var boldFont = new PDType1Font(FontName.HELVETICA_BOLD);
@@ -69,9 +71,11 @@ public class OverflowPaginationService {
       throw new IllegalStateException("No pages for overflow was found");
     }
 
+    final var patientIdInfo = PatientIdInfo.of(document, personIdConfig);
+
     textField.setValue("");
     renderer.renderAllOverflowPages(
-        document, overflowPageIndex, pages, font, boldFont, fontSize, fieldRect);
+        document, overflowPageIndex, pages, font, boldFont, fontSize, fieldRect, patientIdInfo);
   }
 
   private PDRectangle getFieldRectangle(PDTextField textField) {

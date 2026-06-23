@@ -30,6 +30,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPaginationService;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.PersonIdConfig;
 
 @Slf4j
 @Component
@@ -42,13 +43,15 @@ public class OverflowFieldWriter {
       PDDocument document,
       PDAcroForm acroForm,
       Map<String, List<OverflowEntry>> accumulator,
-      Integer overflowPageIndex) {
+      Integer overflowPageIndex,
+      PersonIdConfig personIdConfig) {
     accumulator.forEach(
         (overflowFieldId, entries) -> {
           final var field = lookupField(acroForm, overflowFieldId);
 
           if (overflowPageIndex != null && field instanceof PDTextField textField) {
-            paginateOverflow(document, textField, overflowFieldId, entries, overflowPageIndex);
+            paginateOverflow(
+                document, textField, overflowFieldId, entries, overflowPageIndex, personIdConfig);
           } else {
             setValue(field, overflowFieldId, toFlatText(entries));
           }
@@ -78,10 +81,11 @@ public class OverflowFieldWriter {
       PDTextField textField,
       String fieldId,
       List<OverflowEntry> entries,
-      int overflowPageIndex) {
+      int overflowPageIndex,
+      PersonIdConfig personIdConfig) {
     try {
       overflowPaginationService.writeWithPagination(
-          document, textField, entries, overflowPageIndex);
+          document, textField, entries, overflowPageIndex, personIdConfig);
     } catch (IOException e) {
       throw new IllegalStateException(
           "Failed to paginate overflow field '%s': %s".formatted(fieldId, e.getMessage()), e);

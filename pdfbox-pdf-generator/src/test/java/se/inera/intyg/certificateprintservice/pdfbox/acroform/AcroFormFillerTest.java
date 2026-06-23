@@ -83,6 +83,7 @@ class AcroFormFillerTest {
     filler.fill(
         document,
         Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(PATIENT_ID).build()),
+        null,
         null);
 
     assertEquals(
@@ -98,7 +99,7 @@ class AcroFormFillerTest {
   void shallFillFieldDirectlyWhenMaxLengthIsNull() {
     final var field = CustomPdfField.builder().value(PATIENT_ID).maxLength(null).build();
 
-    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null, null);
 
     assertEquals(
         PATIENT_ID,
@@ -114,7 +115,7 @@ class AcroFormFillerTest {
     final var field =
         CustomPdfField.builder().value(PATIENT_ID).maxLength(PATIENT_ID.length() + 10).build();
 
-    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null, null);
 
     assertEquals(
         PATIENT_ID,
@@ -133,12 +134,13 @@ class AcroFormFillerTest {
             filler.fill(
                 document,
                 Map.of("nonExistent", CustomPdfField.builder().value("value").build()),
+                null,
                 null));
   }
 
   @Test
   void shallDoNothingWhenFieldsMapIsEmpty() {
-    filler.fill(document, Collections.emptyMap(), null);
+    filler.fill(document, Collections.emptyMap(), null, null);
 
     assertEquals(
         "",
@@ -154,6 +156,7 @@ class AcroFormFillerTest {
     filler.fill(
         document,
         Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(PATIENT_ID).build()),
+        null,
         null);
 
     assertEquals(
@@ -172,6 +175,7 @@ class AcroFormFillerTest {
         Map.of(
             PATIENT_ID_FIELD_ID,
             CustomPdfField.builder().value(PATIENT_ID).appearance("/ArialMT 9.00 Tf 0 g").build()),
+        null,
         null);
 
     final var textField = getTextField(document, PATIENT_ID_FIELD_ID);
@@ -184,7 +188,7 @@ class AcroFormFillerTest {
     final var field =
         CustomPdfField.builder().value(valueWithLineBreaks).shouldRemoveLineBreaks(true).build();
 
-    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null, null);
 
     assertEquals(
         "Line oneLine twoLine three",
@@ -201,7 +205,7 @@ class AcroFormFillerTest {
     final var field =
         CustomPdfField.builder().value(valueWithLineBreaks).shouldRemoveLineBreaks(false).build();
 
-    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null, null);
 
     assertEquals(
         valueWithLineBreaks,
@@ -218,7 +222,7 @@ class AcroFormFillerTest {
     final var maxLength = 30;
     final var field = CustomPdfField.builder().value(longValue).maxLength(maxLength).build();
 
-    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null, null);
 
     final var result =
         document
@@ -240,7 +244,7 @@ class AcroFormFillerTest {
             .overflow(OverflowConfig.builder().overflowFieldId(null).overflowLabel(null).build())
             .build();
 
-    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null, null);
 
     final var result =
         document
@@ -256,7 +260,7 @@ class AcroFormFillerTest {
     final var shortValue = "Short text";
     final var field = CustomPdfField.builder().value(shortValue).maxLength(100).build();
 
-    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null, null);
 
     assertEquals(
         shortValue,
@@ -278,7 +282,7 @@ class AcroFormFillerTest {
             .shouldRemoveLineBreaks(true)
             .build();
 
-    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null);
+    filler.fill(document, Map.of(PATIENT_ID_FIELD_ID, field), null, null);
 
     final var result =
         document
@@ -303,6 +307,7 @@ class AcroFormFillerTest {
       filler.fill(
           document,
           Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(valueWithTab).build()),
+          null,
           null);
 
       assertEquals(
@@ -321,6 +326,7 @@ class AcroFormFillerTest {
       filler.fill(
           document,
           Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(valueWithEnDash).build()),
+          null,
           null);
 
       assertEquals(
@@ -339,6 +345,7 @@ class AcroFormFillerTest {
       filler.fill(
           document,
           Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(valueWithChinese).build()),
+          null,
           null);
 
       assertEquals(
@@ -357,6 +364,7 @@ class AcroFormFillerTest {
       filler.fill(
           document,
           Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(valueWithNewline).build()),
+          null,
           null);
 
       assertEquals(

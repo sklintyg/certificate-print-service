@@ -33,6 +33,7 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.FontStyleEnumDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.OverflowConfigDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.PersonIdConfigDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appearance;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
@@ -40,6 +41,7 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Cust
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.OverflowConfig;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.PersonIdConfig;
 
 @Component
 public class CustomPdfRequestConverter {
@@ -57,7 +59,8 @@ public class CustomPdfRequestConverter {
         dto.getRightMarginText(),
         convertAccessibilityMetadata(dto.getAccessibilityMetadata()),
         dto.isAddDraftWatermark(),
-        dto.getOverflowPageIndex());
+        dto.getOverflowPageIndex(),
+        convertPersonId(dto.getPersonId()));
   }
 
   private List<CustomText> convertCustomTexts(List<CustomTextDTO> customTextDTOList) {
@@ -110,5 +113,12 @@ public class CustomPdfRequestConverter {
       return null;
     }
     return new OverflowConfig(dto.getOverflowFieldId(), dto.getOverflowLabel());
+  }
+
+  private PersonIdConfig convertPersonId(PersonIdConfigDTO dto) {
+    if (dto == null) {
+      return null;
+    }
+    return new PersonIdConfig(dto.getFieldId(), dto.getValue());
   }
 }

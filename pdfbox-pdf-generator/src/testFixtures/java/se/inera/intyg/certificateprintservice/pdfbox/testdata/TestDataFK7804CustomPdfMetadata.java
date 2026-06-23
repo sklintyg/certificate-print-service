@@ -24,6 +24,7 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appe
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.PersonIdConfig;
 
 public class TestDataFK7804CustomPdfMetadata {
 
@@ -89,6 +90,9 @@ public class TestDataFK7804CustomPdfMetadata {
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
         .addDraftWatermark(false)
+        .overflowPageIndex(4)
+        .personIdConfig(
+            new PersonIdConfig("form1[0].#subform[0].flt_txtPersonNr[0]", "191212121212"))
         .build();
   }
 }

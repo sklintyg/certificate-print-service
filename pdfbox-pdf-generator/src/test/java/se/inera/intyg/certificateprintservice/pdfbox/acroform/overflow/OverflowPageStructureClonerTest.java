@@ -49,10 +49,21 @@ class OverflowPageStructureClonerTest {
     try (final var document = loadTestTemplate()) {
       final var clonedPage = createClonedPage(document, 0);
 
-      final var overflowDiv = cloner.cloneStructureForPage(document, 0, clonedPage);
+      final var structure = cloner.cloneStructureForPage(document, 0, clonedPage);
 
-      assertNotNull(overflowDiv);
-      assertEquals("Div", overflowDiv.getStructureType());
+      assertNotNull(structure.overflowDiv());
+      assertEquals("Div", structure.overflowDiv().getStructureType());
+    }
+  }
+
+  @Test
+  void shouldReturnSectElementForPage() throws IOException {
+    try (final var document = loadTestTemplate()) {
+      final var clonedPage = createClonedPage(document, 0);
+
+      final var structure = cloner.cloneStructureForPage(document, 0, clonedPage);
+
+      assertNotNull(structure.sect());
     }
   }
 

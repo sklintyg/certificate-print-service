@@ -19,6 +19,7 @@
 package se.inera.intyg.certificateprintservice.integrationtest.fk7804;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static se.inera.intyg.certificateprintservice.integrationtest.fk7804.TestSetupFK7804Constants.PATIENT_ID_FIELD_ID_5;
 import static se.inera.intyg.certificateprintservice.integrationtest.fk7804.TestSetupFK7804Constants.TAGGED_PDF_OVERFLOW_RESOURCE;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Acces
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.PersonIdConfigDTO;
 
 public class TestSetupFK7804 {
 
@@ -52,6 +54,11 @@ public class TestSetupFK7804 {
         .overflowPageIndex(4)
         .rightMarginText(
             "Intygsid: 8996d3d8-cb67-4602-b6a9-81dee33616ce. Intyget är utskrivet från Webcert.")
+        .personId(
+            PersonIdConfigDTO.builder()
+                .fieldId(PATIENT_ID_FIELD_ID_5)
+                .value("191212121212")
+                .build())
         .build();
   }
 
