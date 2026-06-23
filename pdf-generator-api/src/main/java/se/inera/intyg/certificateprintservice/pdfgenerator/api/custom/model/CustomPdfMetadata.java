@@ -39,8 +39,4 @@ public record CustomPdfMetadata(
   public boolean hasRightMarginText() {
     return rightMarginText != null && !rightMarginText.isBlank();
   }
-
-  public boolean hasPersonId() {
-    return personIdConfig != null;
-  }
 }

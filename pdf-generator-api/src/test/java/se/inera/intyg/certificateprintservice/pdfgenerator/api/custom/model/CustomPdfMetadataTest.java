@@ -45,18 +45,4 @@ class CustomPdfMetadataTest {
   void shouldReturnFalseWhenRightMarginTextIsBlank() {
     assertFalse(CustomPdfMetadata.builder().rightMarginText("   ").build().hasRightMarginText());
   }
-
-  @Test
-  void shouldReturnTrueForHasPersonIdWhenPersonIdIsSet() {
-    assertTrue(
-        CustomPdfMetadata.builder()
-            .personIdConfig(PersonIdConfig.builder().fieldId("field").value("value").build())
-            .build()
-            .hasPersonId());
-  }
-
-  @Test
-  void shouldReturnFalseForHasPersonIdWhenPersonIdIsNull() {
-    assertFalse(CustomPdfMetadata.builder().build().hasPersonId());
-  }
 }
