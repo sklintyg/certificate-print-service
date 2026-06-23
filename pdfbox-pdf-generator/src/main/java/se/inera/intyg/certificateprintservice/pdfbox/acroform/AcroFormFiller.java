@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
@@ -34,13 +33,13 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDVariableText;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AcroFormFiller {
 
   private final FieldValueProcessor fieldValueProcessor;
   private final OverflowFieldWriter overflowFieldWriter;
+  private final TextFieldAppearance textFieldAppearance;
 
   public void fill(
       PDDocument document, Map<String, CustomPdfField> fields, Integer overflowPageIndex) {
@@ -57,7 +56,8 @@ public class AcroFormFiller {
           applyAppearance(field, fieldOptions);
           adjustHeight(field, fieldOptions);
 
-          final var result = fieldValueProcessor.process(fieldOptions);
+          final var font = FontResolver.getFont(field);
+          final var result = fieldValueProcessor.process(fieldOptions, font);
           setValue(field, fieldId, result.primaryValue());
           accumulateOverflow(fieldOptions, result, overflowAccumulator);
         });
@@ -87,8 +87,8 @@ public class AcroFormFiller {
 
   private void adjustHeight(PDField field, CustomPdfField fieldOptions) {
     if (field instanceof PDVariableText textField) {
-      final var textAppearance = new TextFieldAppearance(textField);
-      textAppearance.adjustFieldHeight(Optional.ofNullable(fieldOptions.offset()).orElse(0));
+      textFieldAppearance.adjustFieldHeight(
+          textField, Optional.ofNullable(fieldOptions.offset()).orElse(0));
     }
   }
 

@@ -35,6 +35,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPageCapacityCalculator;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPagePaginator;
@@ -47,6 +48,8 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Over
 
 class AcroFormFillerTest {
 
+  private final TextFieldAppearance textFieldAppearance = new TextFieldAppearance();
+
   private final AcroFormFiller filler =
       new AcroFormFiller(
           new FieldValueProcessor(),
@@ -54,7 +57,9 @@ class AcroFormFillerTest {
               new OverflowPaginationService(
                   new OverflowPagePaginator(
                       new TextLineWrapper(), new OverflowPageCapacityCalculator()),
-                  new OverflowPageRenderer(new OverflowPageStructureCloner()))));
+                  new OverflowPageRenderer(new OverflowPageStructureCloner()),
+                  textFieldAppearance)),
+          textFieldAppearance);
 
   private PDDocument document;
 
@@ -286,5 +291,81 @@ class AcroFormFillerTest {
 
   private static PDTextField getTextField(PDDocument document, String fieldId) {
     return (PDTextField) document.getDocumentCatalog().getAcroForm().getField(fieldId);
+  }
+
+  @Nested
+  class FieldValueSanitization {
+
+    @Test
+    void shallReplaceTabCharacterWithSpaceInFieldValue() {
+      final var valueWithTab = "Hello\tWorld";
+
+      filler.fill(
+          document,
+          Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(valueWithTab).build()),
+          null);
+
+      assertEquals(
+          "Hello World",
+          document
+              .getDocumentCatalog()
+              .getAcroForm()
+              .getField(PATIENT_ID_FIELD_ID)
+              .getValueAsString());
+    }
+
+    @Test
+    void shallNormalizeEnDashToAsciiHyphenInFieldValue() {
+      final var valueWithEnDash = "Hello\u2013World";
+
+      filler.fill(
+          document,
+          Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(valueWithEnDash).build()),
+          null);
+
+      assertEquals(
+          "Hello-World",
+          document
+              .getDocumentCatalog()
+              .getAcroForm()
+              .getField(PATIENT_ID_FIELD_ID)
+              .getValueAsString());
+    }
+
+    @Test
+    void shallReplaceChineseCharacterUnsupportedByTemplateFontWithSpace() {
+      final var valueWithChinese = "Hello\u4E2DWorld";
+
+      filler.fill(
+          document,
+          Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(valueWithChinese).build()),
+          null);
+
+      assertEquals(
+          "Hello World",
+          document
+              .getDocumentCatalog()
+              .getAcroForm()
+              .getField(PATIENT_ID_FIELD_ID)
+              .getValueAsString());
+    }
+
+    @Test
+    void shallPreserveNewlineInFieldValue() {
+      final var valueWithNewline = "Line one\nLine two";
+
+      filler.fill(
+          document,
+          Map.of(PATIENT_ID_FIELD_ID, CustomPdfField.builder().value(valueWithNewline).build()),
+          null);
+
+      assertEquals(
+          "Line one\nLine two",
+          document
+              .getDocumentCatalog()
+              .getAcroForm()
+              .getField(PATIENT_ID_FIELD_ID)
+              .getValueAsString());
+    }
   }
 }

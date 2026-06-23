@@ -27,6 +27,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.FontResolver;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.OverflowEntry;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.TextFieldAppearance;
 
@@ -36,6 +37,7 @@ public class OverflowPaginationService {
 
   private final OverflowPagePaginator paginator;
   private final OverflowPageRenderer renderer;
+  private final TextFieldAppearance textFieldAppearance;
 
   public void writeWithPagination(
       PDDocument document,
@@ -43,11 +45,9 @@ public class OverflowPaginationService {
       List<OverflowEntry> entries,
       int overflowPageIndex)
       throws IOException {
-    final var acroForm = document.getDocumentCatalog().getAcroForm();
-    final var textAppearance = new TextFieldAppearance(textField);
-    final var font = textAppearance.getFont(acroForm);
+    final var font = FontResolver.getFont(textField);
     final var boldFont = new PDType1Font(FontName.HELVETICA_BOLD);
-    final var fontSize = textAppearance.getFontSize();
+    final var fontSize = textFieldAppearance.getFontSize(textField);
     final var fieldRect = getFieldRectangle(textField);
     final var lineSpacing = renderer.getLineSpacing();
     final var topMargin = renderer.getTopMargin();

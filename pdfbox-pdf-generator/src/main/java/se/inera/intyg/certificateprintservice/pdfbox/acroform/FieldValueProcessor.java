@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 
@@ -30,8 +31,8 @@ public class FieldValueProcessor {
   private static final String OVERFLOW_REMAINDER_PREFIX = "... ";
   private static final int MAX_LENGTH_THRESHOLD_FOR_LONG_SUFFIX = 22;
 
-  public FieldValueResult process(CustomPdfField field) {
-    final var originalValue = field.value();
+  public FieldValueResult process(CustomPdfField field, PDFont font) {
+    final var originalValue = FieldTextSanitizer.sanitize(field.value(), font);
     final var primaryValue =
         field.shouldRemoveLineBreaks() ? originalValue.replace("\n", "") : originalValue;
 

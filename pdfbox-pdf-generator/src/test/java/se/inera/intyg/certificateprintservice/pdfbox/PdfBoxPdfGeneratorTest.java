@@ -32,29 +32,34 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.AcroFormFiller;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.FieldValueProcessor;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.OverflowFieldWriter;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPageCapacityCalculator;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPagePaginator;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPageRenderer;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPageStructureCloner;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPaginationService;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.TextLineWrapper;
 import se.inera.intyg.certificateprintservice.pdfbox.overlay.OverlayTextService;
 import se.inera.intyg.certificateprintservice.pdfbox.overlay.PageNumberStamper;
 import se.inera.intyg.certificateprintservice.pdfbox.overlay.PdfTextGenerator;
 
 class PdfBoxPdfGeneratorTest {
 
+  private final se.inera.intyg.certificateprintservice.pdfbox.acroform.TextFieldAppearance
+      textFieldAppearance =
+          new se.inera.intyg.certificateprintservice.pdfbox.acroform.TextFieldAppearance();
+
   private final PdfBoxPdfGenerator generator =
       new PdfBoxPdfGenerator(
           new AcroFormFiller(
               new FieldValueProcessor(),
-              new se.inera.intyg.certificateprintservice.pdfbox.acroform.OverflowFieldWriter(
-                  new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                      .OverflowPaginationService(
-                      new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                          .OverflowPagePaginator(
-                          new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                              .TextLineWrapper(),
-                          new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                              .OverflowPageCapacityCalculator()),
-                      new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                          .OverflowPageRenderer(
-                          new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                              .OverflowPageStructureCloner())))),
+              new OverflowFieldWriter(
+                  new OverflowPaginationService(
+                      new OverflowPagePaginator(
+                          new TextLineWrapper(), new OverflowPageCapacityCalculator()),
+                      new OverflowPageRenderer(new OverflowPageStructureCloner()),
+                      textFieldAppearance)),
+              textFieldAppearance),
           new OverlayTextService(new PdfTextGenerator(), new PageNumberStamper()));
 
   @Test
