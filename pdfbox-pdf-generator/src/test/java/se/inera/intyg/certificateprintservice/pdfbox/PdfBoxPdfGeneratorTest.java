@@ -37,6 +37,10 @@ import se.inera.intyg.certificateprintservice.pdfbox.overlay.PdfTextGenerator;
 
 class PdfBoxPdfGeneratorTest {
 
+  private final se.inera.intyg.certificateprintservice.pdfbox.acroform.TextFieldAppearance
+      textFieldAppearance =
+          new se.inera.intyg.certificateprintservice.pdfbox.acroform.TextFieldAppearance();
+
   private final PdfBoxPdfGenerator generator =
       new PdfBoxPdfGenerator(
           new AcroFormFiller(
@@ -53,7 +57,9 @@ class PdfBoxPdfGeneratorTest {
                       new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
                           .OverflowPageRenderer(
                           new se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow
-                              .OverflowPageStructureCloner())))),
+                              .OverflowPageStructureCloner()),
+                      textFieldAppearance)),
+              textFieldAppearance),
           new OverlayTextService(new PdfTextGenerator()));
 
   @Test

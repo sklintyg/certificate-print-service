@@ -47,6 +47,8 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Over
 
 class AcroFormFillerOverflowTest {
 
+  private final TextFieldAppearance textFieldAppearance = new TextFieldAppearance();
+
   private final AcroFormFiller filler =
       new AcroFormFiller(
           new FieldValueProcessor(),
@@ -54,7 +56,9 @@ class AcroFormFillerOverflowTest {
               new OverflowPaginationService(
                   new OverflowPagePaginator(
                       new TextLineWrapper(), new OverflowPageCapacityCalculator()),
-                  new OverflowPageRenderer(new OverflowPageStructureCloner()))));
+                  new OverflowPageRenderer(new OverflowPageStructureCloner()),
+                  textFieldAppearance)),
+          textFieldAppearance);
   private PDDocument document;
 
   @BeforeEach

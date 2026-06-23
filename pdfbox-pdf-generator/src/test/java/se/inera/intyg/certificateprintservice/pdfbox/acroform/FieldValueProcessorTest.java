@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
@@ -29,6 +31,7 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Over
 
 class FieldValueProcessorTest {
 
+  private static final PDType1Font HELVETICA = new PDType1Font(FontName.HELVETICA);
   private final FieldValueProcessor processor = new FieldValueProcessor();
 
   @Nested
@@ -38,7 +41,7 @@ class FieldValueProcessorTest {
     void shallReturnValueAsIs() {
       final var field = CustomPdfField.builder().value("Hello World").build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertEquals("Hello World", result.primaryValue());
       assertNull(result.overflowRemainder());
@@ -52,7 +55,7 @@ class FieldValueProcessorTest {
               .shouldRemoveLineBreaks(true)
               .build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertEquals("Line oneLine twoLine three", result.primaryValue());
       assertNull(result.overflowRemainder());
@@ -66,7 +69,7 @@ class FieldValueProcessorTest {
               .shouldRemoveLineBreaks(false)
               .build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertEquals("Line one\nLine two", result.primaryValue());
     }
@@ -79,7 +82,7 @@ class FieldValueProcessorTest {
     void shallReturnValueWithoutModification() {
       final var field = CustomPdfField.builder().value("Short text").maxLength(100).build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertEquals("Short text", result.primaryValue());
       assertNull(result.overflowRemainder());
@@ -97,7 +100,7 @@ class FieldValueProcessorTest {
               .maxLength(30)
               .build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertEquals("This is a long text that...", result.primaryValue());
       assertNull(result.overflowRemainder());
@@ -112,7 +115,7 @@ class FieldValueProcessorTest {
               .overflow(OverflowConfig.builder().overflowFieldId(null).build())
               .build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertEquals("This is a long text that...", result.primaryValue());
       assertNull(result.overflowRemainder());
@@ -127,7 +130,7 @@ class FieldValueProcessorTest {
               .shouldRemoveLineBreaks(true)
               .build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertEquals("This isa long textthat...", result.primaryValue());
     }
@@ -150,7 +153,7 @@ class FieldValueProcessorTest {
                       .build())
               .build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertTrue(result.primaryValue().endsWith("... Se fortsättningsblad!"));
       assertTrue(result.primaryValue().length() <= 60);
@@ -170,7 +173,7 @@ class FieldValueProcessorTest {
                       .build())
               .build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertTrue(result.primaryValue().endsWith("..."));
       assertTrue(!result.primaryValue().contains("Se fortsättningsblad"));
@@ -191,7 +194,7 @@ class FieldValueProcessorTest {
                       .build())
               .build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertTrue(
           !result.primaryValue().contains("\n"), "Primary value should have line breaks removed");
@@ -215,7 +218,7 @@ class FieldValueProcessorTest {
                       .build())
               .build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       final var primaryWithoutSuffix = result.primaryValue().replaceAll("\\s*\\.{3}.*$", "").trim();
       final var remainderContent =
@@ -245,9 +248,62 @@ class FieldValueProcessorTest {
                       .build())
               .build();
 
-      final var result = processor.process(field);
+      final var result = processor.process(field, HELVETICA);
 
       assertTrue(!result.primaryValue().contains("\n"), "Primary should not contain line breaks");
+    }
+  }
+
+  @Nested
+  class SanitizationBehavior {
+
+    @Test
+    void shallReplaceTabWithSpaceInPrimaryValue() {
+      final var field = CustomPdfField.builder().value("Hello\tWorld").build();
+
+      final var result = processor.process(field, HELVETICA);
+
+      assertEquals("Hello World", result.primaryValue());
+    }
+
+    @Test
+    void shallNormalizeEnDashToHyphenInPrimaryValue() {
+      final var field = CustomPdfField.builder().value("Hello\u2013World").build();
+
+      final var result = processor.process(field, HELVETICA);
+
+      assertEquals("Hello-World", result.primaryValue());
+    }
+
+    @Test
+    void shallSanitizeOverflowRemainderAsWellAsPrimaryValue() {
+      final var valueWithEnDash = "A".repeat(25) + " \u2013 " + "B".repeat(50);
+      final var field =
+          CustomPdfField.builder()
+              .value(valueWithEnDash)
+              .maxLength(30)
+              .overflow(
+                  OverflowConfig.builder()
+                      .overflowFieldId("overflow")
+                      .overflowLabel("Label")
+                      .build())
+              .build();
+
+      final var result = processor.process(field, HELVETICA);
+
+      assertTrue(
+          !result.overflowRemainder().contains("\u2013"),
+          "Overflow remainder should not contain en-dash");
+    }
+
+    @Test
+    void shallApplyFontAwareFilteringWhenFontIsProvided() {
+      final var font = new PDType1Font(FontName.HELVETICA);
+      final var field = CustomPdfField.builder().value("Hello\u4E2DWorld").build();
+
+      final var result = processor.process(field, font);
+
+      assertEquals("Hello World", result.primaryValue());
     }
   }
 }
