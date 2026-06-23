@@ -43,7 +43,7 @@ public class GlobalExceptionHandlerController {
                         .formatted(error.getField(), error.getDefaultMessage()))
             .findFirst()
             .orElse("Invalid request");
-    log.warn("Bad request. Reason: %s.".formatted(message));
+    log.error("Bad request. Reason: %s.".formatted(message));
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .contentType(MediaType.APPLICATION_PROBLEM_JSON)
         .body(message);
@@ -51,7 +51,7 @@ public class GlobalExceptionHandlerController {
 
   @ExceptionHandler({IllegalArgumentException.class})
   public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
-    log.warn("Bad request. Reason: %s.".formatted(exception.getMessage()));
+    log.error("Bad request. Reason: %s.".formatted(exception.getMessage()));
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .contentType(MediaType.APPLICATION_PROBLEM_JSON)
         .body(exception.getMessage());

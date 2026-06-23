@@ -19,7 +19,9 @@
 package se.inera.intyg.certificateprintservice.pdfbox.acroform;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -39,17 +41,16 @@ public class OverflowFieldWriter {
   public void writeAll(
       PDDocument document,
       PDAcroForm acroForm,
-      Map<String, StringBuilder> accumulator,
+      Map<String, List<OverflowEntry>> accumulator,
       Integer overflowPageIndex) {
     accumulator.forEach(
-        (overflowFieldId, content) -> {
+        (overflowFieldId, entries) -> {
           final var field = lookupField(acroForm, overflowFieldId);
-          final var contentText = content.toString();
 
           if (overflowPageIndex != null && field instanceof PDTextField textField) {
-            paginateOverflow(document, textField, overflowFieldId, contentText, overflowPageIndex);
+            paginateOverflow(document, textField, overflowFieldId, entries, overflowPageIndex);
           } else {
-            setValue(field, overflowFieldId, contentText);
+            setValue(field, overflowFieldId, toFlatText(entries));
           }
         });
   }
@@ -76,14 +77,20 @@ public class OverflowFieldWriter {
       PDDocument document,
       PDTextField textField,
       String fieldId,
-      String content,
+      List<OverflowEntry> entries,
       int overflowPageIndex) {
     try {
       overflowPaginationService.writeWithPagination(
-          document, textField, content, overflowPageIndex);
+          document, textField, entries, overflowPageIndex);
     } catch (IOException e) {
       throw new IllegalStateException(
           "Failed to paginate overflow field '%s': %s".formatted(fieldId, e.getMessage()), e);
     }
+  }
+
+  private String toFlatText(List<OverflowEntry> entries) {
+    return entries.stream()
+        .map(e -> e.label() + "\n" + e.content() + "\n\n")
+        .collect(Collectors.joining());
   }
 }

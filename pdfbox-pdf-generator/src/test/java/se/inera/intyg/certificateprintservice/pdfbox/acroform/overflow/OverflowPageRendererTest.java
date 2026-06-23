@@ -34,6 +34,7 @@ class OverflowPageRendererTest {
 
   private OverflowPageRenderer renderer;
   private PDType1Font font;
+  private PDType1Font boldFont;
 
   private static final float FONT_SIZE = 9f;
   private static final PDRectangle FIELD_RECT = new PDRectangle(50f, 50f, 400f, 700f);
@@ -42,15 +43,17 @@ class OverflowPageRendererTest {
   void setUp() {
     renderer = new OverflowPageRenderer(new OverflowPageStructureCloner());
     font = new PDType1Font(FontName.HELVETICA);
+    boldFont = new PDType1Font(FontName.HELVETICA_BOLD);
   }
 
   @Test
   void shouldNotAddPagesWhenOnlySinglePage() throws IOException {
     try (final var document = loadTestTemplate()) {
       final var initialPageCount = document.getNumberOfPages();
-      final var pages = List.of(List.of("Line 1", "Line 2"));
+      final var pages =
+          List.of(List.of(new OverflowLine("Line 1", false), new OverflowLine("Line 2", false)));
 
-      renderer.renderAllOverflowPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(document, 0, pages, font, boldFont, FONT_SIZE, FIELD_RECT);
 
       assertEquals(initialPageCount, document.getNumberOfPages());
     }
@@ -60,9 +63,12 @@ class OverflowPageRendererTest {
   void shouldAddOnePageWhenTwoPageChunksProvided() throws IOException {
     try (final var document = loadTestTemplate()) {
       final var initialPageCount = document.getNumberOfPages();
-      final var pages = List.of(List.of("Line 1", "Line 2"), List.of("Line 3", "Line 4"));
+      final var pages =
+          List.of(
+              List.of(new OverflowLine("Line 1", true), new OverflowLine("Line 2", false)),
+              List.of(new OverflowLine("Line 3", true), new OverflowLine("Line 4", false)));
 
-      renderer.renderAllOverflowPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(document, 0, pages, font, boldFont, FONT_SIZE, FIELD_RECT);
 
       assertEquals(initialPageCount + 1, document.getNumberOfPages());
     }
@@ -72,9 +78,13 @@ class OverflowPageRendererTest {
   void shouldAddMultiplePagesWhenManyChunksProvided() throws IOException {
     try (final var document = loadTestTemplate()) {
       final var initialPageCount = document.getNumberOfPages();
-      final var pages = List.of(List.of("Line 1"), List.of("Line 2"), List.of("Line 3"));
+      final var pages =
+          List.of(
+              List.of(new OverflowLine("Line 1", false)),
+              List.of(new OverflowLine("Line 2", false)),
+              List.of(new OverflowLine("Line 3", false)));
 
-      renderer.renderAllOverflowPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(document, 0, pages, font, boldFont, FONT_SIZE, FIELD_RECT);
 
       assertEquals(initialPageCount + 2, document.getNumberOfPages());
     }
@@ -85,9 +95,12 @@ class OverflowPageRendererTest {
     try (final var document = loadTestTemplate()) {
       final var overflowPage = document.getPage(0);
       final var expectedWidth = overflowPage.getMediaBox().getWidth();
-      final var pages = List.of(List.of("Line 1"), List.of("Line 2"));
+      final var pages =
+          List.of(
+              List.of(new OverflowLine("Line 1", false)),
+              List.of(new OverflowLine("Line 2", false)));
 
-      renderer.renderAllOverflowPages(document, 0, pages, font, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(document, 0, pages, font, boldFont, FONT_SIZE, FIELD_RECT);
 
       final var newPage = document.getPage(document.getNumberOfPages() - 1);
       assertEquals(expectedWidth, newPage.getMediaBox().getWidth());
