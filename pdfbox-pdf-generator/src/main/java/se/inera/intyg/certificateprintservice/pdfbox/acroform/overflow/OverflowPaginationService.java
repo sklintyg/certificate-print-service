@@ -19,12 +19,16 @@
 package se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow;
 
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.FontResolver;
+import se.inera.intyg.certificateprintservice.pdfbox.acroform.OverflowEntry;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.TextFieldAppearance;
 
 @Service
@@ -36,9 +40,13 @@ public class OverflowPaginationService {
   private final TextFieldAppearance textFieldAppearance;
 
   public void writeWithPagination(
-      PDDocument document, PDTextField textField, String content, int overflowPageIndex)
+      PDDocument document,
+      PDTextField textField,
+      List<OverflowEntry> entries,
+      int overflowPageIndex)
       throws IOException {
     final var font = FontResolver.getFont(textField);
+    final var boldFont = new PDType1Font(FontName.HELVETICA_BOLD);
     final var fontSize = textFieldAppearance.getFontSize(textField);
     final var fieldRect = getFieldRectangle(textField);
     final var lineSpacing = renderer.getLineSpacing();
@@ -48,19 +56,22 @@ public class OverflowPaginationService {
     final var effectiveWidth = fieldRect.getWidth() - horizontalInsets;
     final var pages =
         paginator.paginate(
-            content, font, fontSize, effectiveWidth, fieldRect.getHeight(), lineSpacing, topMargin);
+            entries,
+            font,
+            boldFont,
+            fontSize,
+            effectiveWidth,
+            fieldRect.getHeight(),
+            lineSpacing,
+            topMargin);
 
     if (pages.isEmpty()) {
       throw new IllegalStateException("No pages for overflow was found");
     }
 
-    if (pages.size() == 1) {
-      textField.setValue(content);
-      return;
-    }
-
     textField.setValue("");
-    renderer.renderAllOverflowPages(document, overflowPageIndex, pages, font, fontSize, fieldRect);
+    renderer.renderAllOverflowPages(
+        document, overflowPageIndex, pages, font, boldFont, fontSize, fieldRect);
   }
 
   private PDRectangle getFieldRectangle(PDTextField textField) {

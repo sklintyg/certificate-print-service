@@ -101,14 +101,14 @@ class PdfTextGeneratorTest {
     void shallCreateNewDivOnPage() throws IOException {
       final var pageKidsBefore = getPageElement().getKids().size();
 
-      generator.addMarginText(document, "Webcert/cert-123", 1, 0);
+      generator.addMarginText(document, "Webcert/cert-123", 1);
 
       assertEquals(pageKidsBefore + 1, getPageElement().getKids().size());
     }
 
     @Test
     void shallSetActualTextInMarginStructure() throws IOException {
-      generator.addMarginText(document, "Webcert/cert-123", 1, 0);
+      generator.addMarginText(document, "Webcert/cert-123", 1);
 
       final var newDiv = (PDStructureElement) getPageElement().getKids().getFirst();
       final var pElement = (PDStructureElement) newDiv.getKids().getFirst();

@@ -40,6 +40,7 @@ import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowP
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.OverflowPaginationService;
 import se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow.TextLineWrapper;
 import se.inera.intyg.certificateprintservice.pdfbox.overlay.OverlayTextService;
+import se.inera.intyg.certificateprintservice.pdfbox.overlay.PageNumberStamper;
 import se.inera.intyg.certificateprintservice.pdfbox.overlay.PdfTextGenerator;
 
 class PdfBoxPdfGeneratorTest {
@@ -59,7 +60,7 @@ class PdfBoxPdfGeneratorTest {
                       new OverflowPageRenderer(new OverflowPageStructureCloner()),
                       textFieldAppearance)),
               textFieldAppearance),
-          new OverlayTextService(new PdfTextGenerator()));
+          new OverlayTextService(new PdfTextGenerator(), new PageNumberStamper()));
 
   @Test
   void shallThrowWhenTemplateIsNull() {
