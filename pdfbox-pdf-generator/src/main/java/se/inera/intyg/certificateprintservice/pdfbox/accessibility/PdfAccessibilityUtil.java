@@ -91,7 +91,8 @@ public class PdfAccessibilityUtil {
     addContentToCurrentSection(page, markedContentDictionary, section, name, type, text, false);
   }
 
-  public static PDStructureElement createNewDivOnPage(PDDocument pdf, int index, int pageIndex) {
+  public static PDStructureElement createNewDivOnPage(
+      PDDocument pdf, Integer index, int pageIndex) {
     final var structuredTree = pdf.getDocumentCatalog().getStructureTreeRoot();
     final var pageTag = getPageTag(structuredTree, pageIndex);
     return createNewContainer(pageTag, StandardStructureTypes.DIV, index);
