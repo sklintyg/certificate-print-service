@@ -21,9 +21,8 @@ package se.inera.intyg.certificateprintservice.application.print.custom.converte
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.TEMPLATE_BYTES;
-import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.VALID_TEMPLATE;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.buildRequest;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.fullMetadataBuilder;
 
@@ -31,7 +30,7 @@ import java.util.Collections;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
-import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.PersonIdConfigDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 
 class CustomPdfRequestConverterTest {
@@ -154,14 +153,36 @@ class CustomPdfRequestConverterTest {
   }
 
   @Test
-  void shallReturnEmptyMapWhenFieldsIsNull() {
-    final var request =
-        CustomPrintRequestDTO.builder()
-            .template(VALID_TEMPLATE)
-            .metadata(fullMetadataBuilder().build())
-            .fields(null)
+  void shallConvertPersonIdFieldId() {
+    final var personId =
+        PersonIdConfigDTO.builder()
+            .fieldId("form1[0].#subform[0].flt_txtPersonNr[0]")
+            .value("198012121234")
             .build();
+    final var request =
+        buildRequest(fullMetadataBuilder().personId(personId).build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertTrue(result.fields().isEmpty());
+    assertEquals(
+        "form1[0].#subform[0].flt_txtPersonNr[0]", result.metadata().personIdConfig().fieldId());
+  }
+
+  @Test
+  void shallConvertPersonIdValue() {
+    final var personId =
+        PersonIdConfigDTO.builder()
+            .fieldId("form1[0].#subform[0].flt_txtPersonNr[0]")
+            .value("198012121234")
+            .build();
+    final var request =
+        buildRequest(fullMetadataBuilder().personId(personId).build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertEquals("198012121234", result.metadata().personIdConfig().value());
+  }
+
+  @Test
+  void shallConvertPersonIdAsNullWhenNotProvided() {
+    final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertNull(result.metadata().personIdConfig());
   }
 }

@@ -39,10 +39,12 @@ import se.inera.intyg.certificateprintservice.pdfbox.accessibility.PdfAccessibil
 @RequiredArgsConstructor
 public class OverflowPageRenderer {
 
+  private static final COSName SPAN = COSName.getPDFName("Span");
   private static final float Y_MARGIN_APPENDIX_PAGE = 16f;
   private static final float X_MARGIN_APPENDIX_PAGE = 2f;
   private static final float LINE_SPACING = 1.2f;
   private static final float ACROFORM_FIELD_HORIZONTAL_INSET = 4f;
+  public static final int PATIENT_RECT_Y_MARGIN = 6;
 
   private final OverflowPageStructureCloner structureCloner;
 
@@ -53,20 +55,17 @@ public class OverflowPageRenderer {
       PDFont font,
       PDFont boldFont,
       float fontSize,
-      PDRectangle fieldRectangle)
+      PDRectangle fieldRectangle,
+      PatientIdInfo patientIdInfo)
       throws IOException {
-    if (pages.isEmpty()) {
-      return;
-    }
-
-    final var clonedPageSections = new HashMap<PDPage, PDStructureElement>();
+    final var clonedPageStructures = new HashMap<PDPage, ClonedPageStructure>();
     final var additionalPages = new ArrayList<PDPage>();
     for (var i = 1; i < pages.size(); i++) {
       final var clonedPage = cloneOverflowPage(document, overflowPageIndex);
       additionalPages.add(clonedPage);
-      final var overflowDiv =
+      final var clonedStructure =
           structureCloner.cloneStructureForPage(document, overflowPageIndex, clonedPage);
-      clonedPageSections.put(clonedPage, overflowDiv);
+      clonedPageStructures.put(clonedPage, clonedStructure);
     }
 
     final var firstPage = document.getPage(overflowPageIndex);
@@ -83,9 +82,19 @@ public class OverflowPageRenderer {
     for (var i = 0; i < additionalPages.size(); i++) {
       final var newPage = additionalPages.get(i);
       document.addPage(newPage);
-      final var section = clonedPageSections.get(newPage);
+      final var clonedStructure = clonedPageStructures.get(newPage);
       renderTextOnPage(
-          document, newPage, pages.get(i + 1), font, boldFont, fontSize, fieldRectangle, section);
+          document,
+          newPage,
+          pages.get(i + 1),
+          font,
+          boldFont,
+          fontSize,
+          fieldRectangle,
+          clonedStructure.overflowDiv());
+
+      renderPatientIdOnPage(document, newPage, clonedStructure.sect(), patientIdInfo);
+
       structureCloner.updateParentTreeForPage(document, newPage);
     }
   }
@@ -151,6 +160,28 @@ public class OverflowPageRenderer {
     final var newPage = new PDPage(clonedDictionary);
     newPage.setResources(templatePage.getResources());
     return newPage;
+  }
+
+  private void renderPatientIdOnPage(
+      PDDocument document, PDPage page, PDStructureElement sect, PatientIdInfo patientIdInfo)
+      throws IOException {
+    var mcid = MaxMCIDExtractor.findNextMcid(document);
+    final var rect = patientIdInfo.rectangle();
+
+    try (final var contentStream = PdfAccessibilityUtil.createContentStream(document, page)) {
+      contentStream.beginText();
+      contentStream.setFont(patientIdInfo.font(), patientIdInfo.fontSize());
+      contentStream.newLineAtOffset(
+          rect.getLowerLeftX(), rect.getLowerLeftY() + PATIENT_RECT_Y_MARGIN);
+
+      final var dictionary = PdfAccessibilityUtil.beginMarkedContent(contentStream, SPAN, ++mcid);
+      contentStream.showText(patientIdInfo.value());
+      contentStream.endMarkedContent();
+      contentStream.endText();
+
+      PdfAccessibilityUtil.addContentToCurrentSection(
+          page, dictionary, sect, SPAN, StandardStructureTypes.SPAN, patientIdInfo.value());
+    }
   }
 
   private PDStructureElement getOrCreateStructureSection(PDDocument document, int pageIndex) {

@@ -97,7 +97,7 @@ class AcroFormFillerOverflowTest {
       final var fields = new LinkedHashMap<String, CustomPdfField>();
       fields.put(FUNKTIONSNEDSATTNING_FIELD_ID, field);
 
-      filler.fill(document, fields, null);
+      filler.fill(document, fields, null, null);
 
       final var mainFieldValue = getFieldValue(FUNKTIONSNEDSATTNING_FIELD_ID);
       assertTrue(
@@ -125,7 +125,7 @@ class AcroFormFillerOverflowTest {
       final var fields = new LinkedHashMap<String, CustomPdfField>();
       fields.put(FUNKTIONSNEDSATTNING_FIELD_ID, field);
 
-      filler.fill(document, fields, null);
+      filler.fill(document, fields, null, null);
 
       final var overflowValue = getFieldValue(OVERFLOW_FIELD_ID);
       assertTrue(
@@ -153,7 +153,7 @@ class AcroFormFillerOverflowTest {
       final var fields = new LinkedHashMap<String, CustomPdfField>();
       fields.put(FUNKTIONSNEDSATTNING_FIELD_ID, field);
 
-      filler.fill(document, fields, null);
+      filler.fill(document, fields, null, null);
 
       final var mainFieldValue = getFieldValue(FUNKTIONSNEDSATTNING_FIELD_ID);
       assertTrue(
@@ -198,7 +198,7 @@ class AcroFormFillerOverflowTest {
                       .build())
               .build());
 
-      filler.fill(document, fields, null);
+      filler.fill(document, fields, null, null);
 
       final var overflowValue = getFieldValue(OVERFLOW_FIELD_ID);
       final var labelIndex1 = overflowValue.indexOf("Funktionsnedsättning");
@@ -238,7 +238,7 @@ class AcroFormFillerOverflowTest {
                       .build())
               .build());
 
-      filler.fill(document, fields, null);
+      filler.fill(document, fields, null, null);
 
       final var overflowValue = getFieldValue(OVERFLOW_FIELD_ID);
       assertTrue(
@@ -258,7 +258,7 @@ class AcroFormFillerOverflowTest {
       final var fields = new LinkedHashMap<String, CustomPdfField>();
       fields.put(PATIENT_ID_FIELD_ID_1, CustomPdfField.builder().value("Short value").build());
 
-      filler.fill(document, fields, OVERFLOW_PAGE_INDEX);
+      filler.fill(document, fields, OVERFLOW_PAGE_INDEX, null);
 
       assertEquals(initialPageCount - 1, document.getNumberOfPages());
     }
@@ -269,7 +269,7 @@ class AcroFormFillerOverflowTest {
       final var fields = new LinkedHashMap<String, CustomPdfField>();
       fields.put(PATIENT_ID_FIELD_ID_1, CustomPdfField.builder().value("Short value").build());
 
-      filler.fill(document, fields, null);
+      filler.fill(document, fields, null, null);
 
       assertEquals(initialPageCount, document.getNumberOfPages());
     }

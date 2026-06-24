@@ -19,6 +19,7 @@
 package se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7804CustomPdfMetadata.metadataWithAllCustomTextsAndMargin;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,7 +54,8 @@ class OverflowPageRendererTest {
       final var pages =
           List.of(List.of(new OverflowLine("Line 1", false), new OverflowLine("Line 2", false)));
 
-      renderer.renderAllOverflowPages(document, 0, pages, font, boldFont, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(
+          document, 0, pages, font, boldFont, FONT_SIZE, FIELD_RECT, null);
 
       assertEquals(initialPageCount, document.getNumberOfPages());
     }
@@ -68,7 +70,15 @@ class OverflowPageRendererTest {
               List.of(new OverflowLine("Line 1", true), new OverflowLine("Line 2", false)),
               List.of(new OverflowLine("Line 3", true), new OverflowLine("Line 4", false)));
 
-      renderer.renderAllOverflowPages(document, 0, pages, font, boldFont, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(
+          document,
+          0,
+          pages,
+          font,
+          boldFont,
+          FONT_SIZE,
+          FIELD_RECT,
+          PatientIdInfo.of(document, metadataWithAllCustomTextsAndMargin().personIdConfig()));
 
       assertEquals(initialPageCount + 1, document.getNumberOfPages());
     }
@@ -84,7 +94,15 @@ class OverflowPageRendererTest {
               List.of(new OverflowLine("Line 2", false)),
               List.of(new OverflowLine("Line 3", false)));
 
-      renderer.renderAllOverflowPages(document, 0, pages, font, boldFont, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(
+          document,
+          0,
+          pages,
+          font,
+          boldFont,
+          FONT_SIZE,
+          FIELD_RECT,
+          PatientIdInfo.of(document, metadataWithAllCustomTextsAndMargin().personIdConfig()));
 
       assertEquals(initialPageCount + 2, document.getNumberOfPages());
     }
@@ -100,7 +118,15 @@ class OverflowPageRendererTest {
               List.of(new OverflowLine("Line 1", false)),
               List.of(new OverflowLine("Line 2", false)));
 
-      renderer.renderAllOverflowPages(document, 0, pages, font, boldFont, FONT_SIZE, FIELD_RECT);
+      renderer.renderAllOverflowPages(
+          document,
+          0,
+          pages,
+          font,
+          boldFont,
+          FONT_SIZE,
+          FIELD_RECT,
+          PatientIdInfo.of(document, metadataWithAllCustomTextsAndMargin().personIdConfig()));
 
       final var newPage = document.getPage(document.getNumberOfPages() - 1);
       assertEquals(expectedWidth, newPage.getMediaBox().getWidth());

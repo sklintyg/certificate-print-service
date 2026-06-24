@@ -32,6 +32,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDVariableText;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.PersonIdConfig;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,10 @@ public class AcroFormFiller {
   private final TextFieldAppearance textFieldAppearance;
 
   public void fill(
-      PDDocument document, Map<String, CustomPdfField> fields, Integer overflowPageIndex) {
+      PDDocument document,
+      Map<String, CustomPdfField> fields,
+      Integer overflowPageIndex,
+      PersonIdConfig personIdConfig) {
     if (fields == null || fields.isEmpty()) {
       return;
     }
@@ -65,7 +69,8 @@ public class AcroFormFiller {
     if (overflowAccumulator.isEmpty() && overflowPageIndex != null) {
       document.removePage(overflowPageIndex);
     } else {
-      overflowFieldWriter.writeAll(document, acroForm, overflowAccumulator, overflowPageIndex);
+      overflowFieldWriter.writeAll(
+          document, acroForm, overflowAccumulator, overflowPageIndex, personIdConfig);
     }
   }
 

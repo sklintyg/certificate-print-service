@@ -16,27 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
+package se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow;
 
-import java.util.List;
-import lombok.Builder;
+import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
 
-@Builder
-public record CustomPdfMetadata(
-    List<CustomText> customTextList,
-    String rightMarginText,
-    AccessibilityMetadata accessibilityMetadata,
-    boolean addDraftWatermark,
-    Integer overflowPageIndex,
-    PersonIdConfig personIdConfig) {
-
-  public CustomPdfMetadata {
-    if (customTextList == null) {
-      customTextList = List.of();
-    }
-  }
-
-  public boolean hasRightMarginText() {
-    return rightMarginText != null && !rightMarginText.isBlank();
-  }
-}
+public record ClonedPageStructure(PDStructureElement sect, PDStructureElement overflowDiv) {}
