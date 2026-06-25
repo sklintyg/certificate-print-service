@@ -54,15 +54,13 @@ public class PdfAccessibilityUtil {
     return dictionary;
   }
 
-  // TODO: delete prepend?
   public static void addContentToCurrentSection(
       PDPage page,
       COSDictionary markedContentDictionary,
       PDStructureElement section,
       COSName name,
       String type,
-      String text,
-      boolean prepend) {
+      String text) {
     final var newContent = new PDStructureElement(type, section);
     newContent.setActualText(text);
     newContent.setPage(page);
@@ -72,23 +70,7 @@ public class PdfAccessibilityUtil {
       newContent.appendKid(markedContent);
     }
 
-    if (prepend) {
-      final var kids = section.getKids();
-      kids.addFirst(newContent);
-      section.setKids(kids);
-    } else {
-      section.appendKid(newContent);
-    }
-  }
-
-  public static void addContentToCurrentSection(
-      PDPage page,
-      COSDictionary markedContentDictionary,
-      PDStructureElement section,
-      COSName name,
-      String type,
-      String text) {
-    addContentToCurrentSection(page, markedContentDictionary, section, name, type, text, false);
+    section.appendKid(newContent);
   }
 
   public static PDStructureElement createNewDivOnPage(

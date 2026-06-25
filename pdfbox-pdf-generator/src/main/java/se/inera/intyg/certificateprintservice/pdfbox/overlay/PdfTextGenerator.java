@@ -148,8 +148,7 @@ public class PdfTextGenerator {
             section,
             COSName.P,
             StandardStructureTypes.P,
-            textInfo.customText().value(),
-            false);
+            textInfo.customText().value());
       }
       contentStream.endText();
     }
