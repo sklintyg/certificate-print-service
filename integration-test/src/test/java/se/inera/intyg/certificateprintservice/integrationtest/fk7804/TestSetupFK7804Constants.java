@@ -24,7 +24,7 @@ public class TestSetupFK7804Constants {
     throw new IllegalStateException("Utility class");
   }
 
-  public static final String TAGGED_PDF_OVERFLOW_RESOURCE = "/templates/fk7804-overflow.pdf";
+  public static final String TAGGED_PDF_OVERFLOW_RESOURCE = "/templates/fk7804-overflow-signed.pdf";
 
   // --- Patient ID fields (5 pages) ---
 

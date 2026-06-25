@@ -28,9 +28,11 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.AccessibilityMetadataDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.AppearanceDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.PersonIdConfigDTO;
 
 public class TestSetupFK7804 {
@@ -59,6 +61,24 @@ public class TestSetupFK7804 {
                 .fieldId(PATIENT_ID_FIELD_ID_5)
                 .value("191212121212")
                 .build())
+        .customTexts(
+            List.of(
+                CustomTextDTO.builder()
+                    .value("Intyget har skickats digitalt till Försäkringskassan")
+                    .appearance(new AppearanceDTO(22f, null))
+                    .x(40f)
+                    .y(685f)
+                    .pageIndex(0)
+                    .tagIndex(3)
+                    .build(),
+                CustomTextDTO.builder()
+                    .value("Du kan se intyget genom att logga in på 1177.se")
+                    .appearance(new AppearanceDTO(16f, null))
+                    .x(40f)
+                    .y(665f)
+                    .pageIndex(0)
+                    .tagIndex(3)
+                    .build()))
         .build();
   }
 

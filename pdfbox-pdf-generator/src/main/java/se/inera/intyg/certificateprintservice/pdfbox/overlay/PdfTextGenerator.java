@@ -97,7 +97,7 @@ public class PdfTextGenerator {
           document,
           TextInfo.builder()
               .color(Color.black)
-              .mcid(mcid)
+              .mcid(mcid++)
               .customText(
                   CustomText.builder()
                       .x(MARGIN_TEXT_OFFSET_X)
@@ -139,7 +139,7 @@ public class PdfTextGenerator {
             getDivInQuestionSection(
                 pdf, textInfo.customText().tagIndex(), textInfo.customText().pageIndex());
       } else {
-        section = createNewDivOnPage(pdf, 0, 0);
+        section = createNewDivOnPage(pdf, null, textInfo.customText().pageIndex());
       }
       if (section != null) {
         addContentToCurrentSection(
@@ -148,8 +148,7 @@ public class PdfTextGenerator {
             section,
             COSName.P,
             StandardStructureTypes.P,
-            textInfo.customText().value(),
-            false);
+            textInfo.customText().value());
       }
       contentStream.endText();
     }

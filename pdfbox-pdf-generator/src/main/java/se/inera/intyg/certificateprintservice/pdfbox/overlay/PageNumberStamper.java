@@ -76,7 +76,12 @@ public class PageNumberStamper {
       contentStream.endText();
 
       addContentToCurrentSection(
-          page, dictionary, section, COSName.P, StandardStructureTypes.P, text);
+          page,
+          dictionary,
+          section,
+          COSName.P,
+          StandardStructureTypes.P,
+          "Sida %d av %d".formatted(pageIndex + 1, document.getNumberOfPages()));
     }
   }
 

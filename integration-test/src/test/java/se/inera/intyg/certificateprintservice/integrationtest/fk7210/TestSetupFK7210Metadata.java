@@ -50,6 +50,7 @@ public class TestSetupFK7210Metadata {
                     .x(40f)
                     .y(685f)
                     .pageIndex(0)
+                    .tagIndex(4)
                     .build(),
                 CustomTextDTO.builder()
                     .value("Du kan se intyget genom att logga in på 1177.se")
@@ -57,6 +58,7 @@ public class TestSetupFK7210Metadata {
                     .x(40f)
                     .y(665f)
                     .pageIndex(0)
+                    .tagIndex(4)
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
