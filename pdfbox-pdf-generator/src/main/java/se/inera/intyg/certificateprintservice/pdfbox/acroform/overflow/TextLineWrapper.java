@@ -52,33 +52,37 @@ public class TextLineWrapper {
       throws IOException {
     final var words = paragraph.split(" ");
     final var currentLine = new StringBuilder();
+    final var spaceWidth = getTextWidth(" ", font, fontSize);
+    var currentLineWidth = 0f;
 
     for (String word : words) {
-      if (currentLine.isEmpty()) {
-        if (getTextWidth(word, font, fontSize) > availableWidth) {
-          breakLongWord(word, font, fontSize, availableWidth, result);
-        } else {
-          currentLine.append(word);
-        }
+      final var wordWidth = getTextWidth(word, font, fontSize);
+
+      if (wordWidth > availableWidth) {
+        flushLine(currentLine, result);
+        currentLineWidth = 0f;
+        breakLongWord(word, font, fontSize, availableWidth, result);
+        continue;
+      }
+
+      final var wordFitsOnLine =
+          currentLine.isEmpty() || currentLineWidth + spaceWidth + wordWidth <= availableWidth;
+
+      if (!wordFitsOnLine) {
+        flushLine(currentLine, result);
+        currentLine.append(word);
+        currentLineWidth = wordWidth;
       } else {
-        final var candidate = currentLine + " " + word;
-        if (getTextWidth(candidate, font, fontSize) <= availableWidth) {
-          currentLine.append(" ").append(word);
-        } else {
-          result.add(currentLine.toString());
-          currentLine.setLength(0);
-          if (getTextWidth(word, font, fontSize) > availableWidth) {
-            breakLongWord(word, font, fontSize, availableWidth, result);
-          } else {
-            currentLine.append(word);
-          }
+        if (!currentLine.isEmpty()) {
+          currentLine.append(" ");
+          currentLineWidth += spaceWidth;
         }
+        currentLine.append(word);
+        currentLineWidth += wordWidth;
       }
     }
 
-    if (!currentLine.isEmpty()) {
-      result.add(currentLine.toString());
-    }
+    flushLine(currentLine, result);
   }
 
   private void breakLongWord(
@@ -86,13 +90,31 @@ public class TextLineWrapper {
       throws IOException {
     var remaining = word;
     while (!remaining.isEmpty()) {
-      var end = remaining.length();
-      while (end > 1
-          && getTextWidth(remaining.substring(0, end), font, fontSize) > availableWidth) {
-        end--;
+      final var fitLength = findMaxFittingLength(remaining, font, fontSize, availableWidth);
+      result.add(remaining.substring(0, fitLength));
+      remaining = remaining.substring(fitLength);
+    }
+  }
+
+  private int findMaxFittingLength(String text, PDFont font, float fontSize, float availableWidth)
+      throws IOException {
+    int low = 1;
+    int high = text.length();
+    while (low < high) {
+      final var mid = (low + high + 1) / 2;
+      if (getTextWidth(text.substring(0, mid), font, fontSize) <= availableWidth) {
+        low = mid;
+      } else {
+        high = mid - 1;
       }
-      result.add(remaining.substring(0, end));
-      remaining = remaining.substring(end);
+    }
+    return low;
+  }
+
+  private void flushLine(StringBuilder line, List<String> result) {
+    if (!line.isEmpty()) {
+      result.add(line.toString());
+      line.setLength(0);
     }
   }
 
