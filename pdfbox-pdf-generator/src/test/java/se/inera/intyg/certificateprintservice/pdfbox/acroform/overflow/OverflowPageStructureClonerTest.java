@@ -144,6 +144,63 @@ class OverflowPageStructureClonerTest {
     }
   }
 
+  @Test
+  void shouldSkipDynamicObjectReferenceElementsWhenCloningOverflowPage() throws IOException {
+    try (final var document = loadTestTemplate()) {
+      final var clonedPage = createClonedPage(document, 4);
+
+      cloner.cloneStructureForPage(document, 4, clonedPage);
+
+      final var structuredTree = document.getDocumentCatalog().getStructureTreeRoot();
+      final var documentTag = (PDStructureElement) structuredTree.getKids().getFirst();
+      final var newSect = (PDStructureElement) documentTag.getKids().getLast();
+
+      assertEquals(
+          0,
+          countObjectReferences(newSect.getCOSObject()),
+          "Cloned overflow page structure must not duplicate dynamic AcroForm values");
+      assertTrue(
+          containsMcidReference(newSect.getCOSObject()),
+          "Static labels and headings should still be cloned");
+    }
+  }
+
+  @Test
+  void shouldSetAllClonedPageReferencesToClonedPage() throws IOException {
+    try (final var document = loadTestTemplate()) {
+      final var clonedPage = createClonedPage(document, 4);
+
+      cloner.cloneStructureForPage(document, 4, clonedPage);
+
+      final var structuredTree = document.getDocumentCatalog().getStructureTreeRoot();
+      final var documentTag = (PDStructureElement) structuredTree.getKids().getFirst();
+      final var newSect = (PDStructureElement) documentTag.getKids().getLast();
+
+      assertAllPageReferencesMatch(newSect.getCOSObject(), clonedPage);
+    }
+  }
+
+  @Test
+  void shouldPlacePatientIdPlaceholderNotAtSectionEnd() throws IOException {
+    try (final var document = loadTestTemplate()) {
+      final var clonedPage = createClonedPage(document, 4);
+
+      final var structure = cloner.cloneStructureForPage(document, 4, clonedPage);
+
+      final var placeholder = structure.patientIdValuePlaceholder();
+      assertNotNull(placeholder, "A placeholder must be created for the dynamic value");
+
+      final var sectKids = structure.sect().getKids();
+      final var lastKid = sectKids.getLast();
+      final var isPlaceholderLast =
+          lastKid instanceof PDStructureElement last
+              && last.getCOSObject() == placeholder.getCOSObject();
+      assertTrue(
+          !isPlaceholderLast,
+          "Placeholder must not be appended at section end, preserving original reading order");
+    }
+  }
+
   private boolean containsMcidReference(COSDictionary dict) {
     final var k = resolve(dict.getDictionaryObject(COSName.K));
     if (k instanceof COSInteger) {
@@ -189,6 +246,41 @@ class OverflowPageStructureClonerTest {
       }
     }
     return false;
+  }
+
+  private void assertAllPageReferencesMatch(COSDictionary dict, PDPage page) {
+    final var pageReference = dict.getItem(COSName.getPDFName("Pg"));
+    if (pageReference != null) {
+      assertEquals(page.getCOSObject(), pageReference, "Pg must point to the cloned page");
+    }
+
+    final var k = resolve(dict.getDictionaryObject(COSName.K));
+    if (k instanceof COSDictionary kDict) {
+      assertAllPageReferencesMatch(kDict, page);
+    } else if (k instanceof COSArray arr) {
+      for (var i = 0; i < arr.size(); i++) {
+        final var item = resolve(arr.get(i));
+        if (item instanceof COSDictionary itemDict) {
+          assertAllPageReferencesMatch(itemDict, page);
+        }
+      }
+    }
+  }
+
+  private int countObjectReferences(COSDictionary dict) {
+    var count = dict.containsKey(COSName.OBJ) ? 1 : 0;
+    final var k = resolve(dict.getDictionaryObject(COSName.K));
+    if (k instanceof COSDictionary kDict) {
+      count += countObjectReferences(kDict);
+    } else if (k instanceof COSArray arr) {
+      for (var i = 0; i < arr.size(); i++) {
+        final var item = resolve(arr.get(i));
+        if (item instanceof COSDictionary itemDict) {
+          count += countObjectReferences(itemDict);
+        }
+      }
+    }
+    return count;
   }
 
   private Object resolve(Object obj) {

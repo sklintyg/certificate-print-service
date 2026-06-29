@@ -28,6 +28,7 @@ import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
 import org.apache.pdfbox.pdmodel.documentinterchange.taggedpdf.StandardStructureTypes;
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -93,7 +94,8 @@ public class OverflowPageRenderer {
           fieldRectangle,
           clonedStructure.overflowDiv());
 
-      renderPatientIdOnPage(document, newPage, clonedStructure.sect(), patientIdInfo);
+      renderPatientIdOnPage(
+          document, newPage, clonedStructure.patientIdValuePlaceholder(), patientIdInfo);
 
       structureCloner.updateParentTreeForPage(document, newPage);
     }
@@ -151,7 +153,7 @@ public class OverflowPageRenderer {
     }
   }
 
-  private PDPage cloneOverflowPage(PDDocument document, int overflowPageIndex) {
+  private PDPage cloneOverflowPage(PDDocument document, int overflowPageIndex) throws IOException {
     final var templatePage = document.getPage(overflowPageIndex);
     final var clonedDictionary = new COSDictionary(templatePage.getCOSObject());
     clonedDictionary.removeItem(COSName.ANNOTS);
@@ -159,11 +161,31 @@ public class OverflowPageRenderer {
 
     final var newPage = new PDPage(clonedDictionary);
     newPage.setResources(templatePage.getResources());
+    newPage.setContents(cloneContentStreams(document, templatePage));
     return newPage;
   }
 
+  private List<PDStream> cloneContentStreams(PDDocument document, PDPage templatePage)
+      throws IOException {
+    final var clonedStreams = new ArrayList<PDStream>();
+    final var contentStreams = templatePage.getContentStreams();
+    while (contentStreams.hasNext()) {
+      final var originalStream = contentStreams.next();
+      final var clonedStream = new PDStream(document);
+      try (final var inputStream = originalStream.createInputStream();
+          final var outputStream = clonedStream.createOutputStream(COSName.FLATE_DECODE)) {
+        inputStream.transferTo(outputStream);
+      }
+      clonedStreams.add(clonedStream);
+    }
+    return clonedStreams;
+  }
+
   private void renderPatientIdOnPage(
-      PDDocument document, PDPage page, PDStructureElement sect, PatientIdInfo patientIdInfo)
+      PDDocument document,
+      PDPage page,
+      PDStructureElement valueElement,
+      PatientIdInfo patientIdInfo)
       throws IOException {
     var mcid = MaxMCIDExtractor.findNextMcid(document);
     final var rect = patientIdInfo.rectangle();
@@ -179,8 +201,8 @@ public class OverflowPageRenderer {
       contentStream.endMarkedContent();
       contentStream.endText();
 
-      PdfAccessibilityUtil.addContentToCurrentSection(
-          page, dictionary, sect, SPAN, StandardStructureTypes.SPAN, patientIdInfo.value());
+      PdfAccessibilityUtil.fillPatientIdValueElement(
+          page, dictionary, valueElement, SPAN, patientIdInfo.value());
     }
   }
 

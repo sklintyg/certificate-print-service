@@ -20,4 +20,7 @@ package se.inera.intyg.certificateprintservice.pdfbox.acroform.overflow;
 
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
 
-public record ClonedPageStructure(PDStructureElement sect, PDStructureElement overflowDiv) {}
+public record ClonedPageStructure(
+    PDStructureElement sect,
+    PDStructureElement overflowDiv,
+    PDStructureElement patientIdValuePlaceholder) {}

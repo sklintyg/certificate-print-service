@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -261,6 +262,20 @@ class AcroFormFillerOverflowTest {
       filler.fill(document, fields, OVERFLOW_PAGE_INDEX, null);
 
       assertEquals(initialPageCount - 1, document.getNumberOfPages());
+    }
+
+    @Test
+    void shallRemoveOverflowPageStructureWhenNoFieldsOverflow() {
+      final var documentTag =
+          (PDStructureElement)
+              document.getDocumentCatalog().getStructureTreeRoot().getKids().getFirst();
+      final var initialSectCount = documentTag.getKids().size();
+      final var fields = new LinkedHashMap<String, CustomPdfField>();
+      fields.put(PATIENT_ID_FIELD_ID_1, CustomPdfField.builder().value("Short value").build());
+
+      filler.fill(document, fields, OVERFLOW_PAGE_INDEX, null);
+
+      assertEquals(initialSectCount - 1, documentTag.getKids().size());
     }
 
     @Test
