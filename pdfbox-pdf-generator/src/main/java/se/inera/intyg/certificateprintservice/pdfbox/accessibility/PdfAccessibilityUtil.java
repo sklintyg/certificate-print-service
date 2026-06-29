@@ -73,20 +73,27 @@ public class PdfAccessibilityUtil {
     section.appendKid(newContent);
   }
 
+  public static void fillPatientIdValueElement(
+      PDPage page,
+      COSDictionary markedContentDictionary,
+      PDStructureElement valueElement,
+      COSName name,
+      String text) {
+    if (valueElement == null) {
+      return;
+    }
+    valueElement.setActualText(text);
+    valueElement.setPage(page);
+    if (markedContentDictionary != null) {
+      valueElement.appendKid(new PDMarkedContent(name, markedContentDictionary));
+    }
+  }
+
   public static PDStructureElement createNewDivOnPage(
       PDDocument pdf, Integer index, int pageIndex) {
     final var structuredTree = pdf.getDocumentCatalog().getStructureTreeRoot();
     final var pageTag = getPageTag(structuredTree, pageIndex);
     return createNewContainer(pageTag, StandardStructureTypes.DIV, index);
-  }
-
-  public static PDStructureElement getFirstDiv(PDDocument pdf) {
-    final var structuredTree = pdf.getDocumentCatalog().getStructureTreeRoot();
-    final var pageTag = getPageTag(structuredTree, 0);
-    if (pageTag.getKids().isEmpty()) {
-      return pageTag;
-    }
-    return (PDStructureElement) pageTag.getKids().getFirst();
   }
 
   public static PDStructureElement getLastDivOfPage(PDDocument pdf, int pageIndex) {

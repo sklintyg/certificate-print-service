@@ -51,6 +51,7 @@ public class OverflowPageStructureCloner {
   private static final COSName PG = COSName.getPDFName("Pg");
   private static final COSName T = COSName.T;
   private static final COSName PARENT_TREE = COSName.PARENT_TREE;
+  private static final COSName OBJ = COSName.OBJ;
 
   /**
    * Clones the template page's structure tree for a newly cloned page. Creates structure elements
@@ -81,6 +82,7 @@ public class OverflowPageStructureCloner {
     final var templateKids = getKidsArray(templateSect.getCOSObject());
     final var newKidsArray = new COSArray();
     PDStructureElement overflowDiv = null;
+    final var placeholderHolder = new PDStructureElement[1];
 
     if (templateKids != null) {
       for (var i = 0; i < templateKids.size(); i++) {
@@ -92,8 +94,11 @@ public class OverflowPageStructureCloner {
           overflowDiv.getCOSObject().setItem(PG, clonedPage.getCOSObject());
           newKidsArray.add(overflowDiv.getCOSObject());
         } else if (kidObj instanceof COSDictionary kidDict && kidDict.containsKey(S)) {
-          final var clonedChild = cloneStructureElement(kidDict, newPageSect, clonedPage);
-          newKidsArray.add(clonedChild);
+          final var clonedChild =
+              cloneStructureElement(kidDict, newPageSect, clonedPage, placeholderHolder);
+          if (clonedChild != null) {
+            newKidsArray.add(clonedChild);
+          }
         }
       }
     }
@@ -106,7 +111,16 @@ public class OverflowPageStructureCloner {
 
     newPageSectDict.setItem(K, newKidsArray);
     assignStructParentsKey(document, clonedPage);
-    return new ClonedPageStructure(newPageSect, overflowDiv);
+    return new ClonedPageStructure(newPageSect, overflowDiv, placeholderHolder[0]);
+  }
+
+  private COSDictionary createPlaceholder(
+      COSDictionary source, COSDictionary parent, PDPage clonedPage) {
+    final var placeholder = new COSDictionary();
+    placeholder.setItem(S, source.getDictionaryObject(S));
+    placeholder.setItem(P, parent);
+    placeholder.setItem(PG, clonedPage.getCOSObject());
+    return placeholder;
   }
 
   /**
@@ -136,7 +150,19 @@ public class OverflowPageStructureCloner {
   }
 
   private COSDictionary cloneStructureElement(
-      COSDictionary source, PDStructureElement parent, PDPage clonedPage) {
+      COSDictionary source,
+      PDStructureElement parent,
+      PDPage clonedPage,
+      PDStructureElement[] placeholderHolder) {
+    if (isDynamicObjectReferenceElement(source)) {
+      final var placeholderDict = createPlaceholder(source, parent.getCOSObject(), clonedPage);
+      if (placeholderHolder[0] == null) {
+        placeholderHolder[0] = new PDStructureElement(placeholderDict);
+        return placeholderDict;
+      }
+      return null;
+    }
+
     final var cloned = new COSDictionary();
     cloned.setItem(S, source.getDictionaryObject(S));
     cloned.setItem(P, parent.getCOSObject());
@@ -148,25 +174,40 @@ public class OverflowPageStructureCloner {
 
     final var sourceK = source.getDictionaryObject(K);
     if (sourceK != null) {
-      cloned.setItem(K, cloneKEntry(resolveObject(sourceK), cloned, clonedPage));
+      final var clonedK =
+          cloneKEntry(resolveObject(sourceK), cloned, clonedPage, placeholderHolder);
+      if (clonedK != null) {
+        cloned.setItem(K, clonedK);
+      }
     }
 
     return cloned;
   }
 
-  private COSBase cloneKEntry(COSBase sourceK, COSDictionary parentDict, PDPage clonedPage) {
+  private COSBase cloneKEntry(
+      COSBase sourceK,
+      COSDictionary parentDict,
+      PDPage clonedPage,
+      PDStructureElement[] placeholderHolder) {
     if (sourceK instanceof COSInteger) {
       return sourceK;
     } else if (sourceK instanceof COSArray sourceArray) {
       final var clonedArray = new COSArray();
       for (var i = 0; i < sourceArray.size(); i++) {
         final var item = resolveObject(sourceArray.get(i));
-        clonedArray.add(cloneKEntry(item, parentDict, clonedPage));
+        final var clonedItem = cloneKEntry(item, parentDict, clonedPage, placeholderHolder);
+        if (clonedItem != null) {
+          clonedArray.add(clonedItem);
+        }
       }
       return clonedArray;
     } else if (sourceK instanceof COSDictionary sourceDict) {
+      if (sourceDict.containsKey(OBJ)) {
+        return null;
+      }
       if (sourceDict.containsKey(S)) {
-        return cloneStructureElement(sourceDict, new PDStructureElement(parentDict), clonedPage);
+        return cloneStructureElement(
+            sourceDict, new PDStructureElement(parentDict), clonedPage, placeholderHolder);
       } else if (sourceDict.containsKey(COSName.MCID)) {
         final var mcrClone = new COSDictionary();
         mcrClone.setInt(COSName.MCID, sourceDict.getInt(COSName.MCID));
@@ -175,6 +216,49 @@ public class OverflowPageStructureCloner {
       }
     }
     return sourceK;
+  }
+
+  private boolean isDynamicObjectReferenceElement(COSDictionary source) {
+    return containsObjectReference(source) && !containsMcidReference(source);
+  }
+
+  private boolean containsObjectReference(COSDictionary dict) {
+    if (dict.containsKey(OBJ)) {
+      return true;
+    }
+
+    final var kEntry = resolveObject(dict.getDictionaryObject(K));
+    if (kEntry instanceof COSDictionary kDict) {
+      return containsObjectReference(kDict);
+    } else if (kEntry instanceof COSArray kArray) {
+      for (var i = 0; i < kArray.size(); i++) {
+        final var item = resolveObject(kArray.get(i));
+        if (item instanceof COSDictionary itemDict && containsObjectReference(itemDict)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private boolean containsMcidReference(COSDictionary dict) {
+    final var kEntry = resolveObject(dict.getDictionaryObject(K));
+    if (kEntry instanceof COSInteger || dict.containsKey(COSName.MCID)) {
+      return true;
+    } else if (kEntry instanceof COSDictionary kDict) {
+      return containsMcidReference(kDict);
+    } else if (kEntry instanceof COSArray kArray) {
+      for (var i = 0; i < kArray.size(); i++) {
+        final var item = resolveObject(kArray.get(i));
+        if (item instanceof COSInteger) {
+          return true;
+        }
+        if (item instanceof COSDictionary itemDict && containsMcidReference(itemDict)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private COSArray getKidsArray(COSDictionary elementDict) {
