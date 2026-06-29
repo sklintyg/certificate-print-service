@@ -31,6 +31,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDVariableText;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.certificateprintservice.pdfbox.accessibility.PdfAccessibilityUtil;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfField;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.PersonIdConfig;
 
@@ -67,6 +68,7 @@ public class AcroFormFiller {
         });
 
     if (overflowAccumulator.isEmpty() && overflowPageIndex != null) {
+      PdfAccessibilityUtil.removePageStructure(document, overflowPageIndex);
       document.removePage(overflowPageIndex);
     } else {
       overflowFieldWriter.writeAll(
