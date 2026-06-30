@@ -9,5 +9,5 @@ dependencies {
     testFixturesImplementation project(":pdf-generator-api")
     testFixturesImplementation "org.apache.pdfbox:pdfbox"
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.mockito:mockito-junit-jupiter"
 }
