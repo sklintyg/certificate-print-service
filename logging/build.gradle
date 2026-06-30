@@ -2,9 +2,9 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok"
 
     compileOnly "org.projectlombok:lombok"
-    compileOnly "jakarta.servlet:jakarta.servlet-api"
     compileOnly "org.slf4j:slf4j-api"
 
+    implementation "jakarta.servlet:jakarta.servlet-api"
     implementation "org.springframework:spring-web"
     implementation "org.springframework.boot:spring-boot-starter-aspectj"
 
