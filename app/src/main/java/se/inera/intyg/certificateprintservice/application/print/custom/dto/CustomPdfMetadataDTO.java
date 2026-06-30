@@ -32,7 +32,7 @@ import tools.jackson.databind.annotation.JsonPOJOBuilder;
 @JsonDeserialize(builder = CustomPdfMetadataDTOBuilder.class)
 public class CustomPdfMetadataDTO {
 
-  @Valid List<CustomTextDTO> customTexts;
+  List<@Valid CustomTextDTO> customTexts;
   @NotNull @Valid AccessibilityMetadataDTO accessibilityMetadata;
   String rightMarginText;
   boolean addDraftWatermark;
