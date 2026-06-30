@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.certificateprintservice.application.print.custom.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,6 +27,8 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.With;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO.CustomPrintRequestDTOBuilder;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonPOJOBuilder;
 
 @Value
 @Builder

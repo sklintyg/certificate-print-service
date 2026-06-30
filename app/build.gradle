@@ -31,7 +31,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.mockito:mockito-junit-jupiter'
-    testImplementation 'org.testcontainers:junit-jupiter'
 }
 
 bootRun {

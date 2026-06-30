@@ -19,9 +19,10 @@
 package se.inera.intyg.certificateprintservice.integrationtest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -31,6 +32,7 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 @SpringBootTest(
     classes = se.inera.intyg.certificateprintservice.CertificatePrintServiceApplication.class,
     webEnvironment = WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestRestTemplate
 @ActiveProfiles("it")
 public abstract class BaseIT {
 

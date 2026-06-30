@@ -6,6 +6,8 @@ dependencies {
     testAnnotationProcessor platform("se.inera.intyg.bom:platform:${intygBomVersion}")
 
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-restclient'
+    testImplementation 'org.springframework.boot:spring-boot-resttestclient'
 }
 
 test {
