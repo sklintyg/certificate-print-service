@@ -33,13 +33,13 @@ ENV CHROME_VERSION 147.0.7727.137-1
 USER root
 
 RUN apt-get update \
-    && apt-get install -y wget gnupg fonts-liberation ca-certificates --no-install-recommends \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb \
-    && apt-get install -y ./google-chrome-stable_${CHROME_VERSION}_amd64.deb \
-    && rm -f /google-chrome-stable_${CHROME_VERSION}_amd64.deb \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y wget fonts-liberation ca-certificates --no-install-recommends \
+    && wget -q -O /tmp/google-chrome-stable.deb "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb" \
+    && apt-get install -y /tmp/google-chrome-stable.deb \
+    && rm -f /tmp/google-chrome-stable.deb \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-ADD /app/build/libs/app.jar /deployments
+COPY app/build/libs/app.jar /deployments/app.jar
 
 USER nobody
