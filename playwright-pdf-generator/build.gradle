@@ -20,6 +20,7 @@ dependencies {
     implementation "org.apache.commons:commons-pool2"
     implementation "org.jsoup:jsoup"
     implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
 
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"

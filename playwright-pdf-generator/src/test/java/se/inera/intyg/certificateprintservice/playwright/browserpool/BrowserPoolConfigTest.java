@@ -22,20 +22,19 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.springframework.test.util.ReflectionTestUtils;
-
 class BrowserPoolConfigTest {
 
   private static final int MIN_IDLE = 1;
   private static final int MAX_IDLE = 2;
   private static final int MAX_TOTAL = 3;
-  private final BrowserPoolConfig browserPoolConfig = new BrowserPoolConfig();
+  private final BrowserPoolConfig browserPoolConfig =
+      new BrowserPoolConfig(
+          new BrowserPoolProperties(
+              new BrowserPoolProperties.Max(MAX_IDLE, MAX_TOTAL),
+              new BrowserPoolProperties.Min(MIN_IDLE)));
 
   // @Test
   void shouldSetBrowserPoolConfig() throws Exception {
-    ReflectionTestUtils.setField(browserPoolConfig, "browserPoolMinIdle", MIN_IDLE);
-    ReflectionTestUtils.setField(browserPoolConfig, "browserPoolMaxIdle", MAX_IDLE);
-    ReflectionTestUtils.setField(browserPoolConfig, "browserPoolMaxTotal", MAX_TOTAL);
 
     try (final var browserPool = browserPoolConfig.browserPool()) {
 
