@@ -19,14 +19,15 @@ dependencies {
     implementation "com.microsoft.playwright:playwright"
     implementation "org.apache.commons:commons-pool2"
     implementation "org.jsoup:jsoup"
-    implementation "org.springframework.boot:spring-boot-configuration-processor"
-    implementation "org.springframework.boot:spring-boot-devtools"
     implementation "org.springframework.boot:spring-boot-starter"
-
+    implementation "org.springframework.boot:spring-boot-starter-validation"
 
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.mockito:mockito-junit-jupiter"
 }
 

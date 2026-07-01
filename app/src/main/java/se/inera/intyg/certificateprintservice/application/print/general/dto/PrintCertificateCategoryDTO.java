@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.certificateprintservice.application.print.general.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
 import se.inera.intyg.certificateprintservice.application.print.general.dto.PrintCertificateCategoryDTO.PrintCertificateCategoryDTOBuilder;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonPOJOBuilder;
 
 @Value
 @Builder

@@ -16,23 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.certificateprintservice.application.print.general.dto;
+package se.inera.intyg.certificateprintservice.playwright.browserpool;
 
-import java.util.List;
-import lombok.Builder;
-import lombok.Value;
-import se.inera.intyg.certificateprintservice.application.print.general.dto.PrintCertificateRequestDTO.PrintCertificateRequestDTOBuilder;
-import tools.jackson.databind.annotation.JsonDeserialize;
-import tools.jackson.databind.annotation.JsonPOJOBuilder;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
-@Value
-@Builder
-@JsonDeserialize(builder = PrintCertificateRequestDTOBuilder.class)
-public class PrintCertificateRequestDTO {
+@Validated
+@ConfigurationProperties(prefix = "browser.pool")
+public record BrowserPoolProperties(@Valid @NotNull Max max, @Valid @NotNull Min min) {
 
-  List<PrintCertificateCategoryDTO> categories;
-  PrintCertificateMetadataDTO metadata;
+  public record Max(@PositiveOrZero int idle, @Positive int total) {}
 
-  @JsonPOJOBuilder(withPrefix = "")
-  public static class PrintCertificateRequestDTOBuilder {}
+  public record Min(@PositiveOrZero int idle) {}
 }

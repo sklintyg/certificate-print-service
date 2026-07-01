@@ -1,11 +1,12 @@
 dependencies {
-    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.projectlombok:lombok"
 
-    implementation "ch.qos.logback:logback-classic"
+    compileOnly "org.projectlombok:lombok"
+    compileOnly "org.slf4j:slf4j-api"
+
     implementation "jakarta.servlet:jakarta.servlet-api"
-    implementation "org.aspectj:aspectjweaver"
-    implementation "org.springframework:spring-webmvc"
+    implementation "org.springframework:spring-web"
+    implementation "org.springframework.boot:spring-boot-starter-aspectj"
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.mockito:mockito-junit-jupiter"
 }
-

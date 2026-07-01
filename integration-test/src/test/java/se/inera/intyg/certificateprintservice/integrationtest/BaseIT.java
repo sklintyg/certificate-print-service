@@ -19,36 +19,53 @@
 package se.inera.intyg.certificateprintservice.integrationtest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.client.RestTestClient;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintResponseDTO;
 
 @SpringBootTest(
     classes = se.inera.intyg.certificateprintservice.CertificatePrintServiceApplication.class,
     webEnvironment = WebEnvironment.RANDOM_PORT)
+@AutoConfigureRestTestClient
 @ActiveProfiles("it")
 public abstract class BaseIT {
 
   private static final String API_PATH = "/api/print/custom";
 
-  @LocalServerPort protected int port;
-
-  @Autowired protected TestRestTemplate restTemplate;
-
-  protected String baseUrl() {
-    return "http://localhost:" + port;
-  }
+  @Autowired protected RestTestClient restTestClient;
 
   protected ResponseEntity<CustomPrintResponseDTO> postCustom(CustomPrintRequestDTO request) {
-    return restTemplate.postForEntity(baseUrl() + API_PATH, request, CustomPrintResponseDTO.class);
+    final var result =
+        restTestClient
+            .post()
+            .uri(API_PATH)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(request)
+            .exchange()
+            .returnResult(CustomPrintResponseDTO.class);
+
+    return ResponseEntity.status(HttpStatus.valueOf(result.getStatus().value()))
+        .body(result.getResponseBody());
   }
 
   protected ResponseEntity<String> postCustomError(CustomPrintRequestDTO request) {
-    return restTemplate.postForEntity(baseUrl() + API_PATH, request, String.class);
+    final var result =
+        restTestClient
+            .post()
+            .uri(API_PATH)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(request)
+            .exchange()
+            .returnResult(String.class);
+
+    return ResponseEntity.status(HttpStatus.valueOf(result.getStatus().value()))
+        .body(result.getResponseBody());
   }
 }
