@@ -28,7 +28,7 @@ ENV CHROME_PATH=/usr/bin/google-chrome
 # https://playwright.dev/docs/release-notes
 # Then find latest minor of supported chrome version here:
 # https://www.ubuntuupdates.org/package/google_chrome/stable/main/base/google-chrome-stable
-ENV CHROME_VERSION 148.0.7778.96-1
+ENV CHROME_VERSION 147.0.7727.137-1
 
 USER root
 
