@@ -19,15 +19,17 @@
 package se.inera.intyg.certificateprintservice.playwright.browserpool;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
 @ConfigurationProperties(prefix = "browser.pool")
-public record BrowserPoolProperties(@Valid Max max, @Valid Min min) {
+public record BrowserPoolProperties(@Valid @NotNull Max max, @Valid @NotNull Min min) {
 
-  public record Max(@Positive int idle, @Positive int total) {}
+  public record Max(@PositiveOrZero int idle, @Positive int total) {}
 
-  public record Min(@Positive int idle) {}
+  public record Min(@PositiveOrZero int idle) {}
 }
