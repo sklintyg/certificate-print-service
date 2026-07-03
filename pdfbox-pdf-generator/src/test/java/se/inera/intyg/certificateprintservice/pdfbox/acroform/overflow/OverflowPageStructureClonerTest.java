@@ -32,6 +32,8 @@ import org.apache.pdfbox.cos.COSObject;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureElement;
+import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureTreeRoot;
+import org.apache.pdfbox.pdmodel.documentinterchange.taggedpdf.StandardStructureTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -199,6 +201,91 @@ class OverflowPageStructureClonerTest {
           !isPlaceholderLast,
           "Placeholder must not be appended at section end, preserving original reading order");
     }
+  }
+
+  /**
+   * Reproduces the structure found in affected templates (fk3221, fk7426, fk7427, fk7809, fk7810)
+   * where the overflow SECT has exactly 2 children: a Sect header and a margin-text Div (the latter
+   * being the last child). The fix must clone the margin-text Div rather than replace it.
+   */
+  @Test
+  void shouldCloneAllChildrenWhenMarginTextDivIsLastChild() throws IOException {
+    try (final var document = createTwoChildOverflowTemplate()) {
+      final var clonedPage = createClonedPage(document, 0);
+
+      cloner.cloneStructureForPage(document, 0, clonedPage);
+
+      final var structuredTree = document.getDocumentCatalog().getStructureTreeRoot();
+      final var documentTag = (PDStructureElement) structuredTree.getKids().getFirst();
+      final var newSect = (PDStructureElement) documentTag.getKids().getLast();
+
+      assertTrue(
+          containsMcidReference(newSect.getCOSObject()),
+          "Margin text MCID (last child in 2-child template) must be cloned, not discarded");
+    }
+  }
+
+  @Test
+  void shouldAppendOverflowDivAfterAllClonedChildren() throws IOException {
+    try (final var document = createTwoChildOverflowTemplate()) {
+      final var clonedPage = createClonedPage(document, 0);
+
+      final var structure = cloner.cloneStructureForPage(document, 0, clonedPage);
+
+      final var sectKids = structure.sect().getKids();
+      // Template has 2 children (Sect header + margin-text Div); both should be cloned, plus the
+      // new overflow Div appended = 3 total children on the cloned SECT.
+      assertEquals(
+          3,
+          sectKids.size(),
+          "Cloned SECT must contain all 2 original children plus the appended overflow Div");
+      final var lastKid = sectKids.getLast();
+      assertEquals(
+          structure.overflowDiv().getCOSObject(),
+          ((PDStructureElement) lastKid).getCOSObject(),
+          "Overflow Div must be the last child of the cloned SECT");
+    }
+  }
+
+  private PDDocument createTwoChildOverflowTemplate() throws IOException {
+    final var document = new PDDocument();
+    document.setAllSecurityToBeRemoved(true);
+
+    final var page = new PDPage();
+    document.addPage(page);
+
+    final var structureTree = new PDStructureTreeRoot();
+    document.getDocumentCatalog().setStructureTreeRoot(structureTree);
+
+    final var docElement = new PDStructureElement(StandardStructureTypes.DOCUMENT, null);
+    structureTree.appendKid(docElement);
+
+    final var pageElement = new PDStructureElement(StandardStructureTypes.SECT, docElement);
+    pageElement.getCOSObject().setItem(COSName.getPDFName("T"), COSName.getPDFName("Page 1"));
+    docElement.appendKid(pageElement);
+
+    // Child 0: a Sect with one MCID-bearing Div (simulates static header with labels)
+    final var headerSect = new PDStructureElement(StandardStructureTypes.SECT, pageElement);
+    final var headerDiv = new PDStructureElement(StandardStructureTypes.DIV, headerSect);
+    final var headerP = new PDStructureElement(StandardStructureTypes.P, headerDiv);
+    headerP.getCOSObject().setItem(COSName.getPDFName("Pg"), page.getCOSObject());
+    headerP.getCOSObject().setItem(COSName.K, COSInteger.get(1));
+    headerDiv.appendKid(headerP);
+    headerSect.appendKid(headerDiv);
+    pageElement.appendKid(headerSect);
+
+    // Child 1: the margin-text Div (MCID 0) — this is the LAST child, matching affected templates
+    final var marginDiv = new PDStructureElement(StandardStructureTypes.DIV, pageElement);
+    final var marginP = new PDStructureElement(StandardStructureTypes.P, marginDiv);
+    marginP.getCOSObject().setItem(COSName.getPDFName("Pg"), page.getCOSObject());
+    marginP.getCOSObject().setItem(COSName.K, COSInteger.get(0));
+    marginDiv.appendKid(marginP);
+    pageElement.appendKid(marginDiv);
+
+    page.getCOSObject().setInt(COSName.STRUCT_PARENTS, 0);
+    structureTree.getCOSObject().setInt(COSName.getPDFName("ParentTreeNextKey"), 1);
+
+    return document;
   }
 
   private boolean containsMcidReference(COSDictionary dict) {

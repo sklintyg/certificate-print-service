@@ -55,8 +55,12 @@ public class OverflowPageStructureCloner {
 
   /**
    * Clones the template page's structure tree for a newly cloned page. Creates structure elements
-   * with MCIDs pointing to the cloned page. The last child of the template page SECT is treated as
-   * the overflow text area and is recreated empty.
+   * with MCIDs pointing to the cloned page. All children of the template page SECT are cloned, and
+   * a new empty DIV is appended as the last child to serve as the overflow text area.
+   *
+   * <p>This ensures that static content such as the margin label (e.g. "FK 3221 (001 F 001)
+   * Fastställd av Försäkringskassan") — which may be the last child in some templates — is always
+   * preserved and accessible to screen readers on every cloned page.
    *
    * <p>After rendering text on the cloned page, call {@link #updateParentTreeForPage} to populate
    * the ParentTree reverse mapping needed for screen reader interactive reading.
@@ -81,19 +85,12 @@ public class OverflowPageStructureCloner {
 
     final var templateKids = getKidsArray(templateSect.getCOSObject());
     final var newKidsArray = new COSArray();
-    PDStructureElement overflowDiv = null;
     final var placeholderHolder = new PDStructureElement[1];
 
     if (templateKids != null) {
       for (var i = 0; i < templateKids.size(); i++) {
-        final var isLastChild = (i == templateKids.size() - 1);
         final var kidObj = resolveObject(templateKids.get(i));
-
-        if (isLastChild) {
-          overflowDiv = new PDStructureElement(StandardStructureTypes.DIV, newPageSect);
-          overflowDiv.getCOSObject().setItem(PG, clonedPage.getCOSObject());
-          newKidsArray.add(overflowDiv.getCOSObject());
-        } else if (kidObj instanceof COSDictionary kidDict && kidDict.containsKey(S)) {
+        if (kidObj instanceof COSDictionary kidDict && kidDict.containsKey(S)) {
           final var clonedChild =
               cloneStructureElement(kidDict, newPageSect, clonedPage, placeholderHolder);
           if (clonedChild != null) {
@@ -103,11 +100,9 @@ public class OverflowPageStructureCloner {
       }
     }
 
-    if (overflowDiv == null) {
-      overflowDiv = new PDStructureElement(StandardStructureTypes.DIV, newPageSect);
-      overflowDiv.getCOSObject().setItem(PG, clonedPage.getCOSObject());
-      newKidsArray.add(overflowDiv.getCOSObject());
-    }
+    final var overflowDiv = new PDStructureElement(StandardStructureTypes.DIV, newPageSect);
+    overflowDiv.getCOSObject().setItem(PG, clonedPage.getCOSObject());
+    newKidsArray.add(overflowDiv.getCOSObject());
 
     newPageSectDict.setItem(K, newKidsArray);
     assignStructParentsKey(document, clonedPage);
