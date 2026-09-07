@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.TEMPLATE_BYTES;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.buildRequest;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.fullMetadataBuilder;
@@ -131,6 +132,15 @@ class CustomPdfRequestConverterTest {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
     assertFalse(result.metadata().addDraftWatermark());
+  }
+
+  @Test
+  void shallConvertAddRevokedWatermark() {
+    final var request =
+        buildRequest(
+            fullMetadataBuilder().addRevokedWatermark(true).build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertTrue(result.metadata().addRevokedWatermark());
   }
 
   @Test

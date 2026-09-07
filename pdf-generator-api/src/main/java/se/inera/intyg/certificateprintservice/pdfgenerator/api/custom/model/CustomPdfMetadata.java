@@ -27,6 +27,7 @@ public record CustomPdfMetadata(
     String rightMarginText,
     AccessibilityMetadata accessibilityMetadata,
     boolean addDraftWatermark,
+    boolean addRevokedWatermark,
     Integer overflowPageIndex,
     PersonIdConfig personIdConfig) {
 

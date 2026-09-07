@@ -41,6 +41,13 @@ public class TestDataFK7210CustomPdfMetadata {
         .build();
   }
 
+  public static CustomPdfMetadata metadataWithRevokedWatermark() {
+    return CustomPdfMetadata.builder()
+        .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
+        .addRevokedWatermark(true)
+        .build();
+  }
+
   public static CustomPdfMetadata metadataWithCustomTextAndMargin() {
     return CustomPdfMetadata.builder()
         .customTextList(

@@ -124,6 +124,7 @@ public class TestSetupFK7210Metadata {
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
         .addDraftWatermark(false)
+        .addRevokedWatermark(true)
         .build();
   }
 

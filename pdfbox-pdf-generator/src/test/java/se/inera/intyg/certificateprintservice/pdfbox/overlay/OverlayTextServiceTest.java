@@ -40,6 +40,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210CustomPdfMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 
 @ExtendWith(MockitoExtension.class)
 class OverlayTextServiceTest {
@@ -75,6 +77,43 @@ class OverlayTextServiceTest {
           document, TestDataFK7210CustomPdfMetadata.metadataWithCustomTextAndMargin());
 
       verify(pdfTextGenerator, never()).addWatermark(any(), eq("UTKAST"), anyInt());
+    }
+  }
+
+  @Nested
+  class RevokedWatermark {
+
+    @Test
+    void shallDrawRevokedWatermarkWhenAddRevokedWatermarkIsTrue() throws IOException {
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithRevokedWatermark());
+
+      verify(pdfTextGenerator).addWatermark(eq(document), eq("MAKULERAT"), anyInt());
+    }
+
+    @Test
+    void shallNotDrawRevokedWatermarkWhenAddRevokedWatermarkIsFalse() throws IOException {
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithCustomTextAndMargin());
+
+      verify(pdfTextGenerator, never()).addWatermark(any(), eq("MAKULERAT"), anyInt());
+    }
+
+    @Test
+    void shallDrawDraftWatermarkInsteadOfRevokedWatermarkWhenBothAreTrue() throws IOException {
+      overlayTextService.drawOverlays(
+          document,
+          CustomPdfMetadata.builder()
+              .accessibilityMetadata(
+                  AccessibilityMetadata.builder()
+                      .title(TestDataFK7210CustomPdfMetadata.TITLE)
+                      .build())
+              .addDraftWatermark(true)
+              .addRevokedWatermark(true)
+              .build());
+
+      verify(pdfTextGenerator).addWatermark(eq(document), eq("UTKAST"), anyInt());
+      verify(pdfTextGenerator, never()).addWatermark(any(), eq("MAKULERAT"), anyInt());
     }
   }
 
