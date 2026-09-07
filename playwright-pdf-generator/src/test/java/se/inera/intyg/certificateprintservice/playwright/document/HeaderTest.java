@@ -383,6 +383,7 @@ class HeaderTest {
     class Watermark {
 
       String expectedText = "UTKAST";
+      String expectedRevokedText = "MAKULERAT";
 
       @Test
       void watermarkDraft() {
@@ -403,6 +404,29 @@ class HeaderTest {
         final var header = headerBuilder.isDraft(false).isSent(true).build();
         final var element = header.create().child(2);
         assertEquals(0, element.getElementsMatchingText(expectedText).size());
+      }
+
+      @Test
+      void watermarkRevoked() {
+        final var header =
+            headerBuilder
+                .isDraft(false)
+                .isSent(false)
+                .isRevoked(true)
+                .watermark(se.inera.intyg.certificateprintservice.playwright.document.Watermark
+                    .builder()
+                    .watermarkText(expectedRevokedText)
+                    .build())
+                .build();
+        final var element = header.create();
+        assertNotEquals(0, element.getElementsMatchingText(expectedRevokedText).size());
+      }
+
+      @Test
+      void watermarkNotRevoked() {
+        final var header = headerBuilder.isDraft(false).isSent(false).isRevoked(false).build();
+        final var element = header.create();
+        assertEquals(0, element.getElementsMatchingText(expectedRevokedText).size());
       }
     }
 

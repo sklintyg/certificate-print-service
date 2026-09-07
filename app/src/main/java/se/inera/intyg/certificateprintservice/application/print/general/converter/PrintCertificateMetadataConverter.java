@@ -47,6 +47,7 @@ public class PrintCertificateMetadataConverter {
         .issuingUnit(metadata.getIssuingUnit())
         .canSendElectronically(metadata.isCanSendElectronically())
         .generalPrintText(convertToGeneralPrintText(metadata.getGeneralPrintText()))
+        .revoked(metadata.isRevoked())
         .build();
   }
 

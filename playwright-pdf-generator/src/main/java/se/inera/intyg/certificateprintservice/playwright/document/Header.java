@@ -48,6 +48,7 @@ public class Header {
   Watermark watermark;
   byte[] recipientLogo;
   boolean isDraft;
+  boolean isRevoked;
   boolean isSent;
   boolean isCanSendElectronically;
   String draftAlertInfoText;
@@ -59,7 +60,7 @@ public class Header {
       headerElements.add(rightMarginInfo.create());
     }
 
-    if (isDraft) {
+    if (isDraft || isRevoked) {
       headerElements.add(watermark.create());
     }
 

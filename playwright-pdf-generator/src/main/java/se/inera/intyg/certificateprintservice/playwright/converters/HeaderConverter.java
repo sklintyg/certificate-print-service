@@ -22,6 +22,7 @@ import com.microsoft.playwright.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.general.model.Metadata;
+import se.inera.intyg.certificateprintservice.playwright.document.Constants;
 import se.inera.intyg.certificateprintservice.playwright.document.Header;
 import se.inera.intyg.certificateprintservice.playwright.document.Watermark;
 
@@ -44,8 +45,9 @@ public class HeaderConverter {
         .recipientLogo(metadata.getRecipientLogo())
         .leftMarginInfo(leftMarginInfoConverter.convert(metadata))
         .rightMarginInfo(rightMarginInfoConverter.convert(metadata))
-        .watermark(Watermark.builder().build())
+        .watermark(convertWatermark(metadata))
         .isDraft(metadata.isDraft())
+        .isRevoked(metadata.isRevoked())
         .isSent(metadata.isSent())
         .isCanSendElectronically(metadata.isCanSendElectronically())
         .draftAlertInfoText(
@@ -53,6 +55,13 @@ public class HeaderConverter {
                 ? metadata.getGeneralPrintText().getDraftAlertInfoText()
                 : null)
         .build();
+  }
+
+  private Watermark convertWatermark(Metadata metadata) {
+    if (metadata.isRevoked()) {
+      return Watermark.builder().watermarkText(Constants.WATERMARK_TEXT_REVOKED).build();
+    }
+    return Watermark.builder().build();
   }
 
   public int headerHeight(Page page, String header) {

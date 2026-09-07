@@ -83,4 +83,7 @@ public class Constants {
       z-index: -1;
       font-family: 'Liberation Sans', sans-serif;
       font-size: 100pt;""";
+
+  public static final String WATERMARK_TEXT_DRAFT = "UTKAST";
+  public static final String WATERMARK_TEXT_REVOKED = "MAKULERAT";
 }
