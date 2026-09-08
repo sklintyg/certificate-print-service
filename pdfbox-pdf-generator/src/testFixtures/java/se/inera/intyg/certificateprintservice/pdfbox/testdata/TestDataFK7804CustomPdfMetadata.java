@@ -19,12 +19,14 @@
 package se.inera.intyg.certificateprintservice.pdfbox.testdata;
 
 import java.util.List;
+import java.util.Optional;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appearance;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.PersonIdConfig;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Watermark;
 
 public class TestDataFK7804CustomPdfMetadata {
 
@@ -38,7 +40,7 @@ public class TestDataFK7804CustomPdfMetadata {
   public static CustomPdfMetadata metadataWithDraftWatermark() {
     return CustomPdfMetadata.builder()
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
-        .addDraftWatermark(true)
+        .watermark(Optional.of(Watermark.builder().text("UTKAST").build()))
         .build();
   }
 
@@ -89,7 +91,6 @@ public class TestDataFK7804CustomPdfMetadata {
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
-        .addDraftWatermark(false)
         .overflowPageIndex(4)
         .personIdConfig(
             new PersonIdConfig("form1[0].#subform[0].flt_txtPersonNr[0]", "191212121212"))

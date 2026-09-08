@@ -28,6 +28,7 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Appea
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfMetadataDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.FontStyleEnumDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.WatermarkDTO;
 
 public class TestSetupFK7210Metadata {
 
@@ -62,7 +63,6 @@ public class TestSetupFK7210Metadata {
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
-        .addDraftWatermark(false)
         .build();
   }
 
@@ -81,7 +81,7 @@ public class TestSetupFK7210Metadata {
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
-        .addDraftWatermark(true)
+        .watermark(WatermarkDTO.builder().text("UTKAST").build())
         .build();
   }
 
@@ -114,7 +114,6 @@ public class TestSetupFK7210Metadata {
                     .build()))
         .rightMarginText(null)
         .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
-        .addDraftWatermark(false)
         .build();
   }
 
@@ -123,8 +122,7 @@ public class TestSetupFK7210Metadata {
         .customTexts(List.of())
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
-        .addDraftWatermark(false)
-        .addRevokedWatermark(true)
+        .watermark(WatermarkDTO.builder().text("MAKULERAT").build())
         .build();
   }
 
@@ -143,7 +141,6 @@ public class TestSetupFK7210Metadata {
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
-        .addDraftWatermark(false)
         .build();
   }
 }

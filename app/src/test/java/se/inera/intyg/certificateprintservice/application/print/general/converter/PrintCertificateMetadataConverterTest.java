@@ -200,8 +200,6 @@ class PrintCertificateMetadataConverterTest {
   @Test
   void shallConvertRevokedFalseByDefault() {
     assertFalse(
-        printCertificateMetadataConverter
-            .convert(METADATA_DTO_GENERAL_TEXT_MISSING)
-            .isRevoked());
+        printCertificateMetadataConverter.convert(METADATA_DTO_GENERAL_TEXT_MISSING).isRevoked());
   }
 }

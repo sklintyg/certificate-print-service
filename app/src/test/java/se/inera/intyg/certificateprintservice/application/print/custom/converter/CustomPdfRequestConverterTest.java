@@ -32,6 +32,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.PersonIdConfigDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.WatermarkDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 
 class CustomPdfRequestConverterTest {
@@ -128,19 +129,29 @@ class CustomPdfRequestConverterTest {
   }
 
   @Test
-  void shallConvertAddDraftWatermark() {
+  void shallConvertWatermarkAsEmptyWhenNotSet() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertFalse(result.metadata().addDraftWatermark());
+    assertFalse(result.metadata().watermark().isPresent());
   }
 
   @Test
-  void shallConvertAddRevokedWatermark() {
+  void shallConvertWatermarkAsEmptyWhenWatermarkIsNull() {
+    final var request =
+        buildRequest(fullMetadataBuilder().watermark(null).build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertFalse(result.metadata().watermark().isPresent());
+  }
+
+  @Test
+  void shallConvertWatermarkText() {
     final var request =
         buildRequest(
-            fullMetadataBuilder().addRevokedWatermark(true).build(), Collections.emptyMap());
+            fullMetadataBuilder().watermark(WatermarkDTO.builder().text("UTKAST").build()).build(),
+            Collections.emptyMap());
     final var result = converter.convert(request);
-    assertTrue(result.metadata().addRevokedWatermark());
+    assertTrue(result.metadata().watermark().isPresent());
+    assertEquals("UTKAST", result.metadata().watermark().get().text());
   }
 
   @Test

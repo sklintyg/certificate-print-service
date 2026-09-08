@@ -30,6 +30,7 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPrintRequestDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomTextDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.FontStyleEnumDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.WatermarkDTO;
 
 public class TestDataCustomPrintRequest {
 
@@ -52,7 +53,7 @@ public class TestDataCustomPrintRequest {
                     .pageIndex(0)
                     .build()))
         .accessibilityMetadata(new AccessibilityMetadataDTO("Intyg-om-graviditet-2026-06-11"))
-        .addDraftWatermark(true);
+        .watermark(WatermarkDTO.builder().text("UTKAST").build());
   }
 
   public static CustomPdfMetadataDTO.CustomPdfMetadataDTOBuilder fullMetadataBuilder() {
@@ -84,8 +85,7 @@ public class TestDataCustomPrintRequest {
                     .build()))
         .rightMarginText(
             "Intygsid: 8996d3d8-cb67-4602-b6a9-81dee33616ce. Intyget är utskrivet från Webcert.")
-        .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"))
-        .addDraftWatermark(false);
+        .accessibilityMetadata(new AccessibilityMetadataDTO("fk7210"));
   }
 
   public static CustomPrintRequestDTO buildRequest(

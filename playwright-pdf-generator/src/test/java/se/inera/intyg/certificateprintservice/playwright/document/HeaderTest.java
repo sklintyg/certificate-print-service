@@ -413,10 +413,10 @@ class HeaderTest {
                 .isDraft(false)
                 .isSent(false)
                 .isRevoked(true)
-                .watermark(se.inera.intyg.certificateprintservice.playwright.document.Watermark
-                    .builder()
-                    .watermarkText(expectedRevokedText)
-                    .build())
+                .watermark(
+                    se.inera.intyg.certificateprintservice.playwright.document.Watermark.builder()
+                        .watermarkText(expectedRevokedText)
+                        .build())
                 .build();
         final var element = header.create();
         assertNotEquals(0, element.getElementsMatchingText(expectedRevokedText).size());
