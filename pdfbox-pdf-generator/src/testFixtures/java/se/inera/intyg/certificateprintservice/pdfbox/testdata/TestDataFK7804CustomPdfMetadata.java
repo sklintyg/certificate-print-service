@@ -94,6 +94,7 @@ public class TestDataFK7804CustomPdfMetadata {
         .overflowPageIndex(4)
         .personIdConfig(
             new PersonIdConfig("form1[0].#subform[0].flt_txtPersonNr[0]", "191212121212"))
+        .watermark(Optional.empty())
         .build();
   }
 }
