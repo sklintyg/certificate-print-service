@@ -65,6 +65,7 @@ public class TestDataFK7210CustomPdfMetadata {
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
+        .watermark(Optional.empty())
         .build();
   }
 
@@ -72,12 +73,14 @@ public class TestDataFK7210CustomPdfMetadata {
     return CustomPdfMetadata.builder()
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
         .overflowPageIndex(0)
+        .watermark(Optional.empty())
         .build();
   }
 
   public static CustomPdfMetadata metadataWithoutPageNumbers() {
     return CustomPdfMetadata.builder()
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
+        .watermark(Optional.empty())
         .build();
   }
 
@@ -110,6 +113,7 @@ public class TestDataFK7210CustomPdfMetadata {
                     .build()))
         .rightMarginText(RIGHT_MARGIN_TEXT)
         .accessibilityMetadata(AccessibilityMetadata.builder().title(TITLE).build())
+        .watermark(Optional.empty())
         .build();
   }
 }
