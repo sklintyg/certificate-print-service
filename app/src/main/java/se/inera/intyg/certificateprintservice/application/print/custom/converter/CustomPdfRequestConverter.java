@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.AccessibilityMetadataDTO;
@@ -34,6 +35,7 @@ import se.inera.intyg.certificateprintservice.application.print.custom.dto.Custo
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.FontStyleEnumDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.OverflowConfigDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.PersonIdConfigDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.WatermarkDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Appearance;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdf;
@@ -42,6 +44,7 @@ import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Cust
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomText;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.OverflowConfig;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.PersonIdConfig;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Watermark;
 
 @Component
 public class CustomPdfRequestConverter {
@@ -58,9 +61,16 @@ public class CustomPdfRequestConverter {
         convertCustomTexts(dto.getCustomTexts()),
         dto.getRightMarginText(),
         convertAccessibilityMetadata(dto.getAccessibilityMetadata()),
-        dto.isAddDraftWatermark(),
+        convertWatermark(dto.getWatermark()),
         dto.getOverflowPageIndex(),
         convertPersonId(dto.getPersonId()));
+  }
+
+  private Optional<Watermark> convertWatermark(WatermarkDTO watermark) {
+    if (watermark == null) {
+      return Optional.empty();
+    }
+    return Optional.of(new Watermark(watermark.getText()));
   }
 
   private List<CustomText> convertCustomTexts(List<CustomTextDTO> customTextDTOList) {

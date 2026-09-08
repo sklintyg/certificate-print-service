@@ -18,26 +18,7 @@
  */
 package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
-import java.util.List;
-import java.util.Optional;
 import lombok.Builder;
 
 @Builder
-public record CustomPdfMetadata(
-    List<CustomText> customTextList,
-    String rightMarginText,
-    AccessibilityMetadata accessibilityMetadata,
-    Optional<Watermark> watermark,
-    Integer overflowPageIndex,
-    PersonIdConfig personIdConfig) {
-
-  public CustomPdfMetadata {
-    if (customTextList == null) {
-      customTextList = List.of();
-    }
-  }
-
-  public boolean hasRightMarginText() {
-    return rightMarginText != null && !rightMarginText.isBlank();
-  }
-}
+public record Watermark(String text) {}

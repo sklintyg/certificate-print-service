@@ -48,6 +48,7 @@ public class PrintCertificateMetadataDTO {
   String issuingUnit;
   List<String> unitInformation;
   GeneralPrintTextDTO generalPrintText;
+  boolean revoked;
 
   @JsonPOJOBuilder(withPrefix = "")
   public static class PrintCertificateMetadataDTOBuilder {}

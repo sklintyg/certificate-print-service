@@ -45,6 +45,7 @@ public class Metadata {
   String issuingUnit;
   List<String> issuingUnitInfo;
   GeneralPrintText generalPrintText;
+  boolean revoked;
 
   public boolean isDraft() {
     return signingDate == null;

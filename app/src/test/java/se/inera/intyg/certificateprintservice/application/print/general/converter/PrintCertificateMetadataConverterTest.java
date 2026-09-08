@@ -20,7 +20,9 @@ package se.inera.intyg.certificateprintservice.application.print.general.convert
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,6 +65,7 @@ class PrintCertificateMetadataConverterTest {
                   .leftMarginInfoText("leftMarginInfoText")
                   .draftAlertInfoText("draftAlertInfoText")
                   .build())
+          .revoked(true)
           .build();
   private static final PrintCertificateMetadataDTO METADATA_DTO_GENERAL_TEXT_MISSING =
       PrintCertificateMetadataDTO.builder()
@@ -187,5 +190,16 @@ class PrintCertificateMetadataConverterTest {
         printCertificateMetadataConverter
             .convert(METADATA_DTO_GENERAL_TEXT_MISSING)
             .getGeneralPrintText());
+  }
+
+  @Test
+  void shallConvertRevoked() {
+    assertTrue(printCertificateMetadataConverter.convert(METADATA_DTO).isRevoked());
+  }
+
+  @Test
+  void shallConvertRevokedFalseByDefault() {
+    assertFalse(
+        printCertificateMetadataConverter.convert(METADATA_DTO_GENERAL_TEXT_MISSING).isRevoked());
   }
 }

@@ -146,6 +146,41 @@ class HeaderConverterTest {
     assertTrue(response.isSent());
   }
 
+  @Test
+  void shouldSetIsRevokedFalseByDefault() {
+    final var response = headerConverter.convert(METADATA);
+    assertFalse(response.isRevoked());
+  }
+
+  @Nested
+  class Revoked {
+
+    private final Metadata revokedMetadata =
+        Metadata.builder()
+            .name(CERTIFICATE_NAME)
+            .version(VERSION)
+            .typeId(TYPE_ID)
+            .personId(PERSON_ID)
+            .recipientLogo(RECIPIENT_LOGO)
+            .recipientName(RECIPIENT_NAME)
+            .signingDate(SIGNING_DATE)
+            .sentDate(SENT_DATE)
+            .revoked(true)
+            .build();
+
+    @Test
+    void shouldSetIsRevoked() {
+      final var response = headerConverter.convert(revokedMetadata);
+      assertTrue(response.isRevoked());
+    }
+
+    @Test
+    void shouldSetWatermarkTextToMakuleratWhenRevoked() {
+      final var response = headerConverter.convert(revokedMetadata);
+      assertEquals("MAKULERAT", response.getWatermark().getWatermarkText());
+    }
+  }
+
   @Nested
   class HeaderHeight {
 

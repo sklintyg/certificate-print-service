@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.TEMPLATE_BYTES;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.buildRequest;
 import static se.inera.intyg.certificateprintservice.application.testdata.TestDataCustomPrintRequest.fullMetadataBuilder;
@@ -31,6 +32,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.CustomPdfFieldDTO;
 import se.inera.intyg.certificateprintservice.application.print.custom.dto.PersonIdConfigDTO;
+import se.inera.intyg.certificateprintservice.application.print.custom.dto.WatermarkDTO;
 import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.FontStyle;
 
 class CustomPdfRequestConverterTest {
@@ -127,10 +129,29 @@ class CustomPdfRequestConverterTest {
   }
 
   @Test
-  void shallConvertAddDraftWatermark() {
+  void shallConvertWatermarkAsEmptyWhenNotSet() {
     final var request = buildRequest(fullMetadataBuilder().build(), Collections.emptyMap());
     final var result = converter.convert(request);
-    assertFalse(result.metadata().addDraftWatermark());
+    assertFalse(result.metadata().watermark().isPresent());
+  }
+
+  @Test
+  void shallConvertWatermarkAsEmptyWhenWatermarkIsNull() {
+    final var request =
+        buildRequest(fullMetadataBuilder().watermark(null).build(), Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertFalse(result.metadata().watermark().isPresent());
+  }
+
+  @Test
+  void shallConvertWatermarkText() {
+    final var request =
+        buildRequest(
+            fullMetadataBuilder().watermark(WatermarkDTO.builder().text("UTKAST").build()).build(),
+            Collections.emptyMap());
+    final var result = converter.convert(request);
+    assertTrue(result.metadata().watermark().isPresent());
+    assertEquals("UTKAST", result.metadata().watermark().get().text());
   }
 
   @Test

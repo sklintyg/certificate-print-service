@@ -29,6 +29,7 @@ import static se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.Assertions;
@@ -40,6 +41,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.certificateprintservice.pdfbox.testdata.TestDataFK7210CustomPdfMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.AccessibilityMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.CustomPdfMetadata;
+import se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model.Watermark;
 
 @ExtendWith(MockitoExtension.class)
 class OverlayTextServiceTest {
@@ -62,7 +66,7 @@ class OverlayTextServiceTest {
   class DraftWatermark {
 
     @Test
-    void shallDrawDraftWatermarkWhenAddDraftWatermarkIsTrue() throws IOException {
+    void shallDrawDraftWatermarkWhenMetadataHasDraftWatermark() throws IOException {
       overlayTextService.drawOverlays(
           document, TestDataFK7210CustomPdfMetadata.metadataWithDraftWatermark());
 
@@ -70,10 +74,46 @@ class OverlayTextServiceTest {
     }
 
     @Test
-    void shallNotDrawDraftWatermarkWhenAddDraftWatermarkIsFalse() throws IOException {
+    void shallNotDrawDraftWatermarkWhenNoWatermarkIsSet() throws IOException {
       overlayTextService.drawOverlays(
           document, TestDataFK7210CustomPdfMetadata.metadataWithCustomTextAndMargin());
 
+      verify(pdfTextGenerator, never()).addWatermark(any(), eq("UTKAST"), anyInt());
+    }
+  }
+
+  @Nested
+  class RevokedWatermark {
+
+    @Test
+    void shallDrawRevokedWatermarkWhenMetadataHasRevokedWatermark() throws IOException {
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithRevokedWatermark());
+
+      verify(pdfTextGenerator).addWatermark(eq(document), eq("MAKULERAT"), anyInt());
+    }
+
+    @Test
+    void shallNotDrawRevokedWatermarkWhenNoWatermarkIsSet() throws IOException {
+      overlayTextService.drawOverlays(
+          document, TestDataFK7210CustomPdfMetadata.metadataWithCustomTextAndMargin());
+
+      verify(pdfTextGenerator, never()).addWatermark(any(), eq("MAKULERAT"), anyInt());
+    }
+
+    @Test
+    void shallDrawWatermarkWithGivenText() throws IOException {
+      overlayTextService.drawOverlays(
+          document,
+          CustomPdfMetadata.builder()
+              .accessibilityMetadata(
+                  AccessibilityMetadata.builder()
+                      .title(TestDataFK7210CustomPdfMetadata.TITLE)
+                      .build())
+              .watermark(Optional.of(Watermark.builder().text("UTKAST-KOPIA").build()))
+              .build());
+
+      verify(pdfTextGenerator).addWatermark(eq(document), eq("UTKAST-KOPIA"), anyInt());
       verify(pdfTextGenerator, never()).addWatermark(any(), eq("UTKAST"), anyInt());
     }
   }

@@ -37,8 +37,8 @@ public class OverlayTextService {
   public void drawOverlays(PDDocument document, CustomPdfMetadata metadata) throws IOException {
     int mcid = MaxMCIDExtractor.findNextMcid(document);
 
-    if (metadata.addDraftWatermark()) {
-      pdfTextGenerator.addWatermark(document, "UTKAST", ++mcid);
+    if (metadata.watermark().isPresent()) {
+      pdfTextGenerator.addWatermark(document, metadata.watermark().get().text(), ++mcid);
     }
 
     for (CustomText customText : metadata.customTextList()) {

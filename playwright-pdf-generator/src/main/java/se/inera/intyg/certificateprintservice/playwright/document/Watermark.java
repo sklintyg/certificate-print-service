@@ -20,6 +20,7 @@ package se.inera.intyg.certificateprintservice.playwright.document;
 
 import static se.inera.intyg.certificateprintservice.playwright.document.Constants.STYLE;
 import static se.inera.intyg.certificateprintservice.playwright.document.Constants.WATERMARK_STYLE;
+import static se.inera.intyg.certificateprintservice.playwright.document.Constants.WATERMARK_TEXT_DRAFT;
 import static se.inera.intyg.certificateprintservice.playwright.element.ElementProvider.element;
 
 import javax.swing.text.html.HTML.Tag;
@@ -33,7 +34,7 @@ import org.jsoup.nodes.Element;
 @EqualsAndHashCode
 public class Watermark {
 
-  @Builder.Default String watermarkText = "UTKAST";
+  @Builder.Default String watermarkText = WATERMARK_TEXT_DRAFT;
 
   public Element create() {
     return element(Tag.DIV)
