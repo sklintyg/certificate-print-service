@@ -113,9 +113,8 @@ public class CustomPdfRequestConverter {
         dto.getValue(),
         dto.getOffset(),
         dto.getAppearance(),
-        dto.getMaxLength(),
-        dto.isShouldRemoveLineBreaks(),
-        convertOverflowConfig(dto.getOverflow()));
+        convertOverflowConfig(dto.getOverflow()),
+        dto.isSkipTextFitting());
   }
 
   private OverflowConfig convertOverflowConfig(OverflowConfigDTO dto) {

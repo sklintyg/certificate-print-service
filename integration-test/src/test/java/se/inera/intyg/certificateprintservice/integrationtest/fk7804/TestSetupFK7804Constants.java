@@ -105,13 +105,11 @@ public class TestSetupFK7804Constants {
   public static final String DIAGNOS_2_CODE_2_FIELD_ID = "form1[0].#subform[0].flt_txtDiaKod7[0]";
   public static final String DIAGNOS_2_CODE_3_FIELD_ID = "form1[0].#subform[0].flt_txtDiaKod8[0]";
   public static final String DIAGNOS_2_CODE_4_FIELD_ID = "form1[0].#subform[0].flt_txtDiaKod9[0]";
-  public static final String DIAGNOS_2_CODE_5_FIELD_ID = "form1[0].#subform[0].flt_txtDiaKod10[0]";
   public static final String DIAGNOS_3_NAME_FIELD_ID = "form1[0].#subform[0].flt_txtDiagnoser3[0]";
   public static final String DIAGNOS_3_CODE_1_FIELD_ID = "form1[0].#subform[0].flt_txtDiaKod11[0]";
   public static final String DIAGNOS_3_CODE_2_FIELD_ID = "form1[0].#subform[0].flt_txtDiaKod12[0]";
   public static final String DIAGNOS_3_CODE_3_FIELD_ID = "form1[0].#subform[0].flt_txtDiaKod13[0]";
   public static final String DIAGNOS_3_CODE_4_FIELD_ID = "form1[0].#subform[0].flt_txtDiaKod14[0]";
-  public static final String DIAGNOS_3_CODE_5_FIELD_ID = "form1[0].#subform[0].flt_txtDiaKod15[0]";
 
   // --- Text fields with overflow ---
 
@@ -153,21 +151,60 @@ public class TestSetupFK7804Constants {
 
   public static final String PROGNOS_RADIO_GROUP_FIELD_ID = "form1[0].Sida3[0].RadioButtonList4[0]";
 
+  /** Single-line box of 13.4pt at 10pt: two digits are wider than its text area, "..." is not. */
+  public static final String PROGNOS_MANADER_FIELD_ID = "form1[0].Sida3[0].flt_numManadManader[0]";
+
+  public static final String PROGNOS_MANADER_TWO_DIGITS = "47";
+
   // --- Kontakt ---
 
   public static final String CHECKBOX_KONTAKT_FIELD_ID =
       "form1[0].Sida4[0].ksr_ForsakringskassanKontakar[0]";
 
-  // --- MaxLength constants ---
+  // --- Text lengths used to force overflow ---
 
-  public static final int PDF_TEXT_FIELD_ROW_LENGTH = 53;
-  public static final int MAX_LENGTH_FUNKTIONSNEDSATTNING = 11 * PDF_TEXT_FIELD_ROW_LENGTH;
-  public static final int MAX_LENGTH_AKTIVITETSBEGRANSNING = 12 * PDF_TEXT_FIELD_ROW_LENGTH;
-  public static final int MAX_LENGTH_MEDICINSK_BEHANDLING = 8 * PDF_TEXT_FIELD_ROW_LENGTH;
-  public static final int MAX_LENGTH_OVRIGT = 8 * PDF_TEXT_FIELD_ROW_LENGTH;
-  public static final int MAX_LENGTH_ATGARDER = 7 * PDF_TEXT_FIELD_ROW_LENGTH;
-  public static final int MAX_LENGTH_YRKE = 3 * PDF_TEXT_FIELD_ROW_LENGTH;
-  public static final int MAX_LENGTH_GRUND_FOR_BEDOMNING = 2 * PDF_TEXT_FIELD_ROW_LENGTH;
+  // These are only "comfortably more than the field can hold". Capacity itself is derived
+  // from the widget geometry by the print service, so there is nothing to match exactly.
+  public static final int TEXT_LENGTH_OVERFLOWING_FUNKTIONSNEDSATTNING = 783;
+  public static final int TEXT_LENGTH_OVERFLOWING_FUNKTIONSNEDSATTNING_LARGE = 883;
+  public static final int TEXT_LENGTH_OVERFLOWING_AKTIVITETSBEGRANSNING = 886;
+  public static final int TEXT_LENGTH_OVERFLOWING_WITH_LINE_BREAKS = 683;
+
+  // --- Text lengths calibrated to a specific field's actual capacity (unlike the constants
+  // above, these were empirically tuned against MEDICINSK_BEHANDLING_FIELD_ID's real box/font
+  // geometry — 500.315x113.397pt at 10pt — by binary-searching the response's page count and
+  // rendered text, so tests can sit right on either side of the fit/overflow boundary). ---
+
+  /** Fits inside MEDICINSK_BEHANDLING_FIELD_ID without triggering an overflow page. */
+  public static final int TEXT_LENGTH_MAX_FILL_MEDICINSK_BEHANDLING = 770;
+
+  /** One step past the max-fill length above; the smallest amount that reliably overflows. */
+  public static final int TEXT_LENGTH_MINIMAL_OVERFLOW_MEDICINSK_BEHANDLING = 790;
+
+  /**
+   * Overflows MEDICINSK_BEHANDLING_FIELD_ID (500.315x113.397pt) but fits inside
+   * AKTIVITETSBEGRANSNING_FIELD_ID (500.315x177.183pt) at the same font size — demonstrating that
+   * capacity is computed per field from its own box size rather than a single fixed length.
+   */
+  public static final int TEXT_LENGTH_DYNAMIC_CAPACITY_COMPARISON = 1500;
+
+  /** Fits inside ANNAN_GRUND_FIELD_ID, a single-line (non-multiline) field, width 308.976pt. */
+  public static final int TEXT_LENGTH_MAX_FILL_ANNAN_GRUND = 50;
+
+  /** One step past the max-fill length above for the single-line ANNAN_GRUND_FIELD_ID. */
+  public static final int TEXT_LENGTH_MINIMAL_OVERFLOW_ANNAN_GRUND = 60;
+
+  /**
+   * Exceeds CONTACT_INFORMATION_FIELD_ID's capacity comfortably; used without an overflow config to
+   * exercise truncation instead of pagination.
+   */
+  public static final int TEXT_LENGTH_TRUNCATION_NO_OVERFLOW_CONFIG = 800;
+
+  /**
+   * Applied to two overflow-configured fields at once, producing enough combined overflow content
+   * to require two overflow pages instead of one.
+   */
+  public static final int TEXT_LENGTH_MULTI_PAGE_OVERFLOW = 6000;
 
   // --- Realistic value constants ---
 
@@ -179,7 +216,21 @@ public class TestSetupFK7804Constants {
   public static final String HSA_ID = "TSTNMT2321000156-DRAA";
   public static final String WORKPLACE_CODE = "7654321";
   public static final String CONTACT_INFORMATION =
-      "Alfa Medicincentrum\n" + "Alfagatan 3 a, 65591 Karlstad\n" + "Telefon: 054121314";
+"""
+Alfa Medicincentrum
+Alfagatan 3 a, 65591 Karlstad
+Telefon: 054121314
+""";
+
+  /**
+   * A contact block too large for the signature field, used to prove that a field marked {@code
+   * skipTextFitting} keeps both its line breaks and its full length.
+   */
+  public static final String OVERSIZED_CONTACT_INFORMATION =
+"""
+Alfa Medicincentrum Vårdcentral och mottagning för allmänmedicin, rehabilitering, fysioterapi och arbetsterapi i norra Karlstad med omnejd samt filialmottagningarna i Grums, Kil, Hammarö och Forshaga kommun
+Alfagatan 3 a, plan 4, ingång B, hiss C, postbox 1234, 65591 Karlstad, Värmlands län, besöksadress Alfatorget 7, trapphus D, våning 2, reception till vänster om huvudentrén mittemot apoteket och vårdcentralens egen parkering för besökande patienter
+Telefon: 054121314, reception 054121315, tidsbokning 054121316, sjukvårdsrådgivning 054121317""";
 
   public static final String DATE_FYSISK_UNDERSOKNING = "2025-06-10";
   public static final String DATE_DIGITAL_UNDERSOKNING = "2025-06-09";
@@ -191,24 +242,24 @@ public class TestSetupFK7804Constants {
 
   public static final String YRKE_ARBETSUPPGIFTER =
       """
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
-    Lagerarbetare med tunga lyft och repetitiva arbetsmoment\n
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
+    Lagerarbetare med tunga lyft och repetitiva arbetsmoment
   """;
 
   public static final String DIAGNOS_1_NAME = "Lumbal diskbråck";
@@ -403,6 +454,7 @@ public class TestSetupFK7804Constants {
   public static final String OVERFLOW_LABEL_ATGARDER = "Åtgärder för att främja återgång";
   public static final String OVERFLOW_LABEL_YRKE = "Yrke och arbetsuppgifter";
   public static final String OVERFLOW_LABEL_GRUND_FOR_BEDOMNING = "Grund för bedömning";
+  public static final String OVERFLOW_LABEL_ANNAN_GRUND = "Annan grund";
 
   // --- Date range values ---
 

@@ -8,6 +8,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-restclient'
     testImplementation 'org.springframework.boot:spring-boot-resttestclient'
+    testImplementation 'org.apache.pdfbox:pdfbox'
 }
 
 test {

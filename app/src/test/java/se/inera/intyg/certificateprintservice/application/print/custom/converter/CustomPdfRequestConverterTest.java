@@ -174,6 +174,28 @@ class CustomPdfRequestConverterTest {
   }
 
   @Test
+  void shallConvertSkipTextFitting() {
+    final var request =
+        buildRequest(
+            fullMetadataBuilder().build(),
+            Map.of(
+                "field-id",
+                CustomPdfFieldDTO.builder().value("some-value").skipTextFitting(true).build()));
+    final var result = converter.convert(request);
+    assertTrue(result.fields().get("field-id").skipTextFitting());
+  }
+
+  @Test
+  void shallDefaultSkipTextFittingToFalse() {
+    final var request =
+        buildRequest(
+            fullMetadataBuilder().build(),
+            Map.of("field-id", CustomPdfFieldDTO.builder().value("some-value").build()));
+    final var result = converter.convert(request);
+    assertFalse(result.fields().get("field-id").skipTextFitting());
+  }
+
+  @Test
   void shallConvertPersonIdFieldId() {
     final var personId =
         PersonIdConfigDTO.builder()

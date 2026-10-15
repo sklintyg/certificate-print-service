@@ -70,22 +70,9 @@ class FK7804OverflowIT extends BaseIT {
   }
 
   @Test
-  void shallReturnValidPdfWithOverflowAndLineBreaksRemovedFromPrimary() throws IOException {
-    final var setup = new TestSetupFK7804();
-    final var request = setup.buildRequest(TestSetupFK7804Fields.fieldsWithOverflowAndLineBreaks());
-
-    final var response = postCustom(request);
-
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    final var pdfBytes = assertValidPdf(response);
-    savePdf(pdfBytes, "FK7804_OVERFLOW_LINEBREAKS_REMOVED_PRIMARY");
-  }
-
-  @Test
   void shallReturnValidPdfWithOverflowPreservingLineBreaks() throws IOException {
     final var setup = new TestSetupFK7804();
-    final var request =
-        setup.buildRequest(TestSetupFK7804Fields.fieldsWithOverflowNoLineBreakRemoval());
+    final var request = setup.buildRequest(TestSetupFK7804Fields.fieldsWithOverflowAndLineBreaks());
 
     final var response = postCustom(request);
 

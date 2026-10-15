@@ -32,9 +32,8 @@ public class CustomPdfFieldDTO {
   String value;
   Integer offset;
   String appearance;
-  Integer maxLength;
-  boolean shouldRemoveLineBreaks;
   OverflowConfigDTO overflow;
+  boolean skipTextFitting;
 
   @JsonPOJOBuilder(withPrefix = "")
   public static class CustomPdfFieldDTOBuilder {}

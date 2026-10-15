@@ -98,7 +98,7 @@ resulting fields after this mapping has been applied by `certificate-service`.
 
 | ElementValue type | Produces |
 |-------------------|----------|
-| `ElementValueText` | One text field. If content exceeds `maxLength`: either truncated with `"..."` (no overflow sheet) or split with first part in main field and remainder as `append=true` fields in the overflow sheet |
+| `ElementValueText` | One text field. If the content does not fit the field: either truncated with `"..."` (no overflow sheet) or split with first part in main field and remainder as `append=true` fields in the overflow sheet |
 | `ElementValueBoolean` (checkbox) | One checked (`"1"`) or unchecked (`"Off"`) checkbox field depending on the boolean value and whether a false-checkbox field exists |
 | `ElementValueBoolean` (radio) | One radio-group field set to the matching option value |
 | `ElementValueCode` (checkbox) | One checked field for the matching code's field ID |

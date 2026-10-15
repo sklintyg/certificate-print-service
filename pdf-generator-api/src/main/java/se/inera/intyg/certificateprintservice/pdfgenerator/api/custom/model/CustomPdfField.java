@@ -20,11 +20,19 @@ package se.inera.intyg.certificateprintservice.pdfgenerator.api.custom.model;
 
 import lombok.Builder;
 
+/**
+ * A single value to write into an AcroForm field.
+ *
+ * @param skipTextFitting when true the value is written verbatim — line breaks are kept and the
+ *     value is never truncated, leaving any clipping to the renderer. It exists for pre-formatted
+ *     values such as the care unit's name, address and phone number in the signature section, whose
+ *     layout is decided by the consumer. A configured overflow sheet still takes precedence, so
+ *     text is never lost.
+ */
 @Builder
 public record CustomPdfField(
     String value,
     Integer offset,
     String appearance,
-    Integer maxLength,
-    boolean shouldRemoveLineBreaks,
-    OverflowConfig overflow) {}
+    OverflowConfig overflow,
+    boolean skipTextFitting) {}
